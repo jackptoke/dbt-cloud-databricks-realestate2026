@@ -30,8 +30,8 @@ dbt = [
     "dbt-databricks>=1.12.3",
 ]
 
-[project.scripts]
-main = "realestate2026.main:main"
+# [project.scripts]
+# main = "realestate2026.main:main"
 
 [build-system]
 requires = ["hatchling"]
