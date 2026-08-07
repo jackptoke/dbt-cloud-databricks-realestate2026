@@ -1,0 +1,20 @@
+# The main pipeline for realestate2026
+
+resources:
+  pipelines:
+    realestate2026_etl:
+      name: realestate2026_etl
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      serverless: true
+      root_path: "../src/realestate2026_etl"
+
+      libraries:
+        - glob:
+            include: ../src/realestate2026_etl/transformations/**
+
+      environment:
+        dependencies:
+          # We include every dependency defined by pyproject.toml by defining an editable environment
+          # that points to the folder where pyproject.toml is deployed.
+          - --editable ${workspace.file_path}
