@@ -1,0 +1,48 @@
+# ---- Secrets & credentials -------------------------------------------------
+# dbt connection profiles belong in ~/.dbt/, never in the repo
+profiles.yml
+dbt_cloud.yml
+.user.yml
+
+.env
+.env.*
+!.env.example
+
+.databrickscfg
+*.pem
+*.key
+*.p12
+credentials.json
+service-account*.json
+
+# ---- dbt artifacts ---------------------------------------------------------
+# No leading slash: these match at any depth, including the nested project dir
+target/
+dbt_packages/
+dbt_modules/
+logs/
+*.duckdb
+*.duckdb.wal
+
+# ---- Databricks ------------------------------------------------------------
+# Bundle deploy state (machine-specific); databricks.yml itself is tracked
+.databricks/
+
+# ---- Python ----------------------------------------------------------------
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+venv/
+.direnv/
+
+# ---- Editors & OS ----------------------------------------------------------
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
