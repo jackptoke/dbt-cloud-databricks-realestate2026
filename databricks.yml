@@ -21,6 +21,9 @@ variables:
     description: Catalog for this environment; holds the bronze/silver/gold schemas
   landing_path:
         description: Root of the raw landing volume
+  realestate_api_base_url:
+    description: realty-in-au search endpoint
+    default: https://realty-in-au.p.rapidapi.com/properties/list
   bronze_schema:
     description: Schema the ingest pipeline writes raw landed data into
     default: bronze
@@ -44,6 +47,7 @@ targets:
     variables:
       catalog: realestate
       landing_path: /Volumes/realestate/landing/raw
+      realestate_api_base_url: https://realty-in-au.p.rapidapi.com/properties/list
   prod:
     mode: production
     workspace:
@@ -55,6 +59,7 @@ targets:
       # Create it (with bronze/silver/gold schemas) before deploying the prod target.
       catalog: realestate_prod
       landing_path: /Volumes/realestate_prod/landing/raw
+      realestate_api_base_url: https://realty-in-au.p.rapidapi.com/properties/list
     permissions:
       - user_name: jack.toke_outlook.com#ext#@jacktokeoutlook.onmicrosoft.com
         level: CAN_MANAGE

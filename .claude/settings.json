@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/jacktoke/Codes/Databricks/realestate/astro/include/realestate/**)",
+      "Bash(uv build *)",
+      "Bash(.venv/bin/python -c ' *)",
+      "Bash(.venv/bin/python -m realestate2026.ingest.fetch_suburb --help)",
+      "Bash(env -u REALESTATE_API_KEY .venv/bin/python -m realestate2026.ingest.fetch_suburb --suburb Ararat --state VIC --channel buy --dataset buy_properties --landing-root /Volumes/realestate/landing/raw)"
+    ]
+  }
+}

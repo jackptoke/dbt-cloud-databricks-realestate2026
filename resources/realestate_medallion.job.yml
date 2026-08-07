@@ -2,16 +2,32 @@ resources:
   jobs:
     realestate_medallion:
       name: realestate_medallion
-      description: Land raw JSON to bronze, then build silver and gold with dbt.
+      description: >
+        Load bronze with Auto Loader, then build silver and gold with dbt.
+        Triggered by files landing in the volume, so it serves the nightly
+        realestate_ingest run and ad-hoc realestate_backfill runs alike.
 
-      # Fires when the scraper drops files anywhere under the landing volume.
-      # wait_after_last_change lets a multi-file crawl settle before running,
-      # rather than firing once per page.
+      # Fires once the landing zone goes quiet, not on every file.
+      #
+      # wait_after_last_change_seconds must exceed the longest gap WITHIN a
+      # crawl, or the trigger fires mid-run and Auto Loader sees a partial
+      # landing zone. A nightly crawl is only a couple of minutes of fetching,
+      # so 15 minutes is generous by design: it absorbs a 429 backoff chain
+      # (http.py waits up to 60s per retry, six attempts), a slow suburb, or a
+      # gap between for_each iterations. Latency costs nothing here — the run
+      # starts at 11pm and nobody is waiting on gold.
+      #
+      # It also batches consecutive backfills: run four suburbs back to back
+      # and the trigger keeps deferring until the last one finishes, giving one
+      # bronze load instead of four.
       trigger:
         file_arrival:
-          url: /Volumes/realestate/landing/raw/
-          wait_after_last_change_seconds: 120
-          min_time_between_triggers_seconds: 300
+          # The trailing slash is required — the API rejects a bare directory
+          # path. landing_path has no slash because the Python writer joins
+          # onto it, so it is added here rather than in the variable.
+          url: "${var.landing_path}/"
+          wait_after_last_change_seconds: 900
+          min_time_between_triggers_seconds: 600
 
       job_clusters:
         - job_cluster_key: dbt_runner
@@ -27,7 +43,6 @@ resources:
               spark.databricks.cluster.profile: singleNode
             custom_tags:
               ResourceClass: SingleNode
-
 
       tasks:
         - task_key: ingest_bronze
@@ -51,6 +66,8 @@ resources:
             - pypi:
                 package: "dbt-databricks>=1.12.3"
 
+      # A crawl that overruns into the next trigger queues rather than running
+      # two concurrent updates against the same pipeline.
       queue:
         enabled: true
 

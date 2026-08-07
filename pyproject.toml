@@ -6,11 +6,12 @@ authors = [{ name = "jack.toke_outlook.com#ext#@jacktokeoutlook.onmicrosoft.com"
 # 3.12, so a single interpreter serves both the bundle and the dbt project.
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    # Any dependencies for jobs and pipelines in this project can be added here
-    # See also https://docs.databricks.com/dev-tools/bundles/library-dependencies
+    # Needed by realestate2026.ingest, which runs as a python_wheel_task.
     #
     # LIMITATION: for pipelines, dependencies are cached during development;
     # add dependencies to the 'environment' section of your pipeline.yml file instead
+    "requests>=2.32",
+    "tenacity>=9.0",
 ]
 
 [dependency-groups]
@@ -30,8 +31,9 @@ dbt = [
     "dbt-databricks>=1.12.3",
 ]
 
-# [project.scripts]
-# main = "realestate2026.main:main"
+[project.scripts]
+fetch-suburb = "realestate2026.ingest.fetch_suburb:main"
+list-suburbs = "realestate2026.ingest.list_suburbs:main"
 
 [build-system]
 requires = ["hatchling"]
