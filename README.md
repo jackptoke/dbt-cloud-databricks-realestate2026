@@ -22,7 +22,17 @@ realty-in-au API
 <catalog>.gold.{dim_*, bridge_*, fct_*}          star schema
 ```
 
-One nightly job runs the whole chain at 23:00 Australia/Melbourne.
+Three jobs, deliberately decoupled:
+
+| job | trigger | does |
+| --- | --- | --- |
+| `realestate_ingest` | 23:00 Australia/Melbourne | fetches all three channels for every watched suburb |
+| `realestate_medallion` | file arrival in the landing volume | bronze via Auto Loader, then silver and gold via dbt |
+| `realestate_backfill` | manual, per suburb | one suburb's full sold history; writes the backfill marker |
+
+Splitting ingestion from transformation means **anything** that lands files
+feeds bronze — the nightly run and ad-hoc backfills alike — with no wiring
+between the jobs.
 
 ---
 
@@ -32,7 +42,8 @@ One nightly job runs the whole chain at 23:00 Australia/Melbourne.
 databricks.yml                  the single bundle definition
 resources/
   realestate2026_etl.pipeline.yml   Auto Loader: landing → bronze
-  realestate_medallion.job.yml      nightly: ingest → bronze → silver → gold
+  realestate_ingest.job.yml         nightly 23:00: API → landing
+  realestate_medallion.job.yml      on file arrival: bronze → silver → gold
   realestate_backfill.job.yml       manual: one suburb's full sold history
 src/realestate2026/
   ingest/                       API client, landing writer, CLI entry points
@@ -150,9 +161,25 @@ skewing any suburb-to-suburb comparison.
 not events: every run wants the full current set. Only `sold` has history, so
 only `sold` can be incremental.
 
-**Scheduled, not file-arrival triggered.** The job used to fire on file arrival
-in the landing zone. Once ingestion became a task in the same job, that trigger
-would have fired on our own writes and run Auto Loader mid-crawl.
+**Ingestion is scheduled; transformation is file-arrival triggered.** These
+started as one job, which forced a choice: a schedule couldn't react to
+backfills, and a file-arrival trigger fired on the job's own writes and ran Auto
+Loader mid-crawl. Splitting them dissolves the conflict — `realestate_ingest`
+runs on a clock, `realestate_medallion` reacts to files, and any producer feeds
+the medallion.
+
+**The trigger debounces for 15 minutes.** `wait_after_last_change_seconds` must
+exceed the longest gap *within* a crawl, or the trigger fires mid-run.
+A nightly crawl is ~2 minutes of fetching, so 900s is generous by design: it
+absorbs a 429 backoff chain (six attempts, up to 60s each), a slow suburb, or a
+gap between `for_each` iterations. It also batches consecutive backfills into a
+single bronze load. Latency costs nothing when the run starts at 11pm.
+
+**Job parameters are appended to a `python_wheel_task` automatically**, as
+`--<name>=<value>`. Referencing them *also* via `named_parameters` passes each
+twice, and the two spellings won't match — job parameter names can't contain
+hyphens. Hence the CLI speaks underscores throughout, and `named_parameters`
+carries only what isn't already a job parameter.
 
 **The API key is a secret; the base URL is not.** Credentials authenticate;
 endpoints are configuration. Putting the URL in a scope would cost reviewability
@@ -223,12 +250,15 @@ agree.
 # deploy
 databricks bundle deploy -t dev          # or -t prod
 
-# run the whole chain now (the schedule is paused in dev by default)
+# fetch now, rather than waiting for 23:00 (dev schedules are paused)
+databricks bundle run realestate_ingest -t dev
+
+# bronze + silver + gold now, bypassing the 15-minute file-arrival debounce
 databricks bundle run realestate_medallion -t dev
 
 # backfill one suburb's full sold history, then certify it
 databricks bundle run realestate_backfill -t prod \
-  --params suburb=Ararat,state=VIC,max_sold_age_months=,write_marker=true
+  --params suburb=Ararat,state=VIC,write_backfill_marker=true
 
 # large suburbs exceed the API ceiling — slice, then certify the last pass
 databricks bundle run realestate_backfill -t prod \
@@ -279,3 +309,32 @@ non-null on 100% of bronze rows. Values are identical; nothing is lost.
 count grows past 50.
 
 **~1% of listings withhold the street address.** See `property_key` above.
+
+**Only one crawl date exists so far.** Every time-based measure — days on
+market, price reductions, asking-versus-achieved — is derived *across*
+observations, so it needs the nightly run to accumulate history. The model
+supports them; the data does not yet.
+
+---
+
+## Gotchas that cost time
+
+Things that pass `bundle validate` and fail at runtime, or fail in ways whose
+error message points somewhere else:
+
+- **A `file_arrival` trigger URL must end with `/`.** Enforced by the Jobs API
+  at deploy, not by the bundle schema.
+- **`spark_env_vars` is the job mechanism for secrets.** `env_vars` exists in the
+  schema but belongs to Databricks Apps.
+- **`store_true` is unusable with `named_parameters`**, which always emit
+  `--flag=`. argparse rejects an explicit value for a flag that takes none.
+- **A typo'd model name in a dbt YAML silently drops its tests.** dbt warns
+  rather than errors, so the build stays green with untested models.
+- **An unused bundle variable is never flagged.** Declaring one nothing reads
+  fails only at runtime, where the variable was needed.
+- **`num_workers: 0` alone hangs.** A single-node cluster also needs
+  `spark.master`, `spark.databricks.cluster.profile` and the `ResourceClass` tag.
+- **Databricks Connect runs `spark` remotely but plain Python locally.** An
+  `os.makedirs('/Volumes/...')` in a Connect session touches your laptop.
+- **Cluster logs contain a benign `CommandLineHelper$` ERROR** during library
+  install. The real task failure is in the run *output*, not the cluster log.
