@@ -33,7 +33,7 @@ resources:
         - job_cluster_key: dbt_runner
           new_cluster:
             spark_version: 16.4.x-scala2.12
-            node_type_id: Standard_D2ds_v6
+            node_type_id: Standard_D4ds_v4
             num_workers: 0
             data_security_mode: SINGLE_USER
             # A 0-worker cluster needs these two to be a valid single node,
