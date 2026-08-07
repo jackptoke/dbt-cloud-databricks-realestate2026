@@ -31,6 +31,13 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   dbt_cloud_databricks_realestate2026:
-    # Config indicated by + and applies to all files under models/example/
-    example:
+    staging:
+      +schema: silver
+      +materialized: table
+    marts:
+      +schema: gold
+      +materialized: table
+    intermediate:
+      +schema: silver
       +materialized: view
+

@@ -1,0 +1,83 @@
+version: 2
+
+models:
+  - name: stg_sold_properties
+    description: One row per sold listing, deduplicated and typed.
+    columns:
+      - name: listing_id
+        tests: [unique, not_null]
+      - name: property_key
+        tests: [not_null]
+      - name: is_property_identified
+        tests: [not_null]
+      - name: sold_date
+        description: >
+          Sale date from dateSold.value. Null for a small number of listings the
+          source marks Sold without supplying a date (14 of 6,828 at first load).
+        tests:
+          - not_null:
+              config:
+                warn_if: ">0"
+                error_if: ">50"
+                store_failures: true
+      - name: channel
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['sold']
+      - name: sale_price_low_aud
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: false
+              config:
+                where: "not is_price_withheld"
+
+  - name: stg_buy_properties
+    description: One row per active for-sale listing, deduplicated and typed.
+    columns:
+      - name: listing_id
+        tests: [unique, not_null]
+      - name: property_key
+        tests: [not_null]
+      - name: is_property_identified
+        tests: [not_null]
+      - name: channel
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['buy']
+      - name: list_price_low_aud
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: false
+              config:
+                where: "not is_price_withheld"
+
+  - name: stg_rent_properties
+    description: One row per rental listing, deduplicated and typed.
+    columns:
+      - name: listing_id
+        tests: [unique, not_null]
+      - name: property_key
+        tests: [not_null]
+      - name: is_property_identified
+        tests: [not_null]
+      - name: channel
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['rent']
+      - name: weekly_rent_aud
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 10000
+                inclusive: false
+              config:
+                where: "not is_price_withheld"
+

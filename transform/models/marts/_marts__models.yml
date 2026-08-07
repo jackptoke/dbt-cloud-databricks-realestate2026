@@ -1,0 +1,109 @@
+version: 2
+
+models:
+  - name: dim_date
+    columns:
+      - name: date_key
+        tests: [unique, not_null]
+
+  - name: dim_property
+    columns:
+      - name: property_key
+        tests: [unique, not_null]
+      - name: location_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_location')
+                field: location_key
+
+  - name: dim_location
+    columns:
+      - name: location_key
+        tests: [unique, not_null]
+
+  - name: dim_agent
+    columns:
+      - name: agent_key
+        tests: [unique, not_null]
+
+  - name: dim_agency
+    columns:
+      - name: agency_key
+        tests: [unique, not_null]
+
+  - name: dim_property_type
+    columns:
+      - name: property_type_key
+        tests: [unique, not_null]
+
+  - name: dim_feature
+    columns:
+      - name: feature_key
+        tests: [unique, not_null]
+
+  - name: bridge_listing_agent
+    columns:
+      - name: listing_agent_key
+        tests: [unique, not_null]
+      - name: agent_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_agent')
+                field: agent_key
+
+  - name: bridge_listing_feature
+    columns:
+      - name: listing_feature_key
+        tests: [unique, not_null]
+      - name: feature_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_feature')
+                field: feature_key
+
+  - name: fct_listing_snapshot
+    columns:
+      - name: listing_snapshot_key
+        tests: [unique, not_null]
+      - name: property_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_key
+      - name: crawled_date_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+
+  - name: fct_sale
+    columns:
+      - name: sale_key
+        tests: [unique, not_null]
+      - name: sold_date_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: agent_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_agent')
+                field: agent_key
+
+  - name: fct_rental
+    columns:
+      - name: rental_key
+        tests: [unique, not_null]
+
+  - name: fct_inspection
+    columns:
+      - name: inspection_key
+        tests: [unique, not_null]
