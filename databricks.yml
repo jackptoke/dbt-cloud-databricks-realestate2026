@@ -1,19 +1,56 @@
-# This is a Declarative Automation Bundle definition for dbt-cloud-databricks-realestate2026.
-# The Databricks extension requires databricks.yml configuration file.
+# This is a Declarative Automation Bundle definition for realestate2026.
 # See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
-
 bundle:
-  name: dbt-cloud-databricks-realestate2026
+  name: realestate2026
+  uuid: 89f8f64a-6610-4a0e-a72c-45a0ce2e3e0f
+
+include:
+  - resources/*.yml
+
+artifacts:
+  python_artifact:
+    type: whl
+    build: uv build --wheel
+
+# Variable declarations. These variables are assigned in the dev/prod targets below.
+#
+# Environments are separated by CATALOG, not schema, because the schema axis is
+# already taken by the medallion layers (bronze / silver / gold) inside each catalog.
+variables:
+  catalog:
+    description: Catalog for this environment; holds the bronze/silver/gold schemas
+  bronze_schema:
+    description: Schema the ingest pipeline writes raw landed data into
+    default: bronze
+  silver_schema:
+    description: Schema dbt builds conformed staging models and dimensions into
+    default: silver
+  gold_schema:
+    description: Schema dbt builds presentation-layer facts into
+    default: gold
 
 targets:
   dev:
+    # The default target uses 'mode: development' to create a development copy.
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
     mode: development
     default: true
     workspace:
       host: https://adb-7405619183388188.8.azuredatabricks.net
-
-  ## Optionally, there could be 'staging' or 'prod' targets here.
-  #
-  # prod:
-  #   workspace:
-  #     host: https://adb-7405619183388188.8.azuredatabricks.net
+    variables:
+      catalog: realestate
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-7405619183388188.8.azuredatabricks.net
+      # We explicitly deploy to /Workspace/Users/jack.toke_outlook.com#ext#@jacktokeoutlook.onmicrosoft.com to make sure we only have a single copy.
+      root_path: /Workspace/Users/jack.toke_outlook.com#ext#@jacktokeoutlook.onmicrosoft.com/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      # NOTE: this catalog does not exist yet — only `realestate` is provisioned.
+      # Create it (with bronze/silver/gold schemas) before deploying the prod target.
+      catalog: realestate_prod
+    permissions:
+      - user_name: jack.toke_outlook.com#ext#@jacktokeoutlook.onmicrosoft.com
+        level: CAN_MANAGE

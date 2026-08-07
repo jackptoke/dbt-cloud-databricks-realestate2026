@@ -41,16 +41,14 @@ wheels/
 venv/
 .direnv/
 
+# ---- Bundle scratch space --------------------------------------------------
+scratch/**
+!scratch/README.md
+**/explorations/**
+!**/explorations/README.md
+
 # ---- Editors & OS ----------------------------------------------------------
 .idea/
 *.swp
 .DS_Store
 Thumbs.db
-
-.databricks
-
-.databricks
-
-.databricks
-
-.databricks

@@ -5,7 +5,7 @@ resources:
     realestate2026_etl:
       name: realestate2026_etl
       catalog: ${var.catalog}
-      schema: ${var.schema}
+      schema: ${var.bronze_schema}
       serverless: true
       root_path: "../src/realestate2026_etl"
 
