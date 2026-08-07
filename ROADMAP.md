@@ -44,15 +44,38 @@ differences between snapshots.
 the suburb list, aggregate to a region, or publish yield with a sample-size
 column and let the consumer judge. The last is the honest choice and the easiest.
 
-**Watched vs spillover suburbs.** `dim_location` has 119 suburbs; 5 are crawled.
-The rest arrive as neighbouring-suburb results and have arbitrary, unstated
-coverage. Every suburb-comparison mart must exclude them or flag them, or it will
-rank Dimboola against Ararat as if they were measured the same way.
+**Queries are region-scoped, not suburb-scoped.** `realty_au.build_url` sends
+`type=region`, so "Nhill, VIC" resolves to the Nhill *region* and every locality
+in it returns as a tier-1 match. `dim_location` has 119 suburbs because 5 region
+queries cover that many localities — consistently, not accidentally, and with no
+overlap between regions.
 
-**Sold history is truncated for large suburbs.** The 50-page API ceiling means
-Ararat has 1,500 of ~4,260 sales, biased toward whatever the API returns first.
-Price-trend series must carry that caveat; the backfill markers record
-`truncated: true` per suburb, so it can be surfaced rather than hidden.
+The consequence is uneven depth rather than uneven presence:
+
+```text
+crawl_suburb   localities   listings actually in that suburb
+horsham                25   5,785 of 7,890
+stawell                43   3,394 of 4,560
+ararat                 21   3,637 of 4,260
+nhill                  14     890 of 2,160   (41%)
+beaufort                1     828 of   828   (100%)
+```
+
+A suburb that is a *region centre* is measured deeply; one that is merely a
+region *member* gets whatever the centre's query happened to return. So marts
+still need a flag — but it distinguishes `is_region_centre`, not "watched vs
+accidental".
+
+**Sold history is truncated, and worse than the ceiling suggests.** The 1,500
+result cap applies per region, so for Nhill 59% of the budget is spent on
+neighbouring localities. Ararat has 1,500 of ~4,260 regional sales. Price-trend
+series must carry that caveat; the backfill markers record `truncated: true`, so
+it can be surfaced rather than hidden.
+
+Worth deciding early: a suburb-scoped search (`type=suburb`) would make coverage
+match the suburb list exactly and spend the whole cap on the target — at the cost
+of losing the surrounding localities entirely, and needing every result count
+re-verified, since the API silently ignores parameters it doesn't recognise.
 
 **Only one crawl date exists.** Nothing time-based works until the nightly run
 accumulates.
@@ -62,12 +85,12 @@ accumulates.
 ## Gold tables to build
 
 ```text
-dim_location            + is_watched_suburb        flag, driven by suburbs.py
+dim_location            + is_region_centre         flag, driven by suburbs.py
 mart_suburb_yield       suburb × property_type × bedrooms
 mart_suburb_price_trend suburb × year × property_type
 mart_repeat_sales       property_key with ≥2 sales
 mart_listing_valuation  one row per current buy listing, vs its comparables
-mart_suburb_scorecard   one row per watched suburb — the headline table
+mart_suburb_scorecard   one row per region centre — the headline table
 ```
 
 **`mart_suburb_yield`** — median weekly rent, median sale price, gross yield
@@ -88,7 +111,7 @@ bedroom band, the implied comparable value, and the variance. Needs a minimum
 comparable count to produce a verdict; below that it returns null rather than a
 confident-looking guess.
 
-**`mart_suburb_scorecard`** — one row per watched suburb joining the above:
+**`mart_suburb_scorecard`** — one row per region centre joining the above:
 median price, yield, 5-year growth, active listings, sales per year. The table a
 dashboard's landing page reads.
 
@@ -112,7 +135,7 @@ doesn't need making before the tables exist.
 
 ## Next week
 
-**Monday — verify and stabilise**
+### Monday — verify and stabilise
 
 - Check the first unattended nightly: did `realestate_ingest` complete, did the
   file-arrival trigger fire ~15 min later, did dbt build?
@@ -120,30 +143,32 @@ doesn't need making before the tables exist.
 - Backfill the four remaining suburbs so `ingest_sold` stops failing.
 - Confirm a second `ingest_date` lands — the first proof that history accumulates.
 
-**Tuesday — foundations for comparison**
+### Tuesday — foundations for comparison
 
-- Add `is_watched_suburb` to `dim_location`, sourced from `suburbs.py` (a seed
-  keeps it in one place).
+- Add `is_region_centre` to `dim_location`, sourced from `suburbs.py` (a seed
+  keeps it in one place). Region members are covered, but only centres are
+  covered deeply — a suburb ranking that ignores the difference is comparing
+  a measurement with a by-product.
 - Add the backfill-marker state as a dbt source so `is_truncated_history` is
   queryable rather than buried in a JSON file.
 - Expand the suburb list — the thin rental counts are the binding constraint on
   every yield number, and more suburbs is the only real fix. Backfill each.
 
-**Wednesday — the growth and yield marts**
+### Wednesday — the growth and yield marts
 
 - `mart_suburb_price_trend`, `mart_repeat_sales`.
 - `mart_suburb_yield` with explicit sample sizes.
 - Tests: no yield without a minimum sample; no negative growth over a 1-day hold;
-  every mart restricted to watched suburbs.
+  every mart restricted to region centres.
 
-**Thursday — valuation**
+### Thursday — valuation
 
 - `mart_listing_valuation` and `mart_suburb_scorecard`.
 - This is the one with genuine modelling judgement in it: which comparables
   count, how to band bedrooms, what minimum sample justifies a verdict. Expect to
   iterate on the definition more than the SQL.
 
-**Friday — make it visible**
+### Friday — make it visible
 
 - An AI/BI dashboard over `mart_suburb_scorecard`: yield by suburb, price trend,
   the current listings ranked by variance from comparable value.

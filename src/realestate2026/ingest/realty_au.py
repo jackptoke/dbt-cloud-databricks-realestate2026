@@ -114,12 +114,24 @@ def build_url(
     drift apart — differing query strings would silently return differently
     ordered or filtered result sets.
 
-    ``surrounding_suburbs`` defaults to False so a query returns only the
-    suburb asked for. With it on, roughly a quarter of the Beaufort results
-    were neighbouring suburbs — listings that a query for those suburbs would
-    return anyway, so the extra requests re-download data against a limited
-    quota. Coverage is better decided by the suburb list, which is explicit,
-    than by a flag whose reach nobody can enumerate.
+    ``surrounding_suburbs`` defaults to False so the query does not add tier-2
+    results on top. With it on, roughly a quarter of the Beaufort results were
+    neighbouring suburbs — listings that a query for those suburbs would return
+    anyway, so the extra requests re-download data against a limited quota.
+
+    NOTE: this does NOT make the query suburb-scoped. ``type=region`` below
+    means the search resolves to a REGION, and every locality in it comes back
+    as a tier-1 match. Measured on the first crawl:
+
+        horsham   ->  25 suburbs, 5,785 of 7,890 actually in Horsham
+        nhill     ->  14 suburbs,   890 of 2,160 actually in Nhill  (41%)
+        beaufort  ->   1 suburb,    828 of   828                   (100%)
+
+    That matters because the API's 1,500-result ceiling applies per region, so
+    for Nhill 59% of the budget is spent on neighbours. Switching to a
+    suburb-scoped search would need ``type`` and ``searchLocationSubtext``
+    changed together, and the result counts re-verified — the API silently
+    ignores parameters it does not recognise.
 
     ``max_sold_age_months`` restricts the sold channel to recent sales. Units
     are MONTHS, verified against the API:
