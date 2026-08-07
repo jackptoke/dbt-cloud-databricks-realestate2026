@@ -7,8 +7,9 @@ resources:
       catalog: ${var.catalog}
       schema: ${var.bronze_schema}
       serverless: true
+      configuration:
+        landing.path: ${var.landing_path}
       root_path: "../src/realestate2026_etl"
-
       libraries:
         - glob:
             include: ../src/realestate2026_etl/transformations/**
