@@ -2,18 +2,35 @@ resources:
   jobs:
     realestate_medallion:
       name: realestate_medallion
-      description: Land raw JSON to bronze, then build silver and gold with dbt.
+      description: >
+        Nightly: fetch listings from realty-in-au, land them as NDJSON, load
+        bronze with Auto Loader, then build silver and gold with dbt.
 
-      # Fires when the scraper drops files anywhere under the landing volume.
-      # wait_after_last_change lets a multi-file crawl settle before running,
-      # rather than firing once per page.
-      trigger:
-        file_arrival:
-          url: /Volumes/realestate/landing/raw/
-          wait_after_last_change_seconds: 120
-          min_time_between_triggers_seconds: 300
+      # 11pm Melbourne, daily. Replaces the file_arrival trigger this job used
+      # to carry: now that ingestion is a task in this same job, file arrival
+      # would fire on our own writes and run Auto Loader mid-crawl.
+      schedule:
+        quartz_cron_expression: "0 0 23 * * ?"
+        timezone_id: Australia/Melbourne
 
       job_clusters:
+        # Ingest is pure HTTP and file writes — no Spark. Kept separate from
+        # dbt_runner so the API key is only in the environment of the tasks
+        # that actually read it.
+        - job_cluster_key: ingest_runner
+          new_cluster:
+            spark_version: 16.4.x-scala2.12
+            node_type_id: Standard_D2ds_v6
+            num_workers: 0
+            data_security_mode: SINGLE_USER
+            spark_conf:
+              spark.master: "local[*, 4]"
+              spark.databricks.cluster.profile: singleNode
+            custom_tags:
+              ResourceClass: SingleNode
+            spark_env_vars:
+              REALESTATE_API_KEY: "{{secrets/realestate/rapidapi_key}}"
+
         - job_cluster_key: dbt_runner
           new_cluster:
             spark_version: 16.4.x-scala2.12
@@ -28,9 +45,103 @@ resources:
             custom_tags:
               ResourceClass: SingleNode
 
-
       tasks:
+        # Publishes SUBURBS as a task value so the three for_each tasks iterate
+        # the same list the wheel imports — no second copy of it in this file.
+        - task_key: list_suburbs
+          job_cluster_key: ingest_runner
+          python_wheel_task:
+            package_name: realestate2026
+            entry_point: list-suburbs
+          libraries:
+            - whl: ../dist/*.whl
+
+        # buy and rent are STATE, not events: every run fetches the full current
+        # set. There is no history to backfill and nothing to skip, which is why
+        # neither carries an age filter or a marker check.
+        - task_key: ingest_buy
+          depends_on:
+            - task_key: list_suburbs
+          for_each_task:
+            inputs: "{{tasks.list_suburbs.values.suburbs}}"
+            # Bounds concurrent API calls, replacing the Airflow pool.
+            concurrency: 3
+            task:
+              task_key: fetch_buy
+              job_cluster_key: ingest_runner
+              python_wheel_task:
+                package_name: realestate2026
+                entry_point: fetch-suburb
+                named_parameters:
+                  suburb: "{{input.suburb}}"
+                  state: "{{input.state}}"
+                  channel: buy
+                  dataset: buy_properties
+                  landing-root: ${var.landing_path}
+                  base-url: ${var.realestate_api_base_url}
+                  # The schedule's day, not the cluster's UTC clock — an 11pm
+                  # Melbourne run is already tomorrow in UTC.
+                  ingest-date: "{{job.start_time.iso_date}}"
+              libraries:
+                - whl: ../dist/*.whl
+
+        - task_key: ingest_rent
+          depends_on:
+            - task_key: list_suburbs
+          for_each_task:
+            inputs: "{{tasks.list_suburbs.values.suburbs}}"
+            concurrency: 3
+            task:
+              task_key: fetch_rent
+              job_cluster_key: ingest_runner
+              python_wheel_task:
+                package_name: realestate2026
+                entry_point: fetch-suburb
+                named_parameters:
+                  suburb: "{{input.suburb}}"
+                  state: "{{input.state}}"
+                  channel: rent
+                  dataset: rent_properties
+                  landing-root: ${var.landing_path}
+                  base-url: ${var.realestate_api_base_url}
+                  ingest-date: "{{job.start_time.iso_date}}"
+              libraries:
+                - whl: ../dist/*.whl
+
+        # sold is the only channel with history. max-sold-age-months=1 turns a
+        # 263-page sweep into a 2-page one and keeps every suburb under the
+        # API's 50-page ceiling. require-backfill-marker fails rather than
+        # giving a never-backfilled suburb a month of history.
+        - task_key: ingest_sold
+          depends_on:
+            - task_key: list_suburbs
+          for_each_task:
+            inputs: "{{tasks.list_suburbs.values.suburbs}}"
+            concurrency: 3
+            task:
+              task_key: fetch_sold
+              job_cluster_key: ingest_runner
+              python_wheel_task:
+                package_name: realestate2026
+                entry_point: fetch-suburb
+                named_parameters:
+                  suburb: "{{input.suburb}}"
+                  state: "{{input.state}}"
+                  channel: sold
+                  dataset: sold_properties
+                  landing-root: ${var.landing_path}
+                  base-url: ${var.realestate_api_base_url}
+                  ingest-date: "{{job.start_time.iso_date}}"
+                  max-sold-age-months: "1"
+                  require-backfill-marker: "true"
+              libraries:
+                - whl: ../dist/*.whl
+
         - task_key: ingest_bronze
+          depends_on:
+            - task_key: ingest_buy
+            - task_key: ingest_rent
+            - task_key: ingest_sold
           pipeline_task:
             pipeline_id: ${resources.pipelines.realestate2026_etl.id}
 
