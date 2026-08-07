@@ -22,7 +22,10 @@ resources:
       # bronze load instead of four.
       trigger:
         file_arrival:
-          url: ${var.landing_path}
+          # The trailing slash is required — the API rejects a bare directory
+          # path. landing_path has no slash because the Python writer joins
+          # onto it, so it is added here rather than in the variable.
+          url: "${var.landing_path}/"
           wait_after_last_change_seconds: 900
           min_time_between_triggers_seconds: 600
 
