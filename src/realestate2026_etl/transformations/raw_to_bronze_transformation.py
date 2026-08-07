@@ -4,6 +4,74 @@ from pyspark.sql.functions import col, current_timestamp
 LANDING = spark.conf.get("landing.path")
 CHANNELS = ["buy_properties", "rent_properties", "sold_properties"]
 
+# Auto Loader infers the schema from the records it actually sees, so a field
+# that no record in a crawl happens to carry becomes an ABSENT COLUMN rather
+# than a null one. Downstream SQL referencing it fails outright:
+#
+#   [UNRESOLVED_COLUMN] `auctionTime`.`auction` cannot be resolved
+#
+# That is not hypothetical — only 1 of 674 buy listings in dev had an auction,
+# and prod's first 267 had none, so prod's buy table came out with 46 columns
+# against dev's 48 and broke the dbt build.
+#
+# Schema hints pin these columns into existence with a declared type whether or
+# not the data contains them. Two benefits: staging models can reference an
+# optional field unconditionally, and bronze schemas stay identical across
+# environments instead of drifting with each crawl's contents.
+#
+# Only optional fields need hinting. Anything present on every record (address,
+# agency, price, listingId) is inferred consistently and is left alone.
+
+COMMON_HINTS = (
+    # Populated for sold listings, largely absent on active ones.
+    "status struct<label:string,type:string>, "
+    # Always {"value": ""} in practice, but a crawl of only populated records
+    # would otherwise infer a different shape.
+    "modifiedDate struct<value:string>, "
+)
+
+INSPECTIONS = (
+    "inspectionsAndAuctions array<struct<auction:boolean,dateDisplay:string,"
+    "endTime:string,endTimeDisplay:string,startTime:string,"
+    "startTimeDisplay:string>>, "
+)
+
+LAND_SIZE = (
+    "landSize struct<display:string,displayApp:string,"
+    "displayAppAbbreviated:string,unit:string,value:bigint>, "
+)
+
+CHANNEL_HINTS = {
+    "buy_properties": (
+        "auctionTime struct<auction:boolean,dateDisplay:string,"
+        "startTime:string,startTimeDisplay:string>, "
+        "statementOfInformation struct<href:string,statementSummary:string,"
+        "title:string>, "
+        "builderProfile struct<hasDesignsOnPage:boolean>, "
+        "agencyListingId string, "
+        "constructionStatus string, "
+        "isExternalChildListing boolean, "
+        "isInternalChildListing boolean, "
+        "isLinkedExternalChildListing boolean, "
+        + LAND_SIZE
+        + INSPECTIONS
+    ),
+    "rent_properties": (
+        "bond struct<display:string,value:bigint>, "
+        "dateAvailable struct<date:string,dateDisplay:string>, "
+        "applyOnline boolean, "
+        "agencyListingId string, "
+        + INSPECTIONS
+    ),
+    "sold_properties": (
+        "dateSold struct<display:string,value:string>, "
+        "constructionStatus string, "
+        "propertyTypeDisplay string, "
+        "propertyTypeId string, "
+        + LAND_SIZE
+    ),
+}
+
 
 def define_bronze(folder: str) -> None:
     @dp.table(
@@ -23,6 +91,10 @@ def define_bronze(folder: str) -> None:
             .option("cloudFiles.format", "json")
             .option("cloudFiles.inferColumnTypes", "true")
             .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
+            .option(
+                "cloudFiles.schemaHints",
+                (COMMON_HINTS + CHANNEL_HINTS[folder]).rstrip(", "),
+            )
             .option("rescuedDataColumn", "_rescued_data")
             .load(f"{LANDING}/{folder}")
             .select(

@@ -36,7 +36,7 @@ resources:
         - job_cluster_key: ingest_runner
           new_cluster:
             spark_version: 16.4.x-scala2.12
-            node_type_id: Standard_D2ds_v6
+            node_type_id: Standard_D4ds_v4
             num_workers: 0
             data_security_mode: SINGLE_USER
             spark_conf:

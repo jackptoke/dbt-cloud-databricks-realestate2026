@@ -15,7 +15,12 @@ resources:
         - job_cluster_key: ingest_runner
           new_cluster:
             spark_version: 16.4.x-scala2.12
-            node_type_id: Standard_D2ds_v6
+            # australiaeast has been returning SkuNotAvailable for several
+            # families (DS3_v2, D4ads_v6). This one is confirmed available, and
+            # all three jobs use it so a stockout cannot take out one job while
+            # sparing another. 4 cores covers the 3 concurrent REPLs the chained
+            # for_each tasks produce.
+            node_type_id: Standard_D4ds_v4
             num_workers: 0
             data_security_mode: SINGLE_USER
             spark_conf:
@@ -66,9 +71,16 @@ resources:
               libraries:
                 - whl: ../dist/*.whl
 
+        # Chained behind ingest_buy, not run alongside it. Three for_each
+        # tasks at concurrency 3 meant up to 9 Python REPLs starting at once on
+        # one 2-core node, and every iteration died with
+        # "Failure starting repl. Futures timed out after [80 seconds]".
+        # Chaining caps it at 3 concurrent REPLs, which is also the API rate
+        # bound the concurrency was chosen for. Costs wall-clock, which is free
+        # at 11pm.
         - task_key: ingest_rent
           depends_on:
-            - task_key: list_suburbs
+            - task_key: ingest_buy
           for_each_task:
             inputs: "{{tasks.list_suburbs.values.suburbs}}"
             concurrency: 3
@@ -95,7 +107,7 @@ resources:
         # giving a never-backfilled suburb a month of history.
         - task_key: ingest_sold
           depends_on:
-            - task_key: list_suburbs
+            - task_key: ingest_rent
           for_each_task:
             inputs: "{{tasks.list_suburbs.values.suburbs}}"
             concurrency: 3
