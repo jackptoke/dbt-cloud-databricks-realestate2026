@@ -1,0 +1,126 @@
+resources:
+  jobs:
+    realestate_ingest:
+      name: realestate_ingest
+      description: >
+        Nightly: fetch listings from realty-in-au and land them as NDJSON.
+        Loading bronze and building silver/gold is realestate_medallion's job,
+        triggered by the files this one writes.
+
+      schedule:
+        quartz_cron_expression: "0 0 23 * * ?"
+        timezone_id: Australia/Melbourne
+
+      job_clusters:
+        - job_cluster_key: ingest_runner
+          new_cluster:
+            spark_version: 16.4.x-scala2.12
+            node_type_id: Standard_D2ds_v6
+            num_workers: 0
+            data_security_mode: SINGLE_USER
+            spark_conf:
+              spark.master: "local[*, 4]"
+              spark.databricks.cluster.profile: singleNode
+            custom_tags:
+              ResourceClass: SingleNode
+            spark_env_vars:
+              REALESTATE_API_KEY: "{{secrets/realestate/rapidapi_key}}"
+
+      tasks:
+        # Publishes SUBURBS as a task value so the three for_each tasks iterate
+        # the same list the wheel imports — no second copy of it in this file.
+        - task_key: list_suburbs
+          job_cluster_key: ingest_runner
+          python_wheel_task:
+            package_name: realestate2026
+            entry_point: list-suburbs
+          libraries:
+            - whl: ../dist/*.whl
+
+        # buy and rent are STATE, not events: every run fetches the full current
+        # set. There is no history to backfill and nothing to skip, which is why
+        # neither carries an age filter or a marker check.
+        - task_key: ingest_buy
+          depends_on:
+            - task_key: list_suburbs
+          for_each_task:
+            inputs: "{{tasks.list_suburbs.values.suburbs}}"
+            # Bounds concurrent API calls, replacing the Airflow pool.
+            concurrency: 3
+            task:
+              task_key: fetch_buy
+              job_cluster_key: ingest_runner
+              python_wheel_task:
+                package_name: realestate2026
+                entry_point: fetch-suburb
+                named_parameters:
+                  suburb: "{{input.suburb}}"
+                  state: "{{input.state}}"
+                  channel: buy
+                  dataset: buy_properties
+                  landing_root: ${var.landing_path}
+                  base_url: ${var.realestate_api_base_url}
+                  # The schedule's day, not the cluster's UTC clock — an 11pm
+                  # Melbourne run is already tomorrow in UTC.
+                  ingest_date: "{{job.start_time.iso_date}}"
+              libraries:
+                - whl: ../dist/*.whl
+
+        - task_key: ingest_rent
+          depends_on:
+            - task_key: list_suburbs
+          for_each_task:
+            inputs: "{{tasks.list_suburbs.values.suburbs}}"
+            concurrency: 3
+            task:
+              task_key: fetch_rent
+              job_cluster_key: ingest_runner
+              python_wheel_task:
+                package_name: realestate2026
+                entry_point: fetch-suburb
+                named_parameters:
+                  suburb: "{{input.suburb}}"
+                  state: "{{input.state}}"
+                  channel: rent
+                  dataset: rent_properties
+                  landing_root: ${var.landing_path}
+                  base_url: ${var.realestate_api_base_url}
+                  ingest_date: "{{job.start_time.iso_date}}"
+              libraries:
+                - whl: ../dist/*.whl
+
+        # sold is the only channel with history. max_sold_age_months=1 turns a
+        # 142-page sweep into a 2-page one and keeps every suburb under the
+        # API's 50-page ceiling. require_backfill_marker fails rather than
+        # giving a never-backfilled suburb a month of history.
+        - task_key: ingest_sold
+          depends_on:
+            - task_key: list_suburbs
+          for_each_task:
+            inputs: "{{tasks.list_suburbs.values.suburbs}}"
+            concurrency: 3
+            task:
+              task_key: fetch_sold
+              job_cluster_key: ingest_runner
+              python_wheel_task:
+                package_name: realestate2026
+                entry_point: fetch-suburb
+                named_parameters:
+                  suburb: "{{input.suburb}}"
+                  state: "{{input.state}}"
+                  channel: sold
+                  dataset: sold_properties
+                  landing_root: ${var.landing_path}
+                  base_url: ${var.realestate_api_base_url}
+                  ingest_date: "{{job.start_time.iso_date}}"
+                  max_sold_age_months: "1"
+                  require_backfill_marker: "true"
+              libraries:
+                - whl: ../dist/*.whl
+
+      queue:
+        enabled: true
+
+      email_notifications:
+        on_failure:
+          - jackptoke@gmail.com

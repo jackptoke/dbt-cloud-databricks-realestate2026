@@ -140,7 +140,7 @@ def fetch_suburb(
                 "%s, %s (%s): source reports %s pages but serves at most %s. "
                 "Fetching %s; the remaining %s pages are UNREACHABLE and those "
                 "listings will be missing. Narrow the query "
-                "(--max-sold-age-months, or slice by price band) to get under "
+                "(--max_sold_age_months, or slice by price band) to get under "
                 "the cap.",
                 suburb, state, channel, available, max_pages,
                 pages, available - pages,
@@ -188,10 +188,15 @@ def fetch_suburb(
 def _optional_int(value: str) -> int | None:
     """Parse a job parameter that may legitimately be empty.
 
-    Databricks renders named_parameters as ``--name=value``, so an unset job
-    parameter arrives as ``--max-sold-age-months=`` rather than as an absent
+    Databricks renders parameters as ``--name=value``, so an unset job
+    parameter arrives as ``--max_sold_age_months=`` rather than as an absent
     flag. argparse's type=int rejects that outright, which would fail every
     full backfill.
+
+    Note the underscores throughout this CLI: job-level ``parameters`` are
+    appended automatically using the parameter's own name, and job parameter
+    names cannot contain hyphens. A hyphenated flag here would be unreachable
+    from a job parameter.
     """
     value = (value or "").strip()
     return int(value) if value else None
@@ -243,9 +248,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--state", required=True)
     parser.add_argument("--channel", required=True, choices=["buy", "rent", "sold"])
     parser.add_argument("--dataset", required=True, help="Landing folder, e.g. buy_properties")
-    parser.add_argument("--landing-root", required=True, help="/Volumes/<catalog>/landing/raw")
+    parser.add_argument("--landing_root", required=True, help="/Volumes/<catalog>/landing/raw")
     parser.add_argument(
-        "--ingest-date",
+        "--ingest_date",
         default=None,
         help=(
             "Partition date (YYYY-MM-DD). Pass {{job.start_time.iso_date}} from the "
@@ -253,33 +258,33 @@ def main(argv: list[str] | None = None) -> int:
             "clock — an 11pm Melbourne run is already tomorrow in UTC."
         ),
     )
-    parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
-    parser.add_argument("--page-size", type=int, default=PAGE_SIZE)
-    parser.add_argument("--max-pages", type=int, default=MAX_PAGES)
+    parser.add_argument("--base_url", default=DEFAULT_BASE_URL)
+    parser.add_argument("--page_size", type=int, default=PAGE_SIZE)
+    parser.add_argument("--max_pages", type=int, default=MAX_PAGES)
     parser.add_argument(
-        "--max-sold-age-months",
+        "--max_sold_age_months",
         type=_optional_int,
         default=None,
         help="Sold channel only. 1 for a daily sweep; empty for a full backfill.",
     )
     parser.add_argument(
-        "--require-backfill-marker",
+        "--require_backfill_marker",
         type=_flag,
         default=False,
         help="Fail if this suburb has never been backfilled. For the nightly run.",
     )
     parser.add_argument(
-        "--write-backfill-marker",
+        "--write_backfill_marker",
         type=_flag,
         default=False,
         help="Record a completed backfill on success. For the backfill job.",
     )
     parser.add_argument(
-        "--secret-scope",
+        "--secret_scope",
         default="realestate",
         help="Scope holding the API key, read when REALESTATE_API_KEY is unset.",
     )
-    parser.add_argument("--secret-key", default="rapidapi_key")
+    parser.add_argument("--secret_key", default="rapidapi_key")
     args = parser.parse_args(argv)
 
     api_key = _api_key(args.secret_scope, args.secret_key)
