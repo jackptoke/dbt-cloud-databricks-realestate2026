@@ -4,7 +4,15 @@
 -- appear many times — that repeat-sales structure is the point.
 
 with sales as (
-    select * from {{ ref('int_listings_unioned') }} where channel = 'sold'
+    select *
+    from {{ ref('int_listings_unioned') }}
+    where channel = 'sold'
+    -- One row per event, not per observation. int_listings_unioned carries a
+    -- row per listing per crawl date, so without this the same sale would
+    -- appear once for every night it was still being advertised.
+    qualify row_number() over (
+        partition by listing_id order by crawled_on desc
+    ) = 1
 )
 
 select
