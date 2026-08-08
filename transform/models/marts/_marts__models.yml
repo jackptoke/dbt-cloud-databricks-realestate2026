@@ -74,6 +74,16 @@ models:
               arguments:
                 to: ref('dim_property')
                 field: property_key
+      # dim_location builds its centroid from one row per listing, while this
+      # fact keys every crawl row. If a listing's suburb/postcode ever changed
+      # between crawls, the dropped row's location_key would have no dimension
+      # to point at — silently, since this was the one snapshot FK untested.
+      - name: location_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_location')
+                field: location_key
       - name: crawled_date_key
         tests:
           - relationships:

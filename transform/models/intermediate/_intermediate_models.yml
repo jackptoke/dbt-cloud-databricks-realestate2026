@@ -50,6 +50,14 @@ models:
     columns:
       - name: listing_id
         tests: [not_null]
+      - name: starts_at
+        # Warns rather than errors: rows with no start time are filtered out of
+        # the model on purpose, so this can only fire if that filter is removed.
+        # It exists to make the silent-drop shape visible if anyone does.
+        tests:
+          - not_null:
+              config:
+                severity: warn
       - name: channel
         tests:
           - accepted_values:

@@ -31,19 +31,27 @@ resources:
         # and run the backfill in slices; empty means everything reachable,
         # which is what a backfill wants by default.
         #
-        # Note the interaction with write_backfill_marker below: a sliced run
-        # will NOT be certified, because one slice is not a full history. Slices
-        # are for fetching the data; the marker needs a run that could actually
-        # have seen everything.
+        # maxSoldAge is a MAXIMUM age with no minimum, so every slice is a
+        # window rooted at today. Slices make recent history complete; they
+        # cannot reach old sales sitting behind the cap, because widening the
+        # window far enough to include them re-crosses the 1,500 ceiling.
+        #
+        # Note the interaction with write_backfill_marker below: a slice cannot
+        # certify a suburb on its own. The order for a large suburb is one
+        # unsliced run to earn the marker, then slices, each recording its
+        # window on that marker. Slices land under their own filenames and never
+        # overwrite or prune the unsliced run's pages.
         - name: max_sold_age_months
           default: ""
         # Certifies the suburb as backfilled. Defaults to false so an
         # unparameterised run cannot mark a partial fetch as complete.
         #
-        # Setting it true is a request, not a guarantee: fetch_suburb declines
-        # to write the marker for a run that hit the page cap or asked for a
-        # slice, and logs why. Check the task log for "NOT writing a backfill
-        # marker" before assuming a suburb is certified.
+        # Setting it true is a request, not a guarantee. A sliced run adds its
+        # window to an existing marker, or is declined if there is none. An
+        # unsliced run that hit the page cap IS certified, knowingly partial,
+        # with truncated=true recorded. Check the task log for "NOT writing a
+        # backfill marker", "Recording window", or "Certifying ... DESPITE
+        # truncation" to know which of the three you got.
         - name: write_backfill_marker
           default: "false"
 

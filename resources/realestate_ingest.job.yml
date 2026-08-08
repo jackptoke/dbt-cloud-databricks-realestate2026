@@ -96,6 +96,13 @@ resources:
         # whether rent can be fetched. Under ALL_SUCCESS one bad suburb in buy
         # skipped rent AND sold — and sold is the only channel carrying history
         # that cannot be re-fetched tomorrow.
+        #
+        # Accepted trade-off: run_if is per-task, not per-dependency, so it also
+        # disarms the list_suburbs dependency, which IS a hard prerequisite. If
+        # list_suburbs fails, this runs anyway and fails on an unresolved task
+        # value instead of skipping cleanly. Noisier run history, same outcome —
+        # and ingest_buy keeps the default ALL_SUCCESS, so the first task in the
+        # chain still skips properly and names the real cause.
         - task_key: ingest_rent
           run_if: ALL_DONE
           depends_on:

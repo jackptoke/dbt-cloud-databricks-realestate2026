@@ -296,9 +296,25 @@ a warning naming how many pages are unreachable — but the listings past the ca
 **cannot be retrieved** without narrowing the query. This is the one problem no
 amount of downstream work fixes.
 
-A run that hits this cap will not be certified as a backfill: `fetch_suburb`
-declines to write the marker for a truncated run, and for a run narrowed with
-`--max_sold_age_months`, because neither has seen the suburb's full history.
+Certification handles the two cases differently. An unsliced run that hits the
+cap **is** certified, knowingly partial, with `truncated: true` recorded. Not
+because the rest is unreachable — `sortType` is `relevance`, so the 1,500 you
+get are the most relevant, and a narrower query returns a different, complete
+window containing records the unsliced run never saw. It is certified because
+Horsham, Nhill and Ararat are all over the ceiling, so refusing left three of
+five watched suburbs with no route to a marker and therefore no sold ingest at
+all. A knowingly-partial certification beats none.
+
+A run narrowed with `--max_sold_age_months` cannot **create** a marker — that
+would certify a suburb holding one month of history — but it does record its
+window in `covered_windows` on a marker that already exists. Nothing reads any
+of this yet; exposing `_state/` as a dbt source is on the roadmap.
+
+Because a suburb's landing partition is shared by every query that targets the
+same date, page files are named per query scope — bare `page=NNNN.jsonl` for an
+unsliced crawl, `m1.page=NNNN.jsonl` for a one-month slice. Stale-page pruning
+only ever touches its own scope. Without that, a nightly slice landing 2 pages
+into the directory where a backfill had just landed 50 would delete the other 48.
 
 **`modifiedDate` is always empty.** `{"value": ""}` on every record sampled, so
 the source provides no change signal. `ingest_date` is the only version axis,

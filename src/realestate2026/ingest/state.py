@@ -35,7 +35,7 @@ import logging
 import os
 from datetime import datetime, timezone
 
-from realestate2026.ingest.landing import _slug, _write_atomic
+from realestate2026.ingest.landing import slug, write_atomic
 
 log = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ log = logging.getLogger(__name__)
 def marker_path(*, landing_root: str, dataset: str, suburb: str, state: str) -> str:
     return (
         f"{landing_root.rstrip('/')}/_state/{dataset}"
-        f"/state={_slug(state)}/suburb={_slug(suburb)}.json"
+        f"/state={slug(state)}/suburb={slug(suburb)}.json"
     )
 
 
@@ -80,7 +80,7 @@ def write_marker(
     # read_marker deliberately treats corrupt as absent — so a half-written
     # marker would silently un-certify a suburb that really was backfilled.
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    _write_atomic(path, json.dumps(payload, indent=2, default=str).encode())
+    write_atomic(path, json.dumps(payload, indent=2, default=str).encode())
 
     log.info("Wrote backfill marker %s", path)
     return path

@@ -17,7 +17,12 @@ import logging
 import random
 
 import requests
-from tenacity import retry, retry_if_exception, stop_after_attempt
+from tenacity import (
+    retry,
+    retry_if_exception,
+    stop_after_attempt,
+    stop_after_delay,
+)
 
 log = logging.getLogger(__name__)
 
@@ -27,6 +32,16 @@ MAX_BACKOFF = 60.0
 # would hold the cluster for the length of the pause and still probably fail.
 # Give up immediately instead, so the error names the real problem.
 MAX_RETRY_AFTER = 300.0
+# Per-wait caps do not bound the total. Five waits at MAX_RETRY_AFTER is 1500s
+# on a single page — 83% of the for_each task's 1800s timeout, spent before the
+# crawl is killed mid-suburb.
+#
+# stop_after_delay is checked when DECIDING to retry, so the real ceiling is
+# this budget plus one final wait (<=MAX_RETRY_AFTER) plus one final request
+# (<=DEFAULT_TIMEOUT): about 930s worst case, not 600. Still comfortably inside
+# the task timeout, which is the point — a persistently throttled request gives
+# up while the task still has time to fail cleanly and be retried by the job.
+MAX_TOTAL_RETRY_SECONDS = 600.0
 RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 
 
@@ -108,7 +123,7 @@ def _log_retry(retry_state) -> None:
 @retry(
     retry=retry_if_exception(_is_retryable),
     wait=_wait,
-    stop=stop_after_attempt(6),
+    stop=stop_after_attempt(6) | stop_after_delay(MAX_TOTAL_RETRY_SECONDS),
     before_sleep=_log_retry,
     reraise=True,
 )

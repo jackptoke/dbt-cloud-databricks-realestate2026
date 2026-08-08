@@ -29,6 +29,19 @@ with exploded as (
 {% endfor %}
 ),
 
+-- An event with no start time is dropped explicitly rather than incidentally.
+-- The dedup below partitions by starts_at, and Spark groups NULLs together, so
+-- three open homes with a null startTime would silently collapse into one —
+-- a grain fix that hides the very rows it should surface. Losing them here is
+-- deliberate: they carry no inspection_date_key and no orderable time, so
+-- nothing downstream could place them. Note the not_null test on starts_at in
+-- _intermediate_models.yml is a canary on this filter, not a count of what it
+-- drops — the model's output can never contain a null by construction. Counting
+-- them would need a singular test against the staging explode.
+usable as (
+    select * from exploded where starts_at is not null
+),
+
 deduplicated as (
     select
         *,
@@ -38,7 +51,7 @@ deduplicated as (
         min(crawled_on) over (
             partition by listing_id, channel, starts_at
         ) as first_seen_on
-    from exploded
+    from usable
     qualify row_number() over (
         partition by listing_id, channel, starts_at
         order by crawled_on desc, _ingested_at desc

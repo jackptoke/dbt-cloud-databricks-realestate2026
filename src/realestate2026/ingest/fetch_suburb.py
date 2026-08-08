@@ -38,7 +38,7 @@ from datetime import date, datetime, timezone
 import requests
 
 from realestate2026.ingest.http import get_json
-from realestate2026.ingest.landing import land_ndjson, prune_stale_pages
+from realestate2026.ingest.landing import land_ndjson, page_filename, prune_stale_pages
 from realestate2026.ingest.realty_au import (
     assert_locality_resolved,
     build_url,
@@ -69,6 +69,46 @@ def max_pages_for(page_size: int) -> int:
     return math.ceil(MAX_RESULTS / page_size)
 
 
+def query_scope(
+    *,
+    max_sold_age_months: int | None,
+    page_size: int,
+    max_pages_override: int | None,
+) -> str | None:
+    """Name the query shape, for everything that changes the PAGE COUNT.
+
+    Landed pages are tagged with this so two different queries against the same
+    suburb and date cannot share a filename namespace — see landing.page_filename
+    for why that matters, and what it cost to learn.
+
+    Every input that moves `pages` belongs here, which is all three of these:
+    `available` is ceil(totalResultsCount / page_size), and the cap is either
+    --max_pages or max_pages_for(page_size). Tagging only max_sold_age_months
+    left the same data loss reachable one axis over — `--page_size=100` or
+    `--max_pages=10` against a partition holding a default full crawl would
+    still have pruned the pages beyond its own shorter count.
+
+    Returns None for the default query, which keeps the bare `page=NNNN.jsonl`
+    name and so needs no migration of anything already landed.
+    """
+    if (
+        max_sold_age_months is None
+        and page_size == PAGE_SIZE
+        and max_pages_override is None
+    ):
+        return None
+
+    bits = []
+    if max_sold_age_months is not None:
+        bits.append(f"m{max_sold_age_months}")
+    if page_size != PAGE_SIZE:
+        bits.append(f"s{page_size}")
+    if max_pages_override is not None:
+        bits.append(f"c{max_pages_override}")
+    # Must stay within [a-z0-9]+ to match landing.PAGE_FILE.
+    return "".join(bits)
+
+
 def fetch_suburb(
     *,
     suburb: str,
@@ -85,6 +125,9 @@ def fetch_suburb(
     require_backfill_marker: bool = False,
     write_backfill_marker: bool = False,
 ) -> dict:
+    # Captured before the default is resolved: query_scope needs to know whether
+    # the caller asked for a cap, not what the cap ended up being.
+    max_pages_override = max_pages
     max_pages = max_pages or max_pages_for(page_size)
 
     if require_backfill_marker and not read_marker(
@@ -125,12 +168,22 @@ def fetch_suburb(
         "suburb": suburb,
     }
 
+    # The query scope, which the partition path does not capture. A full crawl
+    # and a one-month crawl of the same suburb on the same day land in the same
+    # directory and produce completely different page counts, so they must not
+    # share a filename namespace. See landing.page_filename.
+    scope = query_scope(
+        max_sold_age_months=max_sold_age_months,
+        page_size=page_size,
+        max_pages_override=max_pages_override,
+    )
+
     def land(payload: dict, page: int) -> dict:
         return land_ndjson(
             extract_listings(payload),
             dataset=dataset,
             partitions=partitions,
-            filename=f"page={page:04d}.jsonl",
+            filename=page_filename(page, scope=scope),
             landing_root=landing_root,
         )
 
@@ -154,12 +207,14 @@ def fetch_suburb(
         if available > max_pages:
             log.warning(
                 "%s, %s (%s): source reports %s pages but serves at most %s. "
-                "Fetching %s; the remaining %s pages are UNREACHABLE and those "
-                "listings will be missing. Narrow the query "
-                "(--max_sold_age_months, or slice by price band) to get under "
-                "the cap.",
+                "Fetching %s; the remaining %s pages are unreachable BY THIS "
+                "QUERY and those listings will be missing. Narrow it with "
+                "--max_sold_age_months to get under the cap — a window that "
+                "fits returns complete, where this returns the most relevant "
+                "%s. (build_url exposes no price parameters, so price-band "
+                "slicing is not available.)",
                 suburb, state, channel, available, max_pages,
-                pages, available - pages,
+                pages, available - pages, max_pages * page_size,
             )
 
         for page in range(2, pages + 1):
@@ -171,12 +226,15 @@ def fetch_suburb(
                 raise
 
     # Reached only when every page landed, which is what makes it safe to treat
-    # anything above `pages` as debris rather than as data still being written.
+    # anything above `pages` IN THIS SCOPE as debris rather than as data still
+    # being written. Another scope's pages in the same directory are not this
+    # run's to judge.
     stale = prune_stale_pages(
         dataset=dataset,
         partitions=partitions,
         landing_root=landing_root,
         keep_pages=pages,
+        scope=scope,
     )
 
     # A page with no records writes no file, so counting summaries would report
@@ -217,32 +275,83 @@ def fetch_suburb(
     # exception above leaves no marker, so a partial backfill is retried
     # rather than mistaken for a complete one.
     #
-    # "Every page landed" is necessary but not sufficient. The marker's whole
-    # claim is that this suburb's FULL history has been fetched, and two
-    # successful runs cannot honestly make that claim: one that stopped at the
-    # page cap, and one that asked for a slice of history in the first place.
-    # The backfill job's own instructions recommend slicing with
-    # max_sold_age_months to get under the cap, so certifying a slice would
-    # quietly grant the coverage guarantee to suburbs that hold a fraction of
-    # their history — the exact artefact the marker exists to prevent, made
-    # invisible because the nightly run would then accept them.
+    # "Every page landed" is necessary but not sufficient, and the two
+    # insufficient cases are NOT alike.
+    #
+    # A TRUNCATED unsliced run is certified, with the truncation recorded. Be
+    # precise about why, because the obvious reason is wrong: it is NOT that the
+    # rest is unreachable. sortType is `relevance` (realty_au.build_url), so an
+    # unsliced Ararat crawl returns the 1,500 most RELEVANT of ~4,260 — and a
+    # narrowed query returns a different, complete window that reaches records
+    # this run never saw. A slice sequence really can accumulate more than this.
+    #
+    # It is certified anyway because refusing stranded the suburbs that need it
+    # most. Horsham (~7,890 regional sales), Nhill (~2,160) and Ararat (~4,260)
+    # are all over the 1,500 ceiling, so for three of five watched suburbs every
+    # unsliced run truncates and every narrowed run is a slice: no route to a
+    # marker existed at all. ingest_sold runs with require_backfill_marker, so
+    # those three would have failed every night and their sold history would
+    # never have landed. A knowingly-partial certification beats no ingest.
+    #
+    # A SLICED run still cannot CREATE a marker — that would hand the coverage
+    # guarantee to a suburb holding one month of history, which is the artefact
+    # the marker exists to prevent. But it can UPGRADE one that already exists,
+    # recording its window in `covered_windows`. That way the recommended
+    # backfill workflow (one unsliced run, then slices) leaves evidence of what
+    # it actually covered instead of leaving none.
+    #
+    # Honest limitation: nothing reads any of this yet. The payload carries
+    # `truncated`, `pages_available` and `covered_windows`, but it is a JSON
+    # file beside the landing zone — ROADMAP.md lists exposing it as a dbt
+    # source so `is_truncated_history` becomes queryable. Until then the record
+    # exists to be audited, not because anything audits it.
     if write_backfill_marker:
-        if truncated:
-            log.warning(
-                "NOT writing a backfill marker for %s, %s (%s): the source "
-                "reported %s pages and only %s are reachable, so this run "
-                "cannot have fetched the full history. Narrow the query and "
-                "re-run.",
-                suburb, state, dataset, available, max_pages,
+        if max_sold_age_months is not None:
+            existing = read_marker(
+                landing_root=landing_root, dataset=dataset, suburb=suburb, state=state
             )
-        elif max_sold_age_months is not None:
-            log.warning(
-                "NOT writing a backfill marker for %s, %s (%s): this run "
-                "covered only the last %s month(s). A marker certifies full "
-                "history; run without --max_sold_age_months to earn one.",
-                suburb, state, dataset, max_sold_age_months,
-            )
+            if existing is None:
+                log.warning(
+                    "NOT writing a backfill marker for %s, %s (%s): this run "
+                    "covered only the last %s month(s), and no marker exists to "
+                    "add it to. A slice cannot certify a suburb on its own — do "
+                    "one unsliced run first, then slices to fill in.",
+                    suburb, state, dataset, max_sold_age_months,
+                )
+            else:
+                windows = sorted(
+                    set(existing.get("covered_windows") or []) | {f"m{max_sold_age_months}"}
+                )
+                log.info(
+                    "Recording window m%s on the existing backfill marker for "
+                    "%s, %s (%s); covered windows are now %s.",
+                    max_sold_age_months, suburb, state, dataset, windows,
+                )
+                write_marker(
+                    landing_root=landing_root,
+                    dataset=dataset,
+                    suburb=suburb,
+                    state=state,
+                    summary={
+                        # The certifying run's facts are what the marker asserts;
+                        # a slice only ever adds to its window list.
+                        **{k: v for k, v in existing.items() if k != "completed_at"},
+                        "covered_windows": windows,
+                    },
+                )
         else:
+            if truncated:
+                log.warning(
+                    "Certifying %s, %s (%s) as backfilled DESPITE truncation: "
+                    "the source reported %s pages and serves only %s, so this "
+                    "run holds roughly %s%% of the region's sales — the most "
+                    "RELEVANT ones, not the most recent. Narrower queries would "
+                    "reach records this did not; certifying anyway because "
+                    "refusing leaves the suburb with no sold ingest at all. The "
+                    "marker records truncated=true and pages_available=%s.",
+                    suburb, state, dataset, available, max_pages,
+                    round(100 * max_pages / available), available,
+                )
             write_marker(
                 landing_root=landing_root,
                 dataset=dataset,
