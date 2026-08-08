@@ -35,7 +35,7 @@ import logging
 import os
 from datetime import datetime, timezone
 
-from realestate2026.ingest.landing import _slug
+from realestate2026.ingest.landing import _slug, _write_atomic
 
 log = logging.getLogger(__name__)
 
@@ -76,9 +76,11 @@ def write_marker(
         "completed_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
 
+    # Atomic: a marker truncated by a crash mid-write reads as corrupt, and
+    # read_marker deliberately treats corrupt as absent — so a half-written
+    # marker would silently un-certify a suburb that really was backfilled.
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "wb") as handle:
-        handle.write(json.dumps(payload, indent=2, default=str).encode())
+    _write_atomic(path, json.dumps(payload, indent=2, default=str).encode())
 
     log.info("Wrote backfill marker %s", path)
     return path

@@ -288,12 +288,17 @@ external volume.
 
 ## Known data-quality issues
 
-**The API serves at most 50 pages (1,500 results) per query.** Beyond that it
-returns listings from within the same window, so extra pages are duplicates: one
-sold listing appeared 214 times across 263 pages of Horsham. `MAX_PAGES` stops
-the wasted requests and logs a warning naming how many pages are unreachable —
-but the listings past the cap **cannot be retrieved** without narrowing the
-query. This is the one problem no amount of downstream work fixes.
+**The API serves at most 1,500 results per query** — 50 pages at the default
+page size of 30. Beyond that it returns listings from within the same window, so
+extra pages are duplicates: one sold listing appeared 214 times across 263 pages
+of Horsham. `MAX_RESULTS` and `max_pages_for()` stop the wasted requests and log
+a warning naming how many pages are unreachable — but the listings past the cap
+**cannot be retrieved** without narrowing the query. This is the one problem no
+amount of downstream work fixes.
+
+A run that hits this cap will not be certified as a backfill: `fetch_suburb`
+declines to write the marker for a truncated run, and for a run narrowed with
+`--max_sold_age_months`, because neither has seen the suburb's full history.
 
 **`modifiedDate` is always empty.** `{"value": ""}` on every record sampled, so
 the source provides no change signal. `ingest_date` is the only version axis,

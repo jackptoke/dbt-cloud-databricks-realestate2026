@@ -7,7 +7,10 @@
 with listings as (select * from {{ ref('int_listings_unioned') }})
 
 select
-    {{ dbt_utils.generate_surrogate_key(['listing_id', 'crawled_on']) }} as listing_snapshot_key,
+    -- channel is part of the key, not decoration: this reads a union of three
+    -- channels, so without it a listing seen in buy and sold on the same date
+    -- would produce one key for two different observations.
+    {{ dbt_utils.generate_surrogate_key(['listing_id', 'channel', 'crawled_on']) }} as listing_snapshot_key,
 
     -- degenerate dimension
     listing_id,

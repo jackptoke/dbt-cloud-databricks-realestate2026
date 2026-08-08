@@ -7,6 +7,8 @@ resources:
         Triggered by files landing in the volume, so it serves the nightly
         realestate_ingest run and ad-hoc realestate_backfill runs alike.
 
+      timeout_seconds: 10800
+
       # Fires once the landing zone goes quiet, not on every file.
       #
       # wait_after_last_change_seconds must exceed the longest gap WITHIN a
@@ -56,7 +58,7 @@ resources:
           dbt_task:
             project_directory: ../transform
             source: WORKSPACE
-            warehouse_id: cf2a73a5f7ab6a80
+            warehouse_id: ${var.dbt_warehouse_id}
             catalog: ${var.catalog}
             schema: ${var.silver_schema}
             commands:

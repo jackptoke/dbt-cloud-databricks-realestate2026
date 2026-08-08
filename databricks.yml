@@ -33,6 +33,8 @@ variables:
   gold_schema:
     description: Schema dbt builds presentation-layer facts into
     default: gold
+  dbt_warehouse_id:
+    description: SQL warehouse the dbt task runs against; per-target, like the catalog
 
 targets:
   dev:
@@ -48,6 +50,7 @@ targets:
       catalog: realestate
       landing_path: /Volumes/realestate/landing/raw
       realestate_api_base_url: https://realty-in-au.p.rapidapi.com/properties/list
+      dbt_warehouse_id: cf2a73a5f7ab6a80
   prod:
     mode: production
     workspace:
@@ -60,6 +63,11 @@ targets:
       catalog: realestate_prod
       landing_path: /Volumes/realestate_prod/landing/raw
       realestate_api_base_url: https://realty-in-au.p.rapidapi.com/properties/list
+      # NOTE: still the dev warehouse. It was hardcoded in the job, so prod was
+      # always going to build against dev compute; it is a variable now so that
+      # is a visible choice rather than an invisible one. Point it at prod's own
+      # warehouse when there is one.
+      dbt_warehouse_id: cf2a73a5f7ab6a80
     permissions:
       - user_name: jack.toke_outlook.com#ext#@jacktokeoutlook.onmicrosoft.com
         level: CAN_MANAGE

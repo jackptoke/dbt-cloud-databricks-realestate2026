@@ -3,7 +3,18 @@
 -- Suburb-level geography. Centroid is averaged over listings with coordinates;
 -- ~7% of sold listings have none, so they simply don't contribute.
 
-with listings as (select * from {{ ref('int_listings_unioned') }}),
+-- One row per listing before averaging, not one per listing per crawl:
+-- otherwise a dwelling that sat on market for 60 nights would pull the centroid
+-- 60 times harder than one that sold in a day, and the centroid would drift
+-- every night for reasons that have nothing to do with geography.
+with listings as (
+    select *
+    from {{ ref('int_listings_unioned') }}
+    qualify row_number() over (
+        partition by listing_id
+        order by crawled_on desc, channel
+    ) = 1
+),
 
 aggregated as (
     select

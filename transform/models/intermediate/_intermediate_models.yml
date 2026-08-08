@@ -3,11 +3,14 @@ version: 2
 models:
   - name: int_listings_unioned
     description: All listings across the three channels, conformed to one shape.
-    # Inherits the staging grain: one row per listing per crawl date.
+    # Inherits the staging grain: one row per listing per crawl date. channel
+    # belongs in the key because this is a union of three of them — a property
+    # advertised in buy and later appearing in sold would collide on
+    # (listing_id, crawled_on) alone if the source reuses the id.
     tests:
       - dbt_utils.unique_combination_of_columns:
           arguments:
-            combination_of_columns: [listing_id, crawled_on]
+            combination_of_columns: [listing_id, channel, crawled_on]
     columns:
       - name: listing_id
         tests: [not_null]
@@ -35,3 +38,20 @@ models:
         tests: [unique, not_null]
       - name: feature_name
         tests: [not_null]
+
+  - name: int_listing_inspections
+    description: One row per inspection or auction event, deduplicated across crawls.
+    # Guards the grain directly rather than leaving fct_inspection's unique test
+    # to catch it: the event grain is what stops the fact fanning out.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [listing_id, channel, starts_at]
+    columns:
+      - name: listing_id
+        tests: [not_null]
+      - name: channel
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['buy', 'rent']

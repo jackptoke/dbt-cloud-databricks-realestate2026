@@ -7,6 +7,11 @@ resources:
         watched suburb's first nightly run; the nightly job refuses to ingest
         a suburb with no backfill marker.
 
+      # A full backfill is long by nature, so this ceiling is generous — it is
+      # here to stop a wedged run holding the cluster overnight, not to bound
+      # normal work.
+      timeout_seconds: 14400
+
       # No schedule, deliberately. A full backfill is thousands of requests
       # against the same rate-limited key the nightly run depends on, so it
       # happens when someone is watching — never because a marker was missing
@@ -22,13 +27,23 @@ resources:
         - name: state
           default: VIC
         # Sold reaches back ~20 years, so a full history exceeds the API's
-        # 50-page ceiling in larger suburbs. Narrow with this to stay under it
+        # result ceiling in larger suburbs. Narrow with this to stay under it
         # and run the backfill in slices; empty means everything reachable,
         # which is what a backfill wants by default.
+        #
+        # Note the interaction with write_backfill_marker below: a sliced run
+        # will NOT be certified, because one slice is not a full history. Slices
+        # are for fetching the data; the marker needs a run that could actually
+        # have seen everything.
         - name: max_sold_age_months
           default: ""
         # Certifies the suburb as backfilled. Defaults to false so an
         # unparameterised run cannot mark a partial fetch as complete.
+        #
+        # Setting it true is a request, not a guarantee: fetch_suburb declines
+        # to write the marker for a run that hit the page cap or asked for a
+        # slice, and logs why. Check the task log for "NOT writing a backfill
+        # marker" before assuming a suburb is certified.
         - name: write_backfill_marker
           default: "false"
 

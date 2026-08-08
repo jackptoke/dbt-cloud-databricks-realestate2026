@@ -20,14 +20,17 @@ suburb rather than 25 pages of it.
 ### Partial failure
 
 A run that fails partway has already landed some pages. That is safe because
-landing paths are deterministic and overwritten — a retry re-lands identical
-files rather than duplicating them.
+landing paths are deterministic and overwritten — a retry re-lands the same
+paths rather than accumulating new ones — and because a completed run prunes any
+page files above its own page count, so a shorter retry cannot leave the tail of
+a longer failed attempt behind as live-looking data. See landing.py.
 """
 
 from __future__ import annotations
 
 import argparse
 import logging
+import math
 import os
 import sys
 from datetime import date, datetime, timezone
@@ -35,7 +38,7 @@ from datetime import date, datetime, timezone
 import requests
 
 from realestate2026.ingest.http import get_json
-from realestate2026.ingest.landing import land_ndjson
+from realestate2026.ingest.landing import land_ndjson, prune_stale_pages
 from realestate2026.ingest.realty_au import (
     assert_locality_resolved,
     build_url,
@@ -49,12 +52,21 @@ log = logging.getLogger(__name__)
 DEFAULT_BASE_URL = "https://realty-in-au.p.rapidapi.com/properties/list"
 PAGE_SIZE = 30
 
-# The API serves at most 50 pages (1500 results) for a query, then keeps
-# returning listings from within that same window. Requesting beyond it costs
-# quota and lands duplicates: a single sold listing was observed 214 times
-# across 263 pages of Horsham. Capping here makes the ceiling explicit; the
-# WARNING below makes the resulting truncation visible.
-MAX_PAGES = 50
+# The API serves at most 1500 results for a query, then keeps returning
+# listings from within that same window. Requesting beyond it costs quota and
+# lands duplicates: a single sold listing was observed 214 times across 263
+# pages of Horsham. Capping makes the ceiling explicit; the WARNING below makes
+# the resulting truncation visible.
+#
+# The ceiling is a RESULT count, so the page cap has to be derived from the page
+# size rather than written down. Hardcoding 50 was only correct at the default
+# page_size of 30: at --page_size=10 it would allow 500 results and silently
+# treat the other 1000 as absent, reporting no truncation at all.
+MAX_RESULTS = 1500
+
+
+def max_pages_for(page_size: int) -> int:
+    return math.ceil(MAX_RESULTS / page_size)
 
 
 def fetch_suburb(
@@ -69,10 +81,12 @@ def fetch_suburb(
     base_url: str = DEFAULT_BASE_URL,
     page_size: int = PAGE_SIZE,
     max_sold_age_months: int | None = None,
-    max_pages: int = MAX_PAGES,
+    max_pages: int | None = None,
     require_backfill_marker: bool = False,
     write_backfill_marker: bool = False,
 ) -> dict:
+    max_pages = max_pages or max_pages_for(page_size)
+
     if require_backfill_marker and not read_marker(
         landing_root=landing_root, dataset=dataset, suburb=suburb, state=state
     ):
@@ -105,15 +119,17 @@ def fetch_suburb(
             max_sold_age_months=max_sold_age_months,
         )
 
+    partitions = {
+        "ingest_date": ingest_date.isoformat(),
+        "state": state,
+        "suburb": suburb,
+    }
+
     def land(payload: dict, page: int) -> dict:
         return land_ndjson(
             extract_listings(payload),
             dataset=dataset,
-            partitions={
-                "ingest_date": ingest_date.isoformat(),
-                "state": state,
-                "suburb": suburb,
-            },
+            partitions=partitions,
             filename=f"page={page:04d}.jsonl",
             landing_root=landing_root,
         )
@@ -154,33 +170,86 @@ def fetch_suburb(
                 log.exception("Failed page %s for %s, %s", page, suburb, state)
                 raise
 
+    # Reached only when every page landed, which is what makes it safe to treat
+    # anything above `pages` as debris rather than as data still being written.
+    stale = prune_stale_pages(
+        dataset=dataset,
+        partitions=partitions,
+        landing_root=landing_root,
+        keep_pages=pages,
+    )
+
+    # A page with no records writes no file, so counting summaries would report
+    # pages that do not exist — including "1 page" for a suburb that landed
+    # nothing at all.
+    pages_landed = sum(1 for s in summaries if s["path"])
     records = sum(s["record_count"] for s in summaries)
+    truncated = available > max_pages
+
     log.info(
         "%s, %s (%s): landed %s pages, %s records",
-        suburb, state, channel, len(summaries), records,
+        suburb, state, channel, pages_landed, records,
     )
+    if not records:
+        # Not an error. A suburb can legitimately have nothing on the market
+        # tonight, and the sold channel with max_sold_age_months=1 is expected
+        # to come back empty for small suburbs in a quiet month.
+        log.info(
+            "%s, %s (%s): no listings — the source resolved the locality and "
+            "returned nothing, which is a valid result, not a failure.",
+            suburb, state, channel,
+        )
+
     result = {
         "suburb": suburb,
         "state": state,
         "channel": channel,
-        "pages_landed": len(summaries),
+        "pages_landed": pages_landed,
+        "pages_fetched": len(summaries),
         "pages_available": available,
+        "stale_pages_removed": len(stale),
         "record_count": records,
-        "truncated": available > max_pages,
+        "truncated": truncated,
         "max_sold_age_months": max_sold_age_months,
     }
 
     # Written last, and only on the path where every page landed — an
     # exception above leaves no marker, so a partial backfill is retried
     # rather than mistaken for a complete one.
+    #
+    # "Every page landed" is necessary but not sufficient. The marker's whole
+    # claim is that this suburb's FULL history has been fetched, and two
+    # successful runs cannot honestly make that claim: one that stopped at the
+    # page cap, and one that asked for a slice of history in the first place.
+    # The backfill job's own instructions recommend slicing with
+    # max_sold_age_months to get under the cap, so certifying a slice would
+    # quietly grant the coverage guarantee to suburbs that hold a fraction of
+    # their history — the exact artefact the marker exists to prevent, made
+    # invisible because the nightly run would then accept them.
     if write_backfill_marker:
-        write_marker(
-            landing_root=landing_root,
-            dataset=dataset,
-            suburb=suburb,
-            state=state,
-            summary=result,
-        )
+        if truncated:
+            log.warning(
+                "NOT writing a backfill marker for %s, %s (%s): the source "
+                "reported %s pages and only %s are reachable, so this run "
+                "cannot have fetched the full history. Narrow the query and "
+                "re-run.",
+                suburb, state, dataset, available, max_pages,
+            )
+        elif max_sold_age_months is not None:
+            log.warning(
+                "NOT writing a backfill marker for %s, %s (%s): this run "
+                "covered only the last %s month(s). A marker certifies full "
+                "history; run without --max_sold_age_months to earn one.",
+                suburb, state, dataset, max_sold_age_months,
+            )
+        else:
+            write_marker(
+                landing_root=landing_root,
+                dataset=dataset,
+                suburb=suburb,
+                state=state,
+                summary=result,
+            )
 
     return result
 
@@ -226,7 +295,11 @@ def _api_key(scope: str, key: str) -> str:
 
     try:
         from databricks.sdk.runtime import dbutils
-    except ImportError:
+    except Exception:  # noqa: BLE001
+        # Not just ImportError. Off-cluster, importing the runtime constructs a
+        # Config() and authenticates, so a stale local profile raises ValueError
+        # from deep inside the SDK — which is a confusing way to be told "there
+        # is no key here". Either way the answer is the same: no key.
         return ""
 
     try:
@@ -247,7 +320,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--suburb", required=True)
     parser.add_argument("--state", required=True)
     parser.add_argument("--channel", required=True, choices=["buy", "rent", "sold"])
-    parser.add_argument("--dataset", required=True, help="Landing folder, e.g. buy_properties")
+    parser.add_argument(
+        "--dataset",
+        required=True,
+        choices=["buy_properties", "rent_properties", "sold_properties"],
+        help="Landing folder. Constrained because it becomes a path component.",
+    )
     parser.add_argument("--landing_root", required=True, help="/Volumes/<catalog>/landing/raw")
     parser.add_argument(
         "--ingest_date",
@@ -260,7 +338,15 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--base_url", default=DEFAULT_BASE_URL)
     parser.add_argument("--page_size", type=int, default=PAGE_SIZE)
-    parser.add_argument("--max_pages", type=int, default=MAX_PAGES)
+    parser.add_argument(
+        "--max_pages",
+        type=_optional_int,
+        default=None,
+        help=(
+            "Override the page cap. Empty derives it from --page_size and the "
+            f"source's {MAX_RESULTS}-result ceiling."
+        ),
+    )
     parser.add_argument(
         "--max_sold_age_months",
         type=_optional_int,
@@ -322,7 +408,15 @@ def main(argv: list[str] | None = None) -> int:
         require_backfill_marker=args.require_backfill_marker,
         write_backfill_marker=args.write_backfill_marker,
     )
-    return 0 if result["record_count"] else 1
+
+    # Success is "the crawl completed", not "the crawl found something". Exiting
+    # non-zero on an empty suburb failed the whole for_each task, and since the
+    # three channels are chained one behind the other, a single quiet suburb in
+    # buy or rent SKIPPED the sold channel for that night — losing the only
+    # channel whose history cannot be re-fetched later. Genuine failures still
+    # raise, and an exception is still a non-zero exit.
+    log.info("Result: %s", result)
+    return 0
 
 
 if __name__ == "__main__":
