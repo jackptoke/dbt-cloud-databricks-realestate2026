@@ -21,9 +21,15 @@ suburb rather than 25 pages of it.
 
 A run that fails partway has already landed some pages. That is safe because
 landing paths are deterministic and overwritten — a retry re-lands the same
-paths rather than accumulating new ones — and because a completed run prunes any
-page files above its own page count, so a shorter retry cannot leave the tail of
-a longer failed attempt behind as live-looking data. See landing.py.
+paths rather than accumulating new ones — and because a completed run prunes
+page files above its own page count WITHIN ITS OWN QUERY SCOPE, so a shorter
+retry cannot leave the tail of a longer failed attempt behind as live-looking
+data.
+
+The scope qualifier is the whole safety property, not a detail: one partition
+directory is shared by every query that targets the same suburb and date, and
+their page counts are unrelated. Pruning across scopes destroyed 48 pages of
+unrepeatable sold history. See ``query_scope`` below and landing.page_filename.
 """
 
 from __future__ import annotations
@@ -50,7 +56,24 @@ from realestate2026.ingest.state import read_marker, write_marker
 log = logging.getLogger(__name__)
 
 DEFAULT_BASE_URL = "https://realty-in-au.p.rapidapi.com/properties/list"
+
+# Doubles as the sentinel for "default query" in query_scope, so changing it is
+# not a free tuning knob: pages already landed under the bare `page=NNNN.jsonl`
+# name were produced at the OLD size, and new runs would still call themselves
+# the default scope while computing a different page count from them. Change it
+# only alongside a scope tag that distinguishes the two.
 PAGE_SIZE = 30
+
+# channel and dataset are separate CLI arguments, and the landing path is keyed
+# on dataset while the page count depends on channel. Pairing them by convention
+# would mean --channel=rent --dataset=sold_properties writes rent-shaped page
+# counts into the sold partition under the default scope, where pruning would
+# then treat the sold crawl's pages as stale.
+DATASET_FOR_CHANNEL = {
+    "buy": "buy_properties",
+    "rent": "rent_properties",
+    "sold": "sold_properties",
+}
 
 # The API serves at most 1500 results for a query, then keeps returning
 # listings from within that same window. Requesting beyond it costs quota and
@@ -91,6 +114,11 @@ def query_scope(
     Returns None for the default query, which keeps the bare `page=NNNN.jsonl`
     name and so needs no migration of anything already landed.
     """
+    # An explicit --max_pages equal to what would be derived anyway describes
+    # the same query, so it must not open a second namespace for it.
+    if max_pages_override == max_pages_for(page_size):
+        max_pages_override = None
+
     if (
         max_sold_age_months is None
         and page_size == PAGE_SIZE
@@ -125,6 +153,16 @@ def fetch_suburb(
     require_backfill_marker: bool = False,
     write_backfill_marker: bool = False,
 ) -> dict:
+    expected = DATASET_FOR_CHANNEL.get(channel)
+    if expected is not None and dataset != expected:
+        raise SystemExit(
+            f"--channel={channel} does not go with --dataset={dataset}. The "
+            f"landing path is keyed on dataset while the page count comes from "
+            f"channel, so a mismatch writes one channel's page counts into "
+            f"another's partition, where pruning would treat the resident pages "
+            f"as stale. Use --dataset={expected}."
+        )
+
     # Captured before the default is resolved: query_scope needs to know whether
     # the caller asked for a cap, not what the cap ended up being.
     max_pages_override = max_pages
@@ -293,52 +331,38 @@ def fetch_suburb(
     # those three would have failed every night and their sold history would
     # never have landed. A knowingly-partial certification beats no ingest.
     #
-    # A SLICED run still cannot CREATE a marker — that would hand the coverage
-    # guarantee to a suburb holding one month of history, which is the artefact
-    # the marker exists to prevent. But it can UPGRADE one that already exists,
-    # recording its window in `covered_windows`. That way the recommended
-    # backfill workflow (one unsliced run, then slices) leaves evidence of what
-    # it actually covered instead of leaving none.
+    # A SLICED run writes nothing. It cannot certify a suburb — that would hand
+    # the coverage guarantee to a suburb holding one month of history, which is
+    # the artefact the marker exists to prevent — and it deliberately does not
+    # record what it covered either.
     #
-    # Honest limitation: nothing reads any of this yet. The payload carries
-    # `truncated`, `pages_available` and `covered_windows`, but it is a JSON
-    # file beside the landing zone — ROADMAP.md lists exposing it as a dbt
-    # source so `is_truncated_history` becomes queryable. Until then the record
-    # exists to be audited, not because anything audits it.
+    # That recording existed briefly and was removed. It kept needing answers to
+    # questions only a consumer can settle (does "covered" mean ever-covered or
+    # last-observed? do nested windows subsume? does re-certification reset?),
+    # and there is no consumer: ROADMAP.md still lists exposing `_state/` as a
+    # dbt source as future work. A schema guessed ahead of its reader is a
+    # schema that gets guessed differently every time someone looks at it.
+    #
+    # It was also a second, worse copy of something already in the warehouse.
+    # Page files are scope-tagged and `_source_file` carries the landing path
+    # through bronze into int_listings_unioned, so which windows were crawled,
+    # when, and how much each returned is already answerable:
+    #
+    #     select regexp_extract(_source_file, '/([a-z0-9]+)\\.page=', 1) as scope,
+    #            crawled_on, count(*)
+    #     from int_listings_unioned where channel = 'sold' group by all
+    #
+    # — from data that is loaded, tested, and has consumers today.
     if write_backfill_marker:
         if max_sold_age_months is not None:
-            existing = read_marker(
-                landing_root=landing_root, dataset=dataset, suburb=suburb, state=state
+            log.warning(
+                "NOT writing a backfill marker for %s, %s (%s): this run covered "
+                "only the last %s month(s). A slice cannot certify a suburb — do "
+                "one unsliced run to earn the marker, then slices to fill in. "
+                "What this run covered is recoverable from the scope tag on its "
+                "landed page files.",
+                suburb, state, dataset, max_sold_age_months,
             )
-            if existing is None:
-                log.warning(
-                    "NOT writing a backfill marker for %s, %s (%s): this run "
-                    "covered only the last %s month(s), and no marker exists to "
-                    "add it to. A slice cannot certify a suburb on its own — do "
-                    "one unsliced run first, then slices to fill in.",
-                    suburb, state, dataset, max_sold_age_months,
-                )
-            else:
-                windows = sorted(
-                    set(existing.get("covered_windows") or []) | {f"m{max_sold_age_months}"}
-                )
-                log.info(
-                    "Recording window m%s on the existing backfill marker for "
-                    "%s, %s (%s); covered windows are now %s.",
-                    max_sold_age_months, suburb, state, dataset, windows,
-                )
-                write_marker(
-                    landing_root=landing_root,
-                    dataset=dataset,
-                    suburb=suburb,
-                    state=state,
-                    summary={
-                        # The certifying run's facts are what the marker asserts;
-                        # a slice only ever adds to its window list.
-                        **{k: v for k, v in existing.items() if k != "completed_at"},
-                        "covered_windows": windows,
-                    },
-                )
         else:
             if truncated:
                 log.warning(

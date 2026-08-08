@@ -38,20 +38,20 @@ resources:
         #
         # Note the interaction with write_backfill_marker below: a slice cannot
         # certify a suburb on its own. The order for a large suburb is one
-        # unsliced run to earn the marker, then slices, each recording its
-        # window on that marker. Slices land under their own filenames and never
-        # overwrite or prune the unsliced run's pages.
+        # unsliced run to earn the marker, then slices to fetch more. Slices
+        # land under their own filenames and never overwrite or prune the
+        # unsliced run's pages; the scope tag on those filenames is what records
+        # which windows were fetched.
         - name: max_sold_age_months
           default: ""
         # Certifies the suburb as backfilled. Defaults to false so an
         # unparameterised run cannot mark a partial fetch as complete.
         #
-        # Setting it true is a request, not a guarantee. A sliced run adds its
-        # window to an existing marker, or is declined if there is none. An
-        # unsliced run that hit the page cap IS certified, knowingly partial,
-        # with truncated=true recorded. Check the task log for "NOT writing a
-        # backfill marker", "Recording window", or "Certifying ... DESPITE
-        # truncation" to know which of the three you got.
+        # Setting it true is a request, not a guarantee. A sliced run is always
+        # declined. An unsliced run that hit the page cap IS certified,
+        # knowingly partial, with truncated=true recorded. Check the task log
+        # for "NOT writing a backfill marker" or "Certifying ... DESPITE
+        # truncation" to know which you got.
         - name: write_backfill_marker
           default: "false"
 

@@ -305,10 +305,20 @@ Horsham, Nhill and Ararat are all over the ceiling, so refusing left three of
 five watched suburbs with no route to a marker and therefore no sold ingest at
 all. A knowingly-partial certification beats none.
 
-A run narrowed with `--max_sold_age_months` cannot **create** a marker — that
-would certify a suburb holding one month of history — but it does record its
-window in `covered_windows` on a marker that already exists. Nothing reads any
-of this yet; exposing `_state/` as a dbt source is on the roadmap.
+A run narrowed with `--max_sold_age_months` writes no marker at all — certifying
+a suburb that holds one month of history is the artefact the marker exists to
+prevent. It does not record what it covered either: page files are scope-tagged
+and `_source_file` carries the landing path through bronze into
+`int_listings_unioned`, so which windows were crawled, when, and how much each
+returned is already answerable from data that is loaded and tested:
+
+```sql
+select regexp_extract(_source_file, '/([a-z0-9]+)\.page=', 1) as scope,
+       crawled_on, count(*)
+from {{ ref('int_listings_unioned') }}
+where channel = 'sold'
+group by all
+```
 
 Because a suburb's landing partition is shared by every query that targets the
 same date, page files are named per query scope — bare `page=NNNN.jsonl` for an
