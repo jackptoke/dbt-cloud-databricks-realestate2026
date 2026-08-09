@@ -17,12 +17,31 @@ import logging
 import random
 
 import requests
-from tenacity import retry, retry_if_exception_type, stop_after_attempt
+from tenacity import (
+    retry,
+    retry_if_exception,
+    stop_after_attempt,
+    stop_after_delay,
+)
 
 log = logging.getLogger(__name__)
 
 DEFAULT_TIMEOUT = 30
 MAX_BACKOFF = 60.0
+# A Retry-After longer than this is a quota window, not a burst — waiting it out
+# would hold the cluster for the length of the pause and still probably fail.
+# Give up immediately instead, so the error names the real problem.
+MAX_RETRY_AFTER = 300.0
+# Per-wait caps do not bound the total. Five waits at MAX_RETRY_AFTER is 1500s
+# on a single page — 83% of the for_each task's 1800s timeout, spent before the
+# crawl is killed mid-suburb.
+#
+# stop_after_delay is checked when DECIDING to retry, so the real ceiling is
+# this budget plus one final wait (<=MAX_RETRY_AFTER) plus one final request
+# (<=DEFAULT_TIMEOUT): about 930s worst case, not 600. Still comfortably inside
+# the task timeout, which is the point — a persistently throttled request gives
+# up while the task still has time to fail cleanly and be retried by the job.
+MAX_TOTAL_RETRY_SECONDS = 600.0
 RETRYABLE_STATUS = {429, 500, 502, 503, 504}
 
 
@@ -44,6 +63,34 @@ class UnexpectedResponse(ValueError):
     """
 
 
+def _is_retryable(exc: BaseException) -> bool:
+    """Decide retryability by what actually failed, not by exception ancestry.
+
+    ``retry_if_exception_type(RequestException)`` looks right and is wrong:
+    ``raise_for_status`` raises ``HTTPError``, which IS a ``RequestException``,
+    so every 401, 403 and 404 was retried six times with backoff — the exact
+    behaviour the docstring below promises it avoids. A bad key or an exhausted
+    plan would burn six requests per page and spend minutes in backoff before
+    reporting a failure that was certain on the first attempt.
+    """
+    if isinstance(exc, RateLimited):
+        # A throttle that asks us to disappear for longer than we are willing
+        # to wait is not worth retrying — see MAX_RETRY_AFTER.
+        return exc.retry_after is None or exc.retry_after <= MAX_RETRY_AFTER
+
+    if isinstance(exc, requests.HTTPError):
+        response = exc.response
+        return response is not None and response.status_code in RETRYABLE_STATUS
+
+    # Transport-level failures: the request never got a verdict, so repeating
+    # it is meaningful. Everything else (MissingSchema, InvalidURL, TooManyRedirects)
+    # is a defect in how we built the request and will fail identically forever.
+    return isinstance(
+        exc,
+        (requests.ConnectionError, requests.Timeout, requests.exceptions.ChunkedEncodingError),
+    )
+
+
 def _wait(retry_state) -> float:
     """Honour Retry-After when present, otherwise exponential backoff.
 
@@ -54,7 +101,10 @@ def _wait(retry_state) -> float:
     exc = retry_state.outcome.exception() if retry_state.outcome else None
     retry_after = getattr(exc, "retry_after", None)
     if retry_after is not None:
-        return min(float(retry_after), MAX_BACKOFF)
+        # Capped at MAX_RETRY_AFTER, not MAX_BACKOFF: a server asking for 120s
+        # means 120s, and sleeping 60 instead just earns a second 429. Anything
+        # above the cap never reaches here — _is_retryable rejects it outright.
+        return min(float(retry_after), MAX_RETRY_AFTER)
 
     base = min(2.0 ** retry_state.attempt_number, MAX_BACKOFF)
     return base * (0.5 + random.random() / 2)
@@ -71,9 +121,9 @@ def _log_retry(retry_state) -> None:
 
 
 @retry(
-    retry=retry_if_exception_type(requests.RequestException),
+    retry=retry_if_exception(_is_retryable),
     wait=_wait,
-    stop=stop_after_attempt(6),
+    stop=stop_after_attempt(6) | stop_after_delay(MAX_TOTAL_RETRY_SECONDS),
     before_sleep=_log_retry,
     reraise=True,
 )

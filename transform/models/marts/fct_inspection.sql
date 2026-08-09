@@ -5,14 +5,23 @@
 
 with inspections as (select * from {{ ref('int_listing_inspections') }}),
 
+-- One row per listing, not one per listing per crawl. int_listings_unioned
+-- carries the full snapshot history, so joining it unfiltered would multiply
+-- every event by the number of nights its listing was advertised.
 listings as (
     select listing_id, property_key, suburb, postcode, state_code,
            agent_id, agency_id, property_type
     from {{ ref('int_listings_unioned') }}
+    qualify row_number() over (
+        partition by listing_id
+        -- channel breaks the tie if the same id ever appears in two channels
+        -- on one date, so the join side stays exactly one row either way.
+        order by crawled_on desc, channel
+    ) = 1
 )
 
 select
-    {{ dbt_utils.generate_surrogate_key(['i.listing_id', 'i.starts_at']) }} as inspection_key,
+    {{ dbt_utils.generate_surrogate_key(['i.listing_id', 'i.channel', 'i.starts_at']) }} as inspection_key,
     i.listing_id,
     i.channel,
 

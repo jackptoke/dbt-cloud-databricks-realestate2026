@@ -11,7 +11,13 @@ deduplicated as (
     select *
     from source
     qualify row_number() over (
-        partition by listingId
+        -- Partitioned by (listingId, ingest_date), NOT listingId alone. The
+        -- duplication this removes is the scraper paging past the source's
+        -- 1500-result cap, which happens WITHIN one crawl. Partitioning by
+        -- listingId alone would also collapse the same listing across crawls,
+        -- silently reducing fct_listing_snapshot to one row per listing and
+        -- destroying the time series every day-over-day measure depends on.
+        partition by listingId, ingest_date
         order by _ingested_at desc, _source_file
     ) = 1
 ),

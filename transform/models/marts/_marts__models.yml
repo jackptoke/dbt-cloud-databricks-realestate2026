@@ -74,6 +74,16 @@ models:
               arguments:
                 to: ref('dim_property')
                 field: property_key
+      # dim_location builds its centroid from one row per listing, while this
+      # fact keys every crawl row. If a listing's suburb/postcode ever changed
+      # between crawls, the dropped row's location_key would have no dimension
+      # to point at — silently, since this was the one snapshot FK untested.
+      - name: location_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_location')
+                field: location_key
       - name: crawled_date_key
         tests:
           - relationships:
@@ -82,9 +92,25 @@ models:
                 field: date_key
 
   - name: fct_sale
+    description: >
+      One row per completed sale. Deduplicated to the sale EVENT, not the sold
+      listing — the source publishes some sales under more than one listingId.
+    # The grain itself, guarded directly. sale_key's unique test only proves one
+    # row per surviving listing, which was true even while one sale occupied two
+    # rows. Restricted to dated sales: 14 have no sold_date and are deliberately
+    # left as singletons, since an undated sale cannot be matched to anything.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [property_key, sold_date]
+          config:
+            where: "sold_date is not null"
     columns:
       - name: sale_key
         tests: [unique, not_null]
+      - name: source_listing_count
+        description: Source records collapsed into this sale; >1 means consolidated.
+        tests: [not_null]
       - name: sold_date_key
         tests:
           - relationships:

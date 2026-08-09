@@ -91,6 +91,16 @@ def define_bronze(folder: str) -> None:
             .option("cloudFiles.format", "json")
             .option("cloudFiles.inferColumnTypes", "true")
             .option("cloudFiles.schemaEvolutionMode", "addNewColumns")
+            # Auto Loader remembers files by path and, by default, refuses to
+            # look at one twice. The landing writer overwrites a page in place
+            # on a replay, so without this a CORRECTED page would sit in the
+            # volume and never reach bronze — the silent half of a bug whose
+            # loud half (duplicate rows) staging already handles by keeping the
+            # latest _ingested_at per (listingId, ingest_date).
+            .option("cloudFiles.allowOverwrites", "true")
+            # Landed pages are always page=NNNN.jsonl. Anything else in the
+            # directory is not data.
+            .option("pathGlobFilter", "*.jsonl")
             .option(
                 "cloudFiles.schemaHints",
                 (COMMON_HINTS + CHANNEL_HINTS[folder]).rstrip(", "),

@@ -288,12 +288,43 @@ external volume.
 
 ## Known data-quality issues
 
-**The API serves at most 50 pages (1,500 results) per query.** Beyond that it
-returns listings from within the same window, so extra pages are duplicates: one
-sold listing appeared 214 times across 263 pages of Horsham. `MAX_PAGES` stops
-the wasted requests and logs a warning naming how many pages are unreachable —
-but the listings past the cap **cannot be retrieved** without narrowing the
-query. This is the one problem no amount of downstream work fixes.
+**The API serves at most 1,500 results per query** — 50 pages at the default
+page size of 30. Beyond that it returns listings from within the same window, so
+extra pages are duplicates: one sold listing appeared 214 times across 263 pages
+of Horsham. `MAX_RESULTS` and `max_pages_for()` stop the wasted requests and log
+a warning naming how many pages are unreachable — but the listings past the cap
+**cannot be retrieved** without narrowing the query. This is the one problem no
+amount of downstream work fixes.
+
+Certification handles the two cases differently. An unsliced run that hits the
+cap **is** certified, knowingly partial, with `truncated: true` recorded. Not
+because the rest is unreachable — `sortType` is `relevance`, so the 1,500 you
+get are the most relevant, and a narrower query returns a different, complete
+window containing records the unsliced run never saw. It is certified because
+Horsham, Nhill and Ararat are all over the ceiling, so refusing left three of
+five watched suburbs with no route to a marker and therefore no sold ingest at
+all. A knowingly-partial certification beats none.
+
+A run narrowed with `--max_sold_age_months` writes no marker at all — certifying
+a suburb that holds one month of history is the artefact the marker exists to
+prevent. It does not record what it covered either: page files are scope-tagged
+and `_source_file` carries the landing path through bronze into
+`int_listings_unioned`, so which windows were crawled, when, and how much each
+returned is already answerable from data that is loaded and tested:
+
+```sql
+select regexp_extract(_source_file, '/([a-z0-9]+)\.page=', 1) as scope,
+       crawled_on, count(*)
+from {{ ref('int_listings_unioned') }}
+where channel = 'sold'
+group by all
+```
+
+Because a suburb's landing partition is shared by every query that targets the
+same date, page files are named per query scope — bare `page=NNNN.jsonl` for an
+unsliced crawl, `m1.page=NNNN.jsonl` for a one-month slice. Stale-page pruning
+only ever touches its own scope. Without that, a nightly slice landing 2 pages
+into the directory where a backfill had just landed 50 would delete the other 48.
 
 **`modifiedDate` is always empty.** `{"value": ""}` on every record sampled, so
 the source provides no change signal. `ingest_date` is the only version axis,

@@ -3,9 +3,16 @@ version: 2
 models:
   - name: stg_sold_properties
     description: One row per sold listing, deduplicated and typed.
+    # The grain is (listing_id, crawled_on), not listing_id. A listing seen on
+    # ten nights is ten legitimate rows; a listing twice on one night is the
+    # pagination duplication the model exists to remove.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [listing_id, crawled_on]
     columns:
       - name: listing_id
-        tests: [unique, not_null]
+        tests: [not_null]
       - name: property_key
         tests: [not_null]
       - name: is_property_identified
@@ -36,9 +43,16 @@ models:
 
   - name: stg_buy_properties
     description: One row per active for-sale listing, deduplicated and typed.
+    # The grain is (listing_id, crawled_on), not listing_id. A listing seen on
+    # ten nights is ten legitimate rows; a listing twice on one night is the
+    # pagination duplication the model exists to remove.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [listing_id, crawled_on]
     columns:
       - name: listing_id
-        tests: [unique, not_null]
+        tests: [not_null]
       - name: property_key
         tests: [not_null]
       - name: is_property_identified
@@ -59,9 +73,16 @@ models:
 
   - name: stg_rent_properties
     description: One row per rental listing, deduplicated and typed.
+    # The grain is (listing_id, crawled_on), not listing_id. A listing seen on
+    # ten nights is ten legitimate rows; a listing twice on one night is the
+    # pagination duplication the model exists to remove.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [listing_id, crawled_on]
     columns:
       - name: listing_id
-        tests: [unique, not_null]
+        tests: [not_null]
       - name: property_key
         tests: [not_null]
       - name: is_property_identified

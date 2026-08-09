@@ -11,6 +11,11 @@ resources:
         quartz_cron_expression: "0 0 23 * * ?"
         timezone_id: Australia/Melbourne
 
+      # Three chained for_each tasks over ~20 suburbs is minutes of work, not
+      # hours. Without a ceiling, one wedged HTTP call holds the cluster until
+      # someone notices — and nobody is watching an 11pm job.
+      timeout_seconds: 7200
+
       job_clusters:
         - job_cluster_key: ingest_runner
           new_cluster:
@@ -55,6 +60,13 @@ resources:
             task:
               task_key: fetch_buy
               job_cluster_key: ingest_runner
+              # In-process retries cover a throttled request; this covers the
+              # iteration dying outright (REPL start-up, a cluster hiccup).
+              # Replaying a suburb is safe — landing paths are deterministic
+              # and a completed run prunes any pages a longer attempt left.
+              max_retries: 2
+              min_retry_interval_millis: 60000
+              timeout_seconds: 1800
               python_wheel_task:
                 package_name: realestate2026
                 entry_point: fetch-suburb
@@ -78,8 +90,23 @@ resources:
         # Chaining caps it at 3 concurrent REPLs, which is also the API rate
         # bound the concurrency was chosen for. Costs wall-clock, which is free
         # at 11pm.
+        #
+        # ALL_DONE, not the default ALL_SUCCESS: the dependency on ingest_buy
+        # exists purely to stagger compute, so a buy failure has no bearing on
+        # whether rent can be fetched. Under ALL_SUCCESS one bad suburb in buy
+        # skipped rent AND sold — and sold is the only channel carrying history
+        # that cannot be re-fetched tomorrow.
+        #
+        # Accepted trade-off: run_if is per-task, not per-dependency, so it also
+        # disarms the list_suburbs dependency, which IS a hard prerequisite. If
+        # list_suburbs fails, this runs anyway and fails on an unresolved task
+        # value instead of skipping cleanly. Noisier run history, same outcome —
+        # and ingest_buy keeps the default ALL_SUCCESS, so the first task in the
+        # chain still skips properly and names the real cause.
         - task_key: ingest_rent
+          run_if: ALL_DONE
           depends_on:
+            - task_key: list_suburbs
             - task_key: ingest_buy
           for_each_task:
             inputs: "{{tasks.list_suburbs.values.suburbs}}"
@@ -87,6 +114,9 @@ resources:
             task:
               task_key: fetch_rent
               job_cluster_key: ingest_runner
+              max_retries: 2
+              min_retry_interval_millis: 60000
+              timeout_seconds: 1800
               python_wheel_task:
                 package_name: realestate2026
                 entry_point: fetch-suburb
@@ -106,7 +136,9 @@ resources:
         # API's 50-page ceiling. require_backfill_marker fails rather than
         # giving a never-backfilled suburb a month of history.
         - task_key: ingest_sold
+          run_if: ALL_DONE
           depends_on:
+            - task_key: list_suburbs
             - task_key: ingest_rent
           for_each_task:
             inputs: "{{tasks.list_suburbs.values.suburbs}}"
@@ -114,6 +146,9 @@ resources:
             task:
               task_key: fetch_sold
               job_cluster_key: ingest_runner
+              max_retries: 2
+              min_retry_interval_millis: 60000
+              timeout_seconds: 1800
               python_wheel_task:
                 package_name: realestate2026
                 entry_point: fetch-suburb
