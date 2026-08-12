@@ -102,3 +102,55 @@ models:
               config:
                 where: "not is_price_withheld"
 
+
+  - name: stg_suburbs
+    description: >
+      Reference geography for all of Australia: every ABS state suburb and the
+      Local Government Area it belongs to, normalised from the vendored
+      australian_suburbs seed. No API quota involved — this is a static file.
+    columns:
+      - name: ssc_code
+        description: >
+          ABS State Suburb Code, and the only unique key here. (suburb,
+          postcode, state) is NOT unique — Green Point NSW 2251 is two distinct
+          polygons — so consumers joining on name and postcode must collapse
+          this model first.
+        tests: [unique, not_null]
+      - name: lga_key
+        description: >
+          Surrogate over (local_government_area, state_code). State is part of
+          the key because 'Campbelltown (City)' exists in both NSW and SA, and
+          'Unincorporated' spans six jurisdictions.
+        tests: [not_null]
+      - name: suburb_norm
+        description: Lowercased, trimmed suburb name. The join key, never the display value.
+        tests: [not_null]
+      - name: postcode
+        description: >
+          Four characters, zero-padded. 313 source rows lost a leading zero
+          upstream (NT 0886 stored as '886').
+
+          not_null is the real assertion here, not a formality: normalise_postcode
+          rejects anything that is not one to four digits, so a malformed value
+          in a re-downloaded seed arrives as null and fails this test rather than
+          being silently truncated into a valid-looking postcode. A length check
+          on this column would be tautological — the macro can only ever return
+          four characters or null — so the shape is asserted on the RAW seed
+          column in seeds/_seeds.yml instead.
+        tests:
+          - not_null
+      - name: state_code
+        description: Uppercased. Empty source states (Jervis Bay, Norfolk Island) become 'OT', the ABS code for Other Territories.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['NSW', 'VIC', 'QLD', 'SA', 'WA', 'TAS', 'NT', 'ACT', 'OT']
+      - name: local_government_area
+        description: Upstream's misspelled `local_goverment_area`, renamed here.
+        tests: [not_null]
+      - name: population
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0

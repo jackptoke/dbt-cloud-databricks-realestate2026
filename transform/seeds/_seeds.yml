@@ -1,0 +1,70 @@
+version: 2
+
+seeds:
+  - name: australian_suburbs
+    description: >
+      Every ABS state suburb (SSC) in Australia with the Local Government Area
+      it sits in, vendored verbatim from
+      https://github.com/michalsn/australian-suburbs (MIT licence,
+      data/suburbs.csv, ABS SSC 2016 basis, upstream last updated 2020-10-08).
+
+      Kept byte-identical to the source so it can be re-downloaded and diffed;
+      every correction lives in stg_suburbs or suburb_lga_overrides instead.
+      That includes the upstream column-name typo `local_goverment_area`, which
+      is renamed downstream rather than here.
+
+      Imported for all states rather than filtered to Victoria: it is 2.5 MB,
+      and adding a state to the crawl then needs no change to this file.
+
+      Vintage caveat: LGA boundaries change. Rural Victorian boundaries have
+      been stable since the 1994 amalgamations, so the current crawl footprint
+      is safe, but re-verify before trusting this in a recently amalgamated
+      area.
+    columns:
+      - name: ssc_code
+        description: ABS State Suburb Code. The only unique key in this file.
+        tests: [unique, not_null]
+      - name: postcode
+        description: >
+          Loaded as a string. 313 rows lost a leading zero upstream — 301 NT,
+          9 SA and 3 WA, the latter twelve all being 0872, the shared
+          remote-Australia code. stg_suburbs pads them back to four characters.
+        tests:
+          - not_null
+          # Asserted on the RAW column, upstream of normalise_postcode, because
+          # that is the only place it can fail. Once the macro has run the value
+          # is four digits or null by construction, so the equivalent check on
+          # stg_suburbs would be tautological. This is what actually guards a
+          # re-downloaded seed against a malformed postcode.
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "rlike '^[0-9]{1,4}$'"
+      - name: local_goverment_area
+        description: >
+          Upstream spelling, typo included. Renamed to local_government_area in
+          stg_suburbs.
+        tests: [not_null]
+
+  - name: suburb_lga_overrides
+    description: >
+      Manual suburb-to-LGA assignments for localities the reference file does
+      not carry, or carries wrongly. Applied ahead of the reference match in
+      dim_location, so this is also the lever for correcting a bad upstream
+      mapping.
+
+      Every row must name an LGA that already exists in australian_suburbs —
+      dim_location validates the name against the reference list rather than
+      trusting its spelling, so a typo here yields Unknown rather than a
+      dangling key. The test below enforces that directly.
+    columns:
+      - name: suburb
+        tests: [not_null]
+      - name: postcode
+        tests: [not_null]
+      - name: state_code
+        tests: [not_null]
+      - name: local_government_area
+        tests: [not_null]
+      - name: reason
+        description: Why this override exists. Required — an unexplained override is a bug waiting to happen.
+        tests: [not_null]

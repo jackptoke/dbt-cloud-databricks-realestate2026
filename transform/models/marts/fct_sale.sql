@@ -3,7 +3,7 @@
 -- Grain: one row per completed SALE. 20 years of history, and a property can
 -- appear many times — that repeat-sales structure is the point.
 --
--- Reaching that grain takes two collapses, and they remove different things.
+-- Reaching that grain takes three collapses, and they remove different things.
 
 with sold_listings as (
     select *
@@ -47,13 +47,12 @@ grouped as (
     from sold_listings
 ),
 
-sales as (
+same_date_collapsed as (
     select
         *,
-        -- How many source records were collapsed into this row. 1 for almost
-        -- everything; >1 marks a consolidated sale, so the dedup is visible in
-        -- the data rather than only in this comment.
-        count(*) over (partition by sale_group) as source_listing_count
+        -- How many source records were collapsed at this stage. Summed across
+        -- the next collapse too, so the published count is the total.
+        count(*) over (partition by sale_group) as same_date_records
     from grouped
     qualify row_number() over (
         partition by sale_group
@@ -71,6 +70,80 @@ sales as (
             -- disagree on price, assert_no_conflicting_sale_prices flags it —
             -- this tie-break resolves the row, it does not resolve the truth.
             listing_id desc
+    ) = 1
+),
+
+-- (3) The same sale reported on ADJACENT DAYS rather than the same day. The
+-- collapse above keys on an exact date match, so two feeds that disagree by
+-- 24 hours produce two sales of one dwelling: 239 Western Highway sold for
+-- $425,000 on both 2022-03-16 and 2022-03-17, and Lot 2/9 Krause Road for
+-- $720,000 on 2025-03-03 and 2025-03-21 under ids in two different bands.
+--
+-- PRICE EQUALITY is the whole test, and the reason this collapse is safe.
+-- Selling the same dwelling twice inside a month is unlikely but perfectly
+-- possible — a quick flip, or a fall-through and immediate resale — and such a
+-- pair would be real history worth keeping. What makes it implausible is the
+-- price landing on exactly the same figure. So a pair that disagrees on price
+-- survives as two sales: 59 High Street at $207,000 then $230,000 four days
+-- later stays two rows, because nothing in the data can tell a fast resale
+-- from a corrected figure, and inventing an answer would be worse than keeping
+-- both.
+--
+-- A withheld or absent price is NOT a matching price. It is an unknown one,
+-- and an unknown cannot establish that two records describe one event, so
+-- those rows are excluded from this collapse and remain separate sales. Three
+-- pairs currently sit in that state.
+--
+-- Gaps-and-islands over (property, price) rather than a self-join: a property
+-- genuinely sold twice at the same price years apart must not merge, and a
+-- session boundary on the day gap expresses that directly.
+near_duplicate_flags as (
+    select
+        *,
+        case
+            -- Nothing to compare on: keep as its own sale.
+            when sold_date is null
+              or is_price_withheld
+              or sale_price_low_aud is null
+            then 1
+            when datediff(
+                     sold_date,
+                     lag(sold_date) over (
+                         partition by property_key, sale_price_low_aud
+                         order by sold_date
+                     )
+                 ) <= {{ var('sale_duplicate_window_days') }}
+            then 0
+            else 1
+        end as starts_new_sale
+    from same_date_collapsed
+),
+
+sessionised as (
+    select
+        *,
+        sum(starts_new_sale) over (
+            partition by property_key, sale_price_low_aud
+            order by sold_date
+            rows between unbounded preceding and current row
+        ) as sale_session
+    from near_duplicate_flags
+),
+
+sales as (
+    select
+        *,
+        sum(same_date_records) over (
+            partition by property_key, sale_price_low_aud, sale_session
+        ) as source_listing_count
+    from sessionised
+    qualify row_number() over (
+        partition by property_key, sale_price_low_aud, sale_session
+        -- Earliest date wins: the first report of a sale, with the later copy
+        -- treated as the republication. Which of two adjacent dates is the
+        -- contract and which the settlement is not knowable from this feed, so
+        -- this is a stable convention rather than a claim about the truth.
+        order by sold_date, listing_id desc
     ) = 1
 )
 

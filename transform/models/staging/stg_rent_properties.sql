@@ -42,7 +42,7 @@ renamed as (
                 then {{ dbt_utils.generate_surrogate_key([
                         'upper(trim(address.streetAddress))',
                         'upper(trim(address.suburb))',
-                        'address.postCode'
+                        normalise_postcode('address.postCode')
                     ]) }}
             -- Withheld addresses all carry the literal "Address available on
             -- request", so hashing them merges every withheld listing in a
@@ -64,7 +64,7 @@ renamed as (
         agency.address.streetAddress as agency_street_address,
         agency.address.suburb        as agency_suburb,
         agency.address.state         as agency_state,
-        agency.address.postcode      as agency_postcode,
+        {{ normalise_postcode('agency.address.postcode') }} as agency_postcode,
         agency.logo.links.default    as agency_logo_url,
         lister.id       as agent_id,
 
@@ -87,7 +87,7 @@ renamed as (
         address.streetAddress      as street_address,
         address.suburb             as suburb,
         address.locality           as locality,
-        address.postCode           as postcode,
+        {{ normalise_postcode('address.postCode') }} as postcode,
         address.subdivisionCode    as state_code,
         address.location.latitude  as latitude,
         address.location.longitude as longitude,
