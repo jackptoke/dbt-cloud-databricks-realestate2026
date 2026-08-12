@@ -36,6 +36,13 @@ vars:
   # survives as two sales. Observed same-price pairs span 1 to 18 days.
   sale_duplicate_window_days: 30
 
+  # mart_lga_scorecard / mart_data_coverage. Below this many sales an LGA is
+  # stray by-catch from a neighbouring region's crawl rather than a market of
+  # its own — Loddon, Buloke and Southern Grampians hold 4, 2 and 1 between
+  # them. They stay in the marts, flagged rather than dropped, so the coverage
+  # page can show what was excluded and why.
+  scorecard_min_sales: 100
+
   # mart_listing_valuation. Both are modelling judgements rather than facts, so
   # they live here where they can be moved and the effect measured, instead of
   # being buried in the SQL.

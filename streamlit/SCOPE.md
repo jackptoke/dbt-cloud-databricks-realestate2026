@@ -295,13 +295,73 @@ reformats it. A no-op on today's data by design, which is why it was safe to
 add: it makes a current coincidence into a guarantee without moving a single
 surrogate key.
 
-**Still to build.**
+**3. The remaining marts — DONE 2026-08-12.**
 
-| model | grain | feeds |
+| model | grain | result |
 | --- | --- | --- |
-| `mart_lga_price_trend` | LGA × year × property type | page 1 |
-| `mart_lga_scorecard` | one row per LGA | page 1 KPIs |
-| `mart_data_coverage` | one row per table / LGA | page 5 |
+| `int_crawl_coverage` | one row per crawl region | the single definition of truncation |
+| `mart_lga_price_trend` | LGA × year × property type | 344 rows, 2007–2026 |
+| `mart_lga_scorecard` | one row per LGA | 8 rows, 5 reportable |
+| `mart_data_coverage` | one row per LGA | owns `is_truncated_history` |
+
+**4. The app — DONE 2026-08-12.** Four pages under `streamlit/`, verified
+headless against live data with zero exception blocks. See
+[README.md](README.md).
+
+### Two bugs the build surfaced
+
+**Truncation was computed three different ways and two disagreed.** `max_page`
+was taken over the rows belonging to each LGA rather than over the crawl as a
+whole, so a capped crawl whose last Ararat listing fell on page 49 made Ararat
+look complete — while Buloke's 3 stray listings from that same capped crawl
+topped out at page 21 and made *it* look complete too. The ceiling is a property
+of the crawl, not of the slice an LGA receives. Now defined once in
+`int_crawl_coverage` and consumed by all three marts.
+
+**Comparables banded land by bedrooms.** Every vacant block reports 0 bedrooms,
+so a whole LGA's land sat in one cell: Horsham's held 129 sales spanning 306 m²
+to 845,700 m². A 53-hectare parcel read **+3,809%** against 756 m² suburban
+blocks. Land now bands on area via the `comparable_band` macro — worst case
+dropped to +1,242% (a genuine Halls Gap location premium), median land variance
+17.1% → 10.6%, and 54 listings correctly lost a verdict they should never have
+had.
+
+### Why the truncation caveat stays (API investigation, 2026-08-13)
+
+The dashboard's truncation warnings are not provisional — they reflect a hard
+limit that was investigated properly and written up in
+`src/realestate2026/ingest/API_PARAMETERS.md`.
+
+The source serves at most **1,500 results per query** (50 pages x 30). Page 51
+returns page 50 verbatim, forever — verified independently twice. `pageSize` is
+vendor-capped at 30, so there is no shortcut. Our `MAX_RESULTS = 1500` matches
+the ceiling exactly rather than causing it.
+
+There is **no lower bound on sold date** — five spellings tested, all silently
+ignored — so `maxSoldAge` can only give cumulative windows from today and can
+never step past the cap. That is why Horsham stops at 2022.
+
+Full history *is* reachable, but only by opening multiple 1,500-row windows into
+the same set and taking their union: scope by `"<Suburb>, <STATE> <postcode>"`
+so each locality gets its own budget, vary `sortType` (each ordering is a
+different window — `sold-price-asc` reaches 2008 where `relevance` stops at
+2022), and partition with exact bedroom bands, `propertyTypes` and
+`minimumCars`. That is an ingest change of real size and it is deliberately not
+being done now.
+
+**Until it is, every price series in this dashboard is drawn from a truncated,
+relevance-biased subset, and the coverage page says so from data rather than
+prose.** Nothing here needs revisiting when the ingest improves — the marts read
+truncation from `int_crawl_coverage`, so the caveats will simply stop firing.
+
+### No windowed growth KPI, deliberately
+
+The landing page has no "10-year growth". The result cap bites hardest where the
+market is busiest, so history depth runs *inverse* to activity — Horsham reaches
+back 3.9 years, Pyrenees 19.1. Three of the five cannot reach ten years and
+Horsham cannot reach five, so any windowed comparison would compare different
+spans of time and read as a market difference. Growth is the repeat-sales CAGR
+instead: a per-property rate, comparable across all five.
 
 ### Valuation calibration — RESOLVED by time-indexation
 

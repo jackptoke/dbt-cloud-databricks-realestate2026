@@ -1,0 +1,3457 @@
+{
+  "version": "2.17",
+  "children": [
+    {
+      "type": "frame",
+      "id": "Lsd2T",
+      "x": 0,
+      "y": 0,
+      "name": "Component / KPI Metric",
+      "reusable": true,
+      "width": 210,
+      "fill": "$bg-surface",
+      "cornerRadius": 8,
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "strokeAlignment": "inner",
+      "layout": "vertical",
+      "gap": 7,
+      "padding": [
+        15,
+        16,
+        16,
+        16
+      ],
+      "children": [
+        {
+          "type": "text",
+          "id": "j5itEC",
+          "name": "Label",
+          "fill": "$text-faint",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "MEDIAN SOLD PRICE",
+          "fontFamily": "$font-body",
+          "fontSize": 10.5,
+          "fontWeight": "600",
+          "letterSpacing": 0.7
+        },
+        {
+          "type": "text",
+          "id": "EB9TI",
+          "name": "Value",
+          "fill": "$text-primary",
+          "content": "$612,000",
+          "lineHeight": 1.1,
+          "fontFamily": "$font-body",
+          "fontSize": 26,
+          "fontWeight": "600",
+          "letterSpacing": -0.4
+        },
+        {
+          "type": "frame",
+          "id": "QWHRQ",
+          "name": "Delta",
+          "gap": 4,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "M4zpx3",
+              "name": "Delta Icon",
+              "width": 13,
+              "height": 13,
+              "icon": "arrow-up-right",
+              "library": "lucide",
+              "fill": "$positive"
+            },
+            {
+              "type": "text",
+              "id": "QtlY4",
+              "name": "Delta Text",
+              "fill": "$positive",
+              "content": "4.8% vs prior yr",
+              "fontFamily": "$font-body",
+              "fontSize": 12,
+              "fontWeight": "500"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "QyjMF",
+      "x": 250,
+      "y": 0,
+      "name": "Component / Select Filter",
+      "reusable": true,
+      "width": 260,
+      "layout": "vertical",
+      "gap": 6,
+      "children": [
+        {
+          "type": "text",
+          "id": "aO5zR",
+          "name": "Field Label",
+          "fill": "$text-secondary",
+          "content": "Local Government Area",
+          "fontFamily": "$font-body",
+          "fontSize": 12.5,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "QJBGY",
+          "name": "Select Box",
+          "width": "fill_container",
+          "height": 40,
+          "fill": "$bg-surface",
+          "cornerRadius": 6,
+          "stroke": "$border-input",
+          "strokeWidth": 1,
+          "strokeAlignment": "inner",
+          "padding": [
+            0,
+            11,
+            0,
+            12
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "n0no8V",
+              "name": "Selected Value",
+              "fill": "$text-primary",
+              "content": "Ballarat (C)",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "icon",
+              "id": "UI1Z1",
+              "name": "Chevron",
+              "width": 16,
+              "height": 16,
+              "icon": "chevron-down",
+              "library": "lucide",
+              "fill": "$text-faint"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "pbzsh",
+      "x": 0,
+      "y": 206,
+      "name": "Market Explorer — Streamlit Page",
+      "clip": true,
+      "width": 1440,
+      "height": 1160,
+      "fill": "$bg-app",
+      "children": [
+        {
+          "type": "frame",
+          "id": "v4rl1",
+          "name": "Sidebar",
+          "width": 244,
+          "height": "fill_container",
+          "fill": "$bg-sidebar",
+          "layout": "vertical",
+          "padding": [
+            22,
+            16,
+            20,
+            16
+          ],
+          "justifyContent": "space_between",
+          "children": [
+            {
+              "type": "frame",
+              "id": "H7jGWC",
+              "name": "Sidebar Top",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 26,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "pfCrp",
+                  "name": "App Brand",
+                  "gap": 10,
+                  "padding": [
+                    0,
+                    4
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "l8FWX",
+                      "name": "Brand Mark",
+                      "width": 28,
+                      "height": 28,
+                      "fill": "$brand",
+                      "cornerRadius": 7,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "pSV4e",
+                          "name": "Mark Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "house",
+                          "library": "lucide",
+                          "fill": "#FFFFFF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "siVmZ",
+                      "name": "Brand Text",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "e4U3v",
+                          "name": "App Name",
+                          "fill": "#FFFFFF",
+                          "content": "Regional VIC",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14.5,
+                          "fontWeight": "700",
+                          "letterSpacing": -0.2
+                        },
+                        {
+                          "type": "text",
+                          "id": "NZWng",
+                          "name": "App Tagline",
+                          "fill": "#7C848C",
+                          "content": "Property Intelligence",
+                          "fontFamily": "$font-body",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "H5cAI",
+                  "name": "Nav",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nsx2z",
+                      "name": "Nav Section Label",
+                      "fill": "#5C646B",
+                      "content": "PAGES",
+                      "fontFamily": "$font-body",
+                      "fontSize": 10,
+                      "fontWeight": "600",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "a59ASo",
+                      "name": "Nav Label Spacer",
+                      "width": "fill_container",
+                      "height": 6
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KbZCm",
+                      "name": "Nav / Market Explorer",
+                      "width": "fill_container",
+                      "fill": "#FFFFFF14",
+                      "cornerRadius": 6,
+                      "gap": 10,
+                      "padding": [
+                        9,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "FR7c9",
+                          "name": "Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "compass",
+                          "library": "lucide",
+                          "fill": "$brand"
+                        },
+                        {
+                          "type": "text",
+                          "id": "T0C1wG",
+                          "name": "Label",
+                          "fill": "#FFFFFF",
+                          "content": "Market Explorer",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13.5,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZiE0o",
+                      "name": "Nav / Suburb Compare",
+                      "width": "fill_container",
+                      "fill": "#00000000",
+                      "cornerRadius": 6,
+                      "gap": 10,
+                      "padding": [
+                        9,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Ub0M1",
+                          "name": "Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "git-compare",
+                          "library": "lucide",
+                          "fill": "#7C848C"
+                        },
+                        {
+                          "type": "text",
+                          "id": "e4lMdM",
+                          "name": "Label",
+                          "fill": "#A7AEB4",
+                          "content": "Suburb Compare",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fLA9k",
+                      "name": "Nav / Yield & Cashflow",
+                      "width": "fill_container",
+                      "fill": "#00000000",
+                      "cornerRadius": 6,
+                      "gap": 10,
+                      "padding": [
+                        9,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "rT94N",
+                          "name": "Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "percent",
+                          "library": "lucide",
+                          "fill": "#7C848C"
+                        },
+                        {
+                          "type": "text",
+                          "id": "k8O4ht",
+                          "name": "Label",
+                          "fill": "#A7AEB4",
+                          "content": "Yield & Cashflow",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LKkpZ",
+                      "name": "Nav / Listings Feed",
+                      "width": "fill_container",
+                      "fill": "#00000000",
+                      "cornerRadius": 6,
+                      "gap": 10,
+                      "padding": [
+                        9,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "MCvsC",
+                          "name": "Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "list",
+                          "library": "lucide",
+                          "fill": "#7C848C"
+                        },
+                        {
+                          "type": "text",
+                          "id": "fbI2L",
+                          "name": "Label",
+                          "fill": "#A7AEB4",
+                          "content": "Listings Feed",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xdD7k",
+                      "name": "Nav / Growth Forecast",
+                      "width": "fill_container",
+                      "fill": "#00000000",
+                      "cornerRadius": 6,
+                      "gap": 10,
+                      "padding": [
+                        9,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "eZBW4",
+                          "name": "Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "trending-up",
+                          "library": "lucide",
+                          "fill": "#7C848C"
+                        },
+                        {
+                          "type": "text",
+                          "id": "mWiHA",
+                          "name": "Label",
+                          "fill": "#A7AEB4",
+                          "content": "Growth Forecast",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kmEgm",
+                      "name": "Nav / Data Quality",
+                      "width": "fill_container",
+                      "fill": "#00000000",
+                      "cornerRadius": 6,
+                      "gap": 10,
+                      "padding": [
+                        9,
+                        10
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "E6jLF",
+                          "name": "Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "shield-check",
+                          "library": "lucide",
+                          "fill": "#7C848C"
+                        },
+                        {
+                          "type": "text",
+                          "id": "P3b9w",
+                          "name": "Label",
+                          "fill": "#A7AEB4",
+                          "content": "Data Quality",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13.5
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "lpYIU",
+              "name": "Sidebar Footer",
+              "width": "fill_container",
+              "fill": "#FFFFFF0A",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                12,
+                10
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "SGFJP",
+                  "name": "Source Label",
+                  "fill": "#5C646B",
+                  "content": "CONNECTED SOURCE",
+                  "fontFamily": "$font-body",
+                  "fontSize": 9.5,
+                  "fontWeight": "600",
+                  "letterSpacing": 0.8
+                },
+                {
+                  "type": "frame",
+                  "id": "R4D3z",
+                  "name": "Source Row",
+                  "gap": 7,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "lXhxK",
+                      "name": "Status Dot",
+                      "fill": "#3FA574",
+                      "width": 7,
+                      "height": 7
+                    },
+                    {
+                      "type": "text",
+                      "id": "XuIrm",
+                      "name": "Source Name",
+                      "fill": "#C4CACF",
+                      "content": "realestate.gold",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "oeflb",
+          "name": "Main",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            26,
+            32,
+            24,
+            32
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "Jt8Su",
+              "name": "Page Header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "oX0Pj",
+                  "name": "Header Text",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hyruK",
+                      "name": "Page Title",
+                      "fill": "$text-primary",
+                      "content": "Market Explorer",
+                      "lineHeight": 1.15,
+                      "fontFamily": "$font-body",
+                      "fontSize": 29,
+                      "fontWeight": "700",
+                      "letterSpacing": -0.7
+                    },
+                    {
+                      "type": "text",
+                      "id": "fRsRo",
+                      "name": "Page Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "Sold prices, supply and affordability across regional Victoria — for individual investors.",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "V9y3o",
+                  "name": "Header Actions",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "nGIxS",
+                      "name": "Scope Chip",
+                      "fill": "$brand-tint",
+                      "cornerRadius": 6,
+                      "gap": 6,
+                      "padding": [
+                        7,
+                        11
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "b8Iva",
+                          "name": "Scope Icon",
+                          "width": 13,
+                          "height": 13,
+                          "icon": "map-pin",
+                          "library": "lucide",
+                          "fill": "$brand"
+                        },
+                        {
+                          "type": "text",
+                          "id": "I2JGb",
+                          "name": "Scope Text",
+                          "fill": "$brand",
+                          "content": "Regional VIC · 48 LGAs",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12.5,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "YtJcI",
+                      "name": "Download Button",
+                      "fill": "$bg-surface",
+                      "cornerRadius": 6,
+                      "stroke": "$border-input",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "gap": 7,
+                      "padding": [
+                        8,
+                        13
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Mqq1Z",
+                          "name": "Download Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "download",
+                          "library": "lucide",
+                          "fill": "$text-secondary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "N2520",
+                          "name": "Download Label",
+                          "fill": "$text-primary",
+                          "content": "Export CSV",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WJo7t",
+              "name": "Filter Bar",
+              "width": "fill_container",
+              "fill": "$bg-surface",
+              "cornerRadius": 9,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 16,
+              "padding": [
+                14,
+                16
+              ],
+              "alignItems": "end",
+              "children": [
+                {
+                  "id": "QgaPQ",
+                  "type": "ref",
+                  "ref": "QyjMF",
+                  "name": "Filter / Local Government Area",
+                  "width": 320,
+                  "descendants": {
+                    "aO5zR": {
+                      "content": "Local Government Area"
+                    },
+                    "n0no8V": {
+                      "content": "Ballarat (C)"
+                    }
+                  }
+                },
+                {
+                  "id": "z5NQ4",
+                  "type": "ref",
+                  "ref": "QyjMF",
+                  "name": "Filter / Property Type",
+                  "width": 220,
+                  "descendants": {
+                    "aO5zR": {
+                      "content": "Property Type"
+                    },
+                    "n0no8V": {
+                      "content": "House"
+                    }
+                  }
+                },
+                {
+                  "id": "z8oAz",
+                  "type": "ref",
+                  "ref": "QyjMF",
+                  "name": "Filter / Bedrooms",
+                  "width": 150,
+                  "descendants": {
+                    "aO5zR": {
+                      "content": "Bedrooms"
+                    },
+                    "n0no8V": {
+                      "content": "3+"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "b5xWN",
+                  "name": "Filter Spacer",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "zb00T",
+                  "name": "Reset Filters",
+                  "height": 40,
+                  "fill": "#00000000",
+                  "cornerRadius": 6,
+                  "stroke": "$border-input",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": 6,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "F3ejg",
+                      "name": "Reset Icon",
+                      "width": 13,
+                      "height": 13,
+                      "icon": "rotate-ccw",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "VHlow",
+                      "name": "Reset Label",
+                      "fill": "$text-secondary",
+                      "content": "Reset",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "x9hFR",
+              "name": "KPI Row",
+              "width": "fill_container",
+              "gap": 12,
+              "children": [
+                {
+                  "id": "BjtS5",
+                  "type": "ref",
+                  "ref": "Lsd2T",
+                  "name": "KPI / MEDIAN SOLD PRICE · 12M",
+                  "width": "fill_container",
+                  "descendants": {
+                    "j5itEC": {
+                      "content": "MEDIAN SOLD PRICE · 12M"
+                    },
+                    "EB9TI": {
+                      "content": "$612,000"
+                    },
+                    "M4zpx3": {
+                      "icon": "arrow-up-right",
+                      "fill": "$positive"
+                    },
+                    "QtlY4": {
+                      "content": "4.8% vs prior yr",
+                      "fill": "$positive"
+                    }
+                  }
+                },
+                {
+                  "id": "K8HgUS",
+                  "type": "ref",
+                  "ref": "Lsd2T",
+                  "name": "KPI / SALES · LAST 12 MONTHS",
+                  "width": "fill_container",
+                  "descendants": {
+                    "j5itEC": {
+                      "content": "SALES · LAST 12 MONTHS"
+                    },
+                    "EB9TI": {
+                      "content": "1,284"
+                    },
+                    "M4zpx3": {
+                      "icon": "arrow-down-right",
+                      "fill": "$negative"
+                    },
+                    "QtlY4": {
+                      "content": "7.2% vs prior yr",
+                      "fill": "$negative"
+                    }
+                  }
+                },
+                {
+                  "id": "jzcAd",
+                  "type": "ref",
+                  "ref": "Lsd2T",
+                  "name": "KPI / MEDIAN ASKING PRICE",
+                  "width": "fill_container",
+                  "descendants": {
+                    "j5itEC": {
+                      "content": "MEDIAN ASKING PRICE"
+                    },
+                    "EB9TI": {
+                      "content": "$639,000"
+                    },
+                    "M4zpx3": {
+                      "icon": "minus",
+                      "fill": "$text-faint"
+                    },
+                    "QtlY4": {
+                      "content": "4.4% above sold median",
+                      "fill": "$text-faint"
+                    }
+                  }
+                },
+                {
+                  "id": "s5Pho",
+                  "type": "ref",
+                  "ref": "Lsd2T",
+                  "name": "KPI / ACTIVE LISTINGS",
+                  "width": "fill_container",
+                  "descendants": {
+                    "j5itEC": {
+                      "content": "ACTIVE LISTINGS"
+                    },
+                    "EB9TI": {
+                      "content": "412"
+                    },
+                    "M4zpx3": {
+                      "icon": "arrow-up-right",
+                      "fill": "$text-faint"
+                    },
+                    "QtlY4": {
+                      "content": "12.1% vs 90-day avg",
+                      "fill": "$text-faint"
+                    }
+                  }
+                },
+                {
+                  "id": "Tkvkg",
+                  "type": "ref",
+                  "ref": "Lsd2T",
+                  "name": "KPI / 10-YEAR GROWTH",
+                  "width": "fill_container",
+                  "descendants": {
+                    "j5itEC": {
+                      "content": "10-YEAR GROWTH"
+                    },
+                    "EB9TI": {
+                      "content": "+71.3%"
+                    },
+                    "M4zpx3": {
+                      "icon": "trending-up",
+                      "fill": "$positive"
+                    },
+                    "QtlY4": {
+                      "content": "5.5% p.a. compound",
+                      "fill": "$positive"
+                    }
+                  }
+                },
+                {
+                  "id": "b7nOSy",
+                  "type": "ref",
+                  "ref": "Lsd2T",
+                  "name": "KPI / PRICE-TO-INCOME",
+                  "width": "fill_container",
+                  "descendants": {
+                    "j5itEC": {
+                      "content": "PRICE-TO-INCOME"
+                    },
+                    "EB9TI": {
+                      "content": "6.4×"
+                    },
+                    "M4zpx3": {
+                      "icon": "arrow-up-right",
+                      "fill": "$negative"
+                    },
+                    "QtlY4": {
+                      "content": "state median 5.1×",
+                      "fill": "$negative"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jzTak",
+              "name": "Chart / Median Sold Price by Year",
+              "width": "fill_container",
+              "fill": "$bg-surface",
+              "cornerRadius": 9,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                16,
+                18,
+                18,
+                18
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TT5gN",
+                  "name": "Chart Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Wsrkk",
+                      "name": "Titles",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DjgXI",
+                          "name": "Chart Title",
+                          "fill": "$text-primary",
+                          "content": "Median sold price by year",
+                          "fontFamily": "$font-body",
+                          "fontSize": 16.5,
+                          "fontWeight": "700",
+                          "letterSpacing": -0.2
+                        },
+                        {
+                          "type": "text",
+                          "id": "A2iWO",
+                          "name": "Chart Subtitle",
+                          "fill": "$text-secondary",
+                          "content": "House · 3+ bed · Ballarat (C) — settled sales, 2015 to 2026 YTD",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "l8kMQw",
+                      "name": "Legend",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "o2RQH",
+                          "name": "Legend / Median",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 1.5,
+                              "id": "u2uMx",
+                              "name": "Swatch",
+                              "fill": "$brand",
+                              "width": 14,
+                              "height": 3
+                            },
+                            {
+                              "type": "text",
+                              "id": "YLMTH",
+                              "name": "Legend Label",
+                              "fill": "$text-secondary",
+                              "content": "Median",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dIYLC",
+                          "name": "Legend / Q1–Q3 range",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "mpbfY",
+                              "name": "Swatch",
+                              "fill": "$brand-soft",
+                              "width": 14,
+                              "height": 12
+                            },
+                            {
+                              "type": "text",
+                              "id": "uDCsX",
+                              "name": "Legend Label",
+                              "fill": "$text-secondary",
+                              "content": "Q1–Q3 range",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "a9mJqw",
+                  "name": "Chart Body",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UPHJO",
+                      "name": "Y Axis",
+                      "width": 54,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "r9mpdJ",
+                          "name": "Axis Labels",
+                          "width": "fill_container",
+                          "height": 264,
+                          "layout": "vertical",
+                          "justifyContent": "space_between",
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "QkoWr",
+                              "name": "Axis 800",
+                              "fill": "$text-secondary",
+                              "content": "$800k",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 10.5,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "sZVAs",
+                              "name": "Axis 650",
+                              "fill": "$text-secondary",
+                              "content": "$650k",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 10.5,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GAbF3",
+                              "name": "Axis 500",
+                              "fill": "$text-secondary",
+                              "content": "$500k",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 10.5,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Qu7uw",
+                              "name": "Axis 350",
+                              "fill": "$text-secondary",
+                              "content": "$350k",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 10.5,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "n9kLk",
+                              "name": "Axis 200",
+                              "fill": "$text-secondary",
+                              "content": "$200k",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 10.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "RVx3t",
+                          "name": "Axis Spacer",
+                          "width": "fill_container",
+                          "height": 16
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PN3iq",
+                      "name": "Plot",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "m2hpG",
+                          "name": "Bands",
+                          "width": "fill_container",
+                          "height": 264,
+                          "fill": "#FAFAF8",
+                          "cornerRadius": 4,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "h9xbi",
+                              "name": "Year 2015",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "uTogR",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 183
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "bH2Zb",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 60,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "VTgnm",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 32
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "y20wD",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "FFPNj",
+                              "name": "Year 2016",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "nNBh6",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 175
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "PfqVj",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 63,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "EnhGz",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 33
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "Z15umB",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "w8vjl",
+                              "name": "Year 2017",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "IHkhB",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 159
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "t6vEN9",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 69,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "fDMed",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 37
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "p6jbx",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "oGJyK",
+                              "name": "Year 2018",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "bmxoD",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 145
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Alkd6",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 74,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "MOHWc",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 40
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "XOsth",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "VnnFT",
+                              "name": "Year 2019",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ikNCJ",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 141
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "uoPyf",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 75,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "JLe4w",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 41
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "OZoIJ",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "fbH4n",
+                              "name": "Year 2020",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "KbLcL",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 125
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "bldS0",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 82,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "k171eH",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 45
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "sH98Z",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ZdJk5",
+                              "name": "Year 2021",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "TcYEJ",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 79
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "sFgTX",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 99,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "vr9qq",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 54
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "L01qd",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "iqHCH",
+                              "name": "Year 2022",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "B7ylf",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 37
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "nVVNf",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 113,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "GYhfn",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 62
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "iXLzD",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "nx5iI",
+                              "name": "Year 2023",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "s6AukI",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 29
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "sMIq6",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 116,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "b0SAM7",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 63
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "C8ipX",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "uxtqn",
+                              "name": "Year 2024",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ZXjli",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 33
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "J1T8X",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 116,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "XN3WK",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 64
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "qvx34",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "o9Lz6U",
+                              "name": "Year 2025",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "OcAn4",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 21
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "LlKqU",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 119,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "txqnU",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 66
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "VKKEI",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "H8CMz",
+                              "name": "Year 2026",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "layout": "vertical",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "L8tjW1",
+                                  "name": "Top Gap",
+                                  "width": "fill_container",
+                                  "height": 15
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Rv8Ad",
+                                  "name": "IQR Band",
+                                  "width": "fill_container",
+                                  "height": 121,
+                                  "fill": "$brand-soft",
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "Dxr7p",
+                                      "name": "Band Top",
+                                      "width": "fill_container",
+                                      "height": 67
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "Y72iQ",
+                                      "name": "Median Line",
+                                      "fill": "$brand",
+                                      "width": "fill_container",
+                                      "height": 3
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "j6XP4q",
+                          "name": "X Labels",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "RQRYy",
+                              "name": "Label 2015",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ByCgL",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2015",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "DFIO0",
+                              "name": "Label 2016",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "W3NTH",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2016",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "FynGs",
+                              "name": "Label 2017",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "RIKqi",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2017",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "vTbu2",
+                              "name": "Label 2018",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "aERm3",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2018",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "m75jcb",
+                              "name": "Label 2019",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "twDG1",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2019",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "P0dFZN",
+                              "name": "Label 2020",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "q1UYMi",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2020",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "AVTzU",
+                              "name": "Label 2021",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "U4QKbF",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2021",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "j6kfi5",
+                              "name": "Label 2022",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "W4U4S",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2022",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "bAIf6",
+                              "name": "Label 2023",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Sxf0e",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2023",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "kNSpD",
+                              "name": "Label 2024",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Io7OV",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2024",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "DrhOs",
+                              "name": "Label 2025",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Z0Lkb",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2025",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "e7Hnh",
+                              "name": "Label 2026",
+                              "width": "fill_container",
+                              "height": 16,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "S100qY",
+                                  "name": "Year",
+                                  "fill": "$text-secondary",
+                                  "content": "2026*",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "AYW4p",
+                  "name": "Chart Note",
+                  "fill": "$text-secondary",
+                  "content": "* 2026 covers settled sales to 31 Jul 2026 and is not directly comparable with full prior years.",
+                  "fontFamily": "$font-body",
+                  "fontSize": 11.5,
+                  "fontWeight": "normal",
+                  "fontStyle": "italic"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "sVnpC",
+              "name": "Lower Charts Row",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MgR4w",
+                  "name": "Chart / Price Distribution by Property Type",
+                  "width": "fill_container",
+                  "height": 340,
+                  "fill": "$bg-surface",
+                  "cornerRadius": 9,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": [
+                    16,
+                    18,
+                    18,
+                    18
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ZmRc3",
+                      "name": "Chart Header",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "q0X59M",
+                          "name": "Chart Title",
+                          "fill": "$text-primary",
+                          "content": "Price distribution by property type",
+                          "fontFamily": "$font-body",
+                          "fontSize": 16.5,
+                          "fontWeight": "700",
+                          "letterSpacing": -0.2
+                        },
+                        {
+                          "type": "text",
+                          "id": "Nig3s",
+                          "name": "Chart Subtitle",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Sold price spread, last 12 months · box = Q1–Q3, whiskers = 5th–95th pct",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZSXfb",
+                      "name": "Chart Body",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Q42ov",
+                          "name": "Y Axis",
+                          "width": 46,
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "T6DGJ",
+                              "name": "Axis Labels",
+                              "width": "fill_container",
+                              "height": 220,
+                              "layout": "vertical",
+                              "justifyContent": "space_between",
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "cRzu7",
+                                  "name": "Axis 1000",
+                                  "fill": "$text-secondary",
+                                  "content": "$1000k",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "r3Cpe",
+                                  "name": "Axis 800",
+                                  "fill": "$text-secondary",
+                                  "content": "$800k",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "f0kyC",
+                                  "name": "Axis 600",
+                                  "fill": "$text-secondary",
+                                  "content": "$600k",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "A6mJTe",
+                                  "name": "Axis 400",
+                                  "fill": "$text-secondary",
+                                  "content": "$400k",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "I4yFjc",
+                                  "name": "Axis 200",
+                                  "fill": "$text-secondary",
+                                  "content": "$200k",
+                                  "fontFamily": "$font-mono",
+                                  "fontSize": 10.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "bsp5E",
+                              "name": "Axis Spacer",
+                              "width": "fill_container",
+                              "height": 18
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "lEqJA",
+                          "name": "Plot",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Of6PL",
+                              "name": "Boxes",
+                              "width": "fill_container",
+                              "height": 220,
+                              "fill": "#FAFAF8",
+                              "cornerRadius": 4,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "lpC6D",
+                                  "name": "Box House",
+                                  "width": "fill_container",
+                                  "height": "fill_container",
+                                  "layout": "vertical",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "XImD2",
+                                      "name": "Top Gap",
+                                      "width": "fill_container",
+                                      "height": 20
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "x1tPHw",
+                                      "name": "Upper Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "XEKSD",
+                                      "name": "Upper Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 48
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "ikqXB",
+                                      "name": "IQR Box",
+                                      "width": 46,
+                                      "height": 64,
+                                      "fill": "$teal-soft",
+                                      "cornerRadius": 2,
+                                      "stroke": "$teal",
+                                      "strokeWidth": 1,
+                                      "strokeAlignment": "inner",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "MeHgg",
+                                          "name": "Box Top",
+                                          "width": "fill_container",
+                                          "height": 35
+                                        },
+                                        {
+                                          "type": "rectangle",
+                                          "id": "SnUXH",
+                                          "name": "Median Mark",
+                                          "fill": "$teal",
+                                          "width": "fill_container",
+                                          "height": 3
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "GEtq5",
+                                      "name": "Lower Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 33
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "G1DbCW",
+                                      "name": "Lower Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "tyx5T",
+                                  "name": "Box Townhouse",
+                                  "width": "fill_container",
+                                  "height": "fill_container",
+                                  "layout": "vertical",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "ZZnag",
+                                      "name": "Top Gap",
+                                      "width": "fill_container",
+                                      "height": 73
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "DmBwD",
+                                      "name": "Upper Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "guc3B",
+                                      "name": "Upper Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 36
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "oYit4",
+                                      "name": "IQR Box",
+                                      "width": 46,
+                                      "height": 47,
+                                      "fill": "$teal-soft",
+                                      "cornerRadius": 2,
+                                      "stroke": "$teal",
+                                      "strokeWidth": 1,
+                                      "strokeAlignment": "inner",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "dRwFs",
+                                          "name": "Box Top",
+                                          "width": "fill_container",
+                                          "height": 24
+                                        },
+                                        {
+                                          "type": "rectangle",
+                                          "id": "B2hgoc",
+                                          "name": "Median Mark",
+                                          "fill": "$teal",
+                                          "width": "fill_container",
+                                          "height": 3
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "my2kJ",
+                                      "name": "Lower Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 28
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "Cp6oz",
+                                      "name": "Lower Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "o9KAq",
+                                  "name": "Box Unit / Apt",
+                                  "width": "fill_container",
+                                  "height": "fill_container",
+                                  "layout": "vertical",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "F88mWO",
+                                      "name": "Top Gap",
+                                      "width": "fill_container",
+                                      "height": 106
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "G00BJ3",
+                                      "name": "Upper Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "kpg3z",
+                                      "name": "Upper Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 33
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "nKXpS",
+                                      "name": "IQR Box",
+                                      "width": 46,
+                                      "height": 41,
+                                      "fill": "$teal-soft",
+                                      "cornerRadius": 2,
+                                      "stroke": "$teal",
+                                      "strokeWidth": 1,
+                                      "strokeAlignment": "inner",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "XGsfW",
+                                          "name": "Box Top",
+                                          "width": "fill_container",
+                                          "height": 19
+                                        },
+                                        {
+                                          "type": "rectangle",
+                                          "id": "da6rs",
+                                          "name": "Median Mark",
+                                          "fill": "$teal",
+                                          "width": "fill_container",
+                                          "height": 3
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "nfcDt",
+                                      "name": "Lower Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 19
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "EkcNL",
+                                      "name": "Lower Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "ZCRcw",
+                                  "name": "Box Land",
+                                  "width": "fill_container",
+                                  "height": "fill_container",
+                                  "layout": "vertical",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "diBdh",
+                                      "name": "Top Gap",
+                                      "width": "fill_container",
+                                      "height": 146
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "Dd9Uq",
+                                      "name": "Upper Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "NZKKL",
+                                      "name": "Upper Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 29
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "Vw5MG",
+                                      "name": "IQR Box",
+                                      "width": 46,
+                                      "height": 31,
+                                      "fill": "$teal-soft",
+                                      "cornerRadius": 2,
+                                      "stroke": "$teal",
+                                      "strokeWidth": 1,
+                                      "strokeAlignment": "inner",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "w1aku",
+                                          "name": "Box Top",
+                                          "width": "fill_container",
+                                          "height": 16
+                                        },
+                                        {
+                                          "type": "rectangle",
+                                          "id": "t1C2D",
+                                          "name": "Median Mark",
+                                          "fill": "$teal",
+                                          "width": "fill_container",
+                                          "height": 3
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "YVZpB",
+                                      "name": "Lower Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 9
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "Uxk4W",
+                                      "name": "Lower Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "NoaI5",
+                                  "name": "Box Acreage",
+                                  "width": "fill_container",
+                                  "height": "fill_container",
+                                  "layout": "vertical",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "l1LNm",
+                                      "name": "Top Gap",
+                                      "width": "fill_container",
+                                      "height": 1
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "BvDg0",
+                                      "name": "Upper Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "luOkz",
+                                      "name": "Upper Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 13
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "tFJAC",
+                                      "name": "IQR Box",
+                                      "width": 46,
+                                      "height": 70,
+                                      "fill": "$teal-soft",
+                                      "cornerRadius": 2,
+                                      "stroke": "$teal",
+                                      "strokeWidth": 1,
+                                      "strokeAlignment": "inner",
+                                      "layout": "vertical",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "azao6",
+                                          "name": "Box Top",
+                                          "width": "fill_container",
+                                          "height": 29
+                                        },
+                                        {
+                                          "type": "rectangle",
+                                          "id": "TLXvd",
+                                          "name": "Median Mark",
+                                          "fill": "$teal",
+                                          "width": "fill_container",
+                                          "height": 3
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "S84gob",
+                                      "name": "Lower Whisker",
+                                      "fill": "$teal",
+                                      "width": 2,
+                                      "height": 48
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "id": "j3mA7",
+                                      "name": "Lower Cap",
+                                      "fill": "$teal",
+                                      "width": 20,
+                                      "height": 2
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "N8ZUc",
+                              "name": "X Labels",
+                              "width": "fill_container",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Mdw0Y",
+                                  "name": "Label House",
+                                  "width": "fill_container",
+                                  "height": 18,
+                                  "layout": "vertical",
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "Ob3Gp",
+                                      "name": "Category",
+                                      "fill": "$text-secondary",
+                                      "content": "House",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 11.5,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "w6Nqs",
+                                  "name": "Label Townhouse",
+                                  "width": "fill_container",
+                                  "height": 18,
+                                  "layout": "vertical",
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "VomKu",
+                                      "name": "Category",
+                                      "fill": "$text-secondary",
+                                      "content": "Townhouse",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 11.5,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Nfbry",
+                                  "name": "Label Unit / Apt",
+                                  "width": "fill_container",
+                                  "height": 18,
+                                  "layout": "vertical",
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "QcZEK",
+                                      "name": "Category",
+                                      "fill": "$text-secondary",
+                                      "content": "Unit / Apt",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 11.5,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "m9w8g",
+                                  "name": "Label Land",
+                                  "width": "fill_container",
+                                  "height": 18,
+                                  "layout": "vertical",
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "VUAIC",
+                                      "name": "Category",
+                                      "fill": "$text-secondary",
+                                      "content": "Land",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 11.5,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "So7O3",
+                                  "name": "Label Acreage",
+                                  "width": "fill_container",
+                                  "height": 18,
+                                  "layout": "vertical",
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "goq5T",
+                                      "name": "Category",
+                                      "fill": "$text-secondary",
+                                      "content": "Acreage",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 11.5,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FXqXK",
+                  "name": "Chart / Supply Mix",
+                  "width": "fill_container",
+                  "height": 340,
+                  "fill": "$bg-surface",
+                  "cornerRadius": 9,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": [
+                    16,
+                    18,
+                    18,
+                    18
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kaOsB",
+                      "name": "Chart Header",
+                      "width": "fill_container",
+                      "gap": 16,
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "o5gVS",
+                          "name": "Titles",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "a0e81C",
+                              "name": "Chart Title",
+                              "fill": "$text-primary",
+                              "content": "Supply mix by property type",
+                              "fontFamily": "$font-body",
+                              "fontSize": 16.5,
+                              "fontWeight": "700",
+                              "letterSpacing": -0.2
+                            },
+                            {
+                              "type": "text",
+                              "id": "a9bSF",
+                              "name": "Chart Subtitle",
+                              "fill": "$text-secondary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Active for-sale listings today vs sales settled in the last 12 months",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ILZDo",
+                          "name": "Legend",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "Kkugm",
+                              "name": "Legend / Active listings",
+                              "gap": 7,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "rectangle",
+                                  "cornerRadius": 2,
+                                  "id": "L8idMO",
+                                  "name": "Swatch",
+                                  "fill": "$teal",
+                                  "width": 10,
+                                  "height": 10
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "mtRWz",
+                                  "name": "Legend Label",
+                                  "fill": "$text-secondary",
+                                  "content": "Active listings",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "IpbcF",
+                              "name": "Legend / Completed sales",
+                              "gap": 7,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "rectangle",
+                                  "cornerRadius": 2,
+                                  "id": "RTb6I",
+                                  "name": "Swatch",
+                                  "fill": "$brand",
+                                  "width": 10,
+                                  "height": 10
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "XjxPh",
+                                  "name": "Legend Label",
+                                  "fill": "$text-secondary",
+                                  "content": "Completed sales",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bIiqW",
+                      "name": "Chart Body",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "cac7G",
+                          "name": "Bars",
+                          "width": "fill_container",
+                          "height": 220,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "RMASu",
+                              "name": "Group House",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "gap": 8,
+                              "justifyContent": "center",
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "hgyM6",
+                                  "name": "Listings House",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "HUBIF",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "248",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "my3CO",
+                                      "name": "Bar",
+                                      "fill": "$teal",
+                                      "width": 26,
+                                      "height": 57
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "jTIHF",
+                                  "name": "Sales House",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "w0LhqO",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "812",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "Rl0KP",
+                                      "name": "Bar",
+                                      "fill": "$brand",
+                                      "width": 26,
+                                      "height": 187
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "G8Wrl",
+                              "name": "Group Townhouse",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "gap": 8,
+                              "justifyContent": "center",
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "cpg2h",
+                                  "name": "Listings Townhouse",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "PYiUd",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "63",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "GboD7",
+                                      "name": "Bar",
+                                      "fill": "$teal",
+                                      "width": 26,
+                                      "height": 15
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "OCkyC",
+                                  "name": "Sales Townhouse",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "vAiZ4",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "187",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "Amt7w",
+                                      "name": "Bar",
+                                      "fill": "$brand",
+                                      "width": 26,
+                                      "height": 43
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "v24xE",
+                              "name": "Group Unit / Apt",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "gap": 8,
+                              "justifyContent": "center",
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "H6A4PG",
+                                  "name": "Listings Unit / Apt",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "C9F1ZC",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "54",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "JzuSN",
+                                      "name": "Bar",
+                                      "fill": "$teal",
+                                      "width": 26,
+                                      "height": 12
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "wgKcB",
+                                  "name": "Sales Unit / Apt",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "hJFmX",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "168",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "TYdd9",
+                                      "name": "Bar",
+                                      "fill": "$brand",
+                                      "width": 26,
+                                      "height": 39
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "SOpoW",
+                              "name": "Group Land",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "gap": 8,
+                              "justifyContent": "center",
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "BtGaO",
+                                  "name": "Listings Land",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "C6zkhk",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "38",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "zpm49",
+                                      "name": "Bar",
+                                      "fill": "$teal",
+                                      "width": 26,
+                                      "height": 9
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "U0E2wq",
+                                  "name": "Sales Land",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "I6vpv",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "78",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "wXSzQ",
+                                      "name": "Bar",
+                                      "fill": "$brand",
+                                      "width": 26,
+                                      "height": 18
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "tePey",
+                              "name": "Group Acreage",
+                              "width": "fill_container",
+                              "height": "fill_container",
+                              "gap": 8,
+                              "justifyContent": "center",
+                              "alignItems": "end",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "MHuJc",
+                                  "name": "Listings Acreage",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "fVoAH",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "9",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "nzEIf",
+                                      "name": "Bar",
+                                      "fill": "$teal",
+                                      "width": 26,
+                                      "height": 3
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "MGHr1",
+                                  "name": "Sales Acreage",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "justifyContent": "end",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "DG4Rc",
+                                      "name": "Value",
+                                      "fill": "$text-secondary",
+                                      "content": "39",
+                                      "fontFamily": "$font-mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": [
+                                        3,
+                                        3,
+                                        0,
+                                        0
+                                      ],
+                                      "id": "EFaLP",
+                                      "name": "Bar",
+                                      "fill": "$brand",
+                                      "width": 26,
+                                      "height": 9
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "S7oX7d",
+                          "name": "Baseline",
+                          "fill": "$border-input",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "UEif7",
+                          "name": "X Labels",
+                          "width": "fill_container",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "adlUs",
+                              "name": "Label House",
+                              "width": "fill_container",
+                              "height": 18,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "pM6p8",
+                                  "name": "Category",
+                                  "fill": "$text-secondary",
+                                  "content": "House",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 11.5,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "mNKKA",
+                              "name": "Label Townhouse",
+                              "width": "fill_container",
+                              "height": 18,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "uc2P2",
+                                  "name": "Category",
+                                  "fill": "$text-secondary",
+                                  "content": "Townhouse",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 11.5,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Xcjfq",
+                              "name": "Label Unit / Apt",
+                              "width": "fill_container",
+                              "height": 18,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "v4hyi",
+                                  "name": "Category",
+                                  "fill": "$text-secondary",
+                                  "content": "Unit / Apt",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 11.5,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "CXIG0",
+                              "name": "Label Land",
+                              "width": "fill_container",
+                              "height": 18,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ElNPS",
+                                  "name": "Category",
+                                  "fill": "$text-secondary",
+                                  "content": "Land",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 11.5,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "O5DeM",
+                              "name": "Label Acreage",
+                              "width": "fill_container",
+                              "height": 18,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "jd5eC",
+                                  "name": "Category",
+                                  "fill": "$text-secondary",
+                                  "content": "Acreage",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 11.5,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Y0hTb",
+              "name": "Data Provenance Note",
+              "width": "fill_container",
+              "gap": 10,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "GYBcb",
+                  "name": "Crawl Info",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "AiM57",
+                      "name": "Info Icon",
+                      "width": 11,
+                      "height": 11,
+                      "icon": "database",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "S5uIx",
+                      "name": "Crawl Text",
+                      "fill": "$text-secondary",
+                      "content": "Crawled 11 Aug 2026, 04:12 AEST  ·  listings 1,842,097  ·  sales 611,430  ·  suburbs 2,914  ·  LGAs 48",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "h1wT3",
+                  "name": "Model Text",
+                  "fill": "$text-secondary",
+                  "content": "gold.market_explorer_daily",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10.5,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "bg-app": {
+      "type": "color",
+      "value": "#F4F5F2"
+    },
+    "bg-surface": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "bg-sidebar": {
+      "type": "color",
+      "value": "#12161B"
+    },
+    "border": {
+      "type": "color",
+      "value": "#E1E3DE"
+    },
+    "border-input": {
+      "type": "color",
+      "value": "#CFD3CB"
+    },
+    "text-primary": {
+      "type": "color",
+      "value": "#14181D"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "#606A72"
+    },
+    "text-faint": {
+      "type": "color",
+      "value": "#8D959B"
+    },
+    "brand": {
+      "type": "color",
+      "value": "#C1492E"
+    },
+    "brand-soft": {
+      "type": "color",
+      "value": "#C1492E2E"
+    },
+    "brand-tint": {
+      "type": "color",
+      "value": "#C1492E14"
+    },
+    "teal": {
+      "type": "color",
+      "value": "#2C6E7F"
+    },
+    "teal-soft": {
+      "type": "color",
+      "value": "#2C6E7F38"
+    },
+    "positive": {
+      "type": "color",
+      "value": "#2E7A55"
+    },
+    "negative": {
+      "type": "color",
+      "value": "#B23A32"
+    },
+    "font-body": {
+      "type": "string",
+      "value": "Source Sans 3"
+    },
+    "font-mono": {
+      "type": "string",
+      "value": "IBM Plex Mono"
+    }
+  },
+  "fileToken": "373a12f8-aacc-4a96-9e64-3a63d8f78851"
+}

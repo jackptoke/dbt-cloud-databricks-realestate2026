@@ -43,15 +43,20 @@ with sales as (
 -- the page number, so a crawl that reached the page cap is visible in data that
 -- is already loaded and tested. No dependency on the backfill markers, which
 -- sit in a JSON file beside the landing zone that nothing reads.
+-- Truncation from the shared definition in int_crawl_coverage. It used to be
+-- recomputed here as max(page) over this suburb's own rows, which is wrong: the
+-- ceiling applies to the CRAWL, and a capped crawl whose last row for a given
+-- suburb fell on page 49 would make that suburb look completely covered.
 crawls as (
-    select
-        suburb,
-        regexp_extract(_source_file, '/suburb=([a-z0-9-]+)/', 1) as crawl_region,
-        max(cast(regexp_extract(_source_file, 'page=([0-9]+)[.]jsonl', 1) as int)) as max_page
-    from {{ ref('int_listings_unioned') }}
-    where channel = 'sold'
-      and _source_file is not null
-    group by 1, 2
+    select distinct
+        u.suburb,
+        cc.crawl_region,
+        cc.hit_result_cap
+    from {{ ref('int_listings_unioned') }} u
+    join {{ ref('int_crawl_coverage') }} cc
+      on cc.crawl_region = regexp_extract(u._source_file, '/suburb=([a-z0-9-]+)/', 1)
+    where u.channel = 'sold'
+      and u._source_file is not null
 ),
 
 coverage as (
@@ -61,7 +66,7 @@ coverage as (
         -- A complete crawl of a region returns every sold listing in it,
         -- including this suburb's, so one complete supplier is enough to make
         -- the suburb's history whole regardless of what other crawls did.
-        bool_and(max_page >= {{ var('sold_page_cap') }}) as is_truncated_history,
+        bool_and(hit_result_cap)     as is_truncated_history,
         count(distinct crawl_region) as supplying_crawl_regions
     from crawls
     group by 1

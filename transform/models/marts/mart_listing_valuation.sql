@@ -45,6 +45,18 @@
 -- live stock is a different mix from recently-sold stock. Some positive skew is
 -- therefore real and should survive. The verdict is still better read as a
 -- ranking than as an accusation.
+--
+-- KNOWN LIMIT — location within an LGA. Comparables are pooled across the whole
+-- LGA, so a premium pocket is priced against its whole council area. A Halls
+-- Gap lifestyle block reads +1,242% against a Northern Grampians median that
+-- includes Stawell, and a McKenzie Creek house reads +300% against Horsham.
+-- Both are location premium, not mispricing.
+--
+-- This is the deliberate trade made when the grain moved from suburb to LGA:
+-- suburb-level comparables reflect location but reach only 452 of 674 listings,
+-- against 567 at LGA level. Narrowing the geography would trade a bias that is
+-- visible and explainable for a coverage gap that is neither. Revisit once the
+-- crawl footprint is wide enough that suburb cells fill.
 
 with latest_crawl as (
     -- Only the most recent observation of each listing. Today there is one
@@ -134,58 +146,28 @@ live_listings as (
        or (min_ask_aud is not null and max_ask_aud > min_ask_aud * 1.20)
 ),
 
-growth as (select * from {{ ref('mart_lga_growth_rate') }}),
-
--- Sales recent enough to describe the market a buyer is standing in. Withheld
--- and unpriced sales cannot inform a median; a null bedroom count cannot be
--- matched to a cell.
-comparable_sales as (
-    select
-        l.lga_key,
-        s.property_type_key,
-        s.bedrooms,
-        s.sale_price_aud,
-        s.sold_date,
-        datediff(c.crawled_on, s.sold_date) / 365.25 as years_before_crawl
-    from {{ ref('fct_sale') }} s
-    join {{ ref('dim_location') }} l on s.location_key = l.location_key
-    cross join latest_crawl c
-    where s.sold_date >= cast('{{ var("valuation_comparable_from") }}' as date)
-      and s.sale_price_aud is not null
-      and not s.is_price_withheld
-      and s.bedrooms is not null
-),
-
+-- Comparable sales, their band and their indexed value all come from
+-- mart_comparable_sale. That model owns the definition so this mart and the
+-- dashboard's evidence table cannot drift apart — see its header.
 indexed_sales as (
-    select
-        cs.*,
-        g.applied_growth_pct,
-        g.growth_rate_source,
-        -- Compound forward at the LGA's own rate. greatest(...,0) guards the
-        -- direction: a sale dated after the crawl would otherwise be discounted
-        -- backwards, and a bad sold_date should not quietly reduce a comparable.
-        cs.sale_price_aud
-            * power(1 + g.applied_growth_pct / 100.0, greatest(cs.years_before_crawl, 0))
-            as indexed_price_aud
-    from comparable_sales cs
-    join growth g on cs.lga_key = g.lga_key
+    select * from {{ ref('mart_comparable_sale') }}
 ),
 
 comparables as (
     select
         lga_key,
         property_type_key,
-        bedrooms,
+        comparable_band,
         count(*)                                             as comparable_sales,
         cast(median(sale_price_aud) as bigint)               as comparable_median_price_aud,
         cast(median(indexed_price_aud) as bigint)            as comparable_median_indexed_aud,
         cast(percentile(indexed_price_aud, 0.25) as bigint)  as comparable_q1_indexed_aud,
         cast(percentile(indexed_price_aud, 0.75) as bigint)  as comparable_q3_indexed_aud,
-        cast(median(years_before_crawl) as decimal(5, 2))    as comparable_median_age_years,
+        cast(median(age_years) as decimal(5, 2))             as comparable_median_age_years,
         max(applied_growth_pct)                              as applied_growth_pct,
         max(growth_rate_source)                              as growth_rate_source
     from indexed_sales
-    group by lga_key, property_type_key, bedrooms
+    group by lga_key, property_type_key, comparable_band
 ),
 
 joined as (
@@ -203,11 +185,13 @@ joined as (
         l.state_code,
         g.local_government_area,
         t.property_type,
+        t.is_land_or_rural,
 
         s.bedrooms,
         s.bathrooms,
         s.parking_spaces,
         s.land_size_m2,
+        {{ comparable_band('t.is_land_or_rural', 's.bedrooms', 's.land_size_m2') }} as comparable_band,
 
         -- The LOW end of an advertised range, matching fct_sale.sale_price_aud,
         -- which is also the low end where the source gave a range. Comparing
@@ -242,9 +226,9 @@ joined as (
     -- with has_verdict = false rather than dropping out of the mart, so the
     -- coverage figure on the dashboard is honest about its own denominator.
     left join comparables c
-           on l.lga_key            = c.lga_key
-          and s.property_type_key  = c.property_type_key
-          and s.bedrooms           = c.bedrooms
+           on l.lga_key           = c.lga_key
+          and s.property_type_key = c.property_type_key
+          and {{ comparable_band('t.is_land_or_rural', 's.bedrooms', 's.land_size_m2') }} = c.comparable_band
 ),
 
 assessed as (
@@ -278,6 +262,7 @@ select
     bathrooms,
     parking_spaces,
     land_size_m2,
+    comparable_band,
 
     asking_price_aud,
     asking_price_high_aud,
@@ -323,6 +308,12 @@ select
     case
         when has_verdict then null
         when is_price_withheld or asking_price_aud is null then 'no asking price'
+        -- Split by WHY the band is null. Land bands on area and dwellings on
+        -- bedrooms, so one message cannot serve both: telling the owner of a
+        -- bedroom-less house that it is "a land or rural listing" is simply
+        -- false, and the two are fixed by different missing fields.
+        when comparable_band is null and is_land_or_rural then 'no land size recorded'
+        when comparable_band is null then 'no bedroom count recorded'
         when coalesce(comparable_sales, 0) = 0 then 'no comparable sales'
         else 'too few comparable sales'
     end as no_verdict_reason,

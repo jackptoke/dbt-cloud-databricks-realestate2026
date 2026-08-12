@@ -1,0 +1,22 @@
+# Databricks Apps runtime configuration.
+#
+# The warehouse id comes from valueFrom rather than being hardcoded, so the app
+# resource can be repointed without a code change and no infrastructure id is
+# committed. Register a SQL warehouse resource named `sql-warehouse` on the app
+# before the first deploy.
+#
+# Authentication is left entirely to the SDK: the platform injects
+# DATABRICKS_CLIENT_ID and DATABRICKS_CLIENT_SECRET for the app's service
+# principal, and Config() picks them up. Nothing here carries a credential.
+command: ["streamlit", "run", "app.py"]
+
+env:
+  - name: DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse
+  # No literal here on purpose. Hardcoding `realestate` made this file the one
+  # place that could still turn a production deploy into a silent development
+  # one — precisely the failure the no-default rule in lib/data.py exists to
+  # prevent. Register it as an app resource or set it per-environment, and let
+  # the startup guard complain if it is missing.
+  - name: REALESTATE_CATALOG
+    valueFrom: realestate-catalog
