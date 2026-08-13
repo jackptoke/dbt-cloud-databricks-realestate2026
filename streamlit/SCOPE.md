@@ -126,11 +126,14 @@ against Pyrenees at 16.0 is a genuine investor signal for one join.
 
 ### Answerable well — these are the app
 
-**Capital growth on the same dwelling (repeat sales).** 601 properties sold two
+**Capital growth on the same dwelling (repeat sales).** 599 properties sold two
 or more times with an identified address, a real date and a non-withheld price.
-548 sold twice, 46 three times, 7 four times. Median holding period 3.0 years,
-median annualised growth 9.8%, and 556 of the 601 pairs were held a year or
-more. This is the strongest thing in the dataset.
+Median holding period 3.3 years and median annualised growth 9.7%; 556 were held
+a year or more, and only those feed the growth rate. This is the strongest thing
+in the dataset.
+
+(The figure was 601 until `fct_sale` began collapsing same-price sales reported
+days apart — two of those "repeats" were one sale published twice.)
 
 It is also the metric that exercises the hardest modelling in the pipeline.
 `fct_sale` collapses observations into events, then collapses four disjoint
@@ -139,10 +142,15 @@ listing-id bands into a single sale via `property_key` — the work in commit
 constant, which is the methodologically defensible way to measure growth
 (Case-Shiller works this way). It needs no accumulated crawl history.
 
-**Is this listing priced above its comparables.** At LGA × type × bedrooms,
-sold since 2024, priced and not withheld: **566 of 674 live buy listings** land
-in a cell with ≥5 comparables. A real answer for five in six listings, and an
-honest "not enough comparables" for the rest.
+**Is this listing priced above its comparables.** At LGA × property type ×
+band — bedrooms for a dwelling, land area for land — sold since 2024, priced and
+not withheld: **480 of 670 live offerings** receive a verdict. A real answer for
+seven in ten, and an honest "not enough comparables" for the rest.
+
+Both numbers moved after the first cut. 674 became 670 when cross-portal
+duplicate listings were collapsed, and the verdict count fell from 537 once land
+stopped being banded by bedrooms — 54 listings correctly lost a verdict that had
+compared acreage against suburban blocks.
 
 **Price trend by LGA and year.** `mart_suburb_price_trend` already has the
 shape — quartiles and a truncation flag. Regrain it to LGA.
@@ -284,9 +292,9 @@ owner. `dim_lga` stays reference geography plus demographics.
 
 | model | grain | result |
 | --- | --- | --- |
-| `mart_repeat_sales` | property_key with ≥2 sales | 601 properties over 1,262 sales; median 3.0 yrs held, +38.8% total, 9.7% CAGR |
+| `mart_repeat_sales` | property_key with ≥2 sales | 599 properties; median 3.3 yrs held, 9.7% CAGR |
 | `mart_lga_growth_rate` | one row per LGA with listings | 8 rows; 5 on their own rate, 3 on the national fallback |
-| `mart_listing_valuation` | one row per live buy listing | 674 rows, 537 with a verdict, comparables time-indexed |
+| `mart_listing_valuation` | one row per live offering | 670 rows, 480 with a verdict, comparables banded and time-indexed |
 
 Postcode was also normalised at source in the same pass — a
 `normalise_postcode` macro applied in the three staging models, so every
@@ -304,9 +312,20 @@ surrogate key.
 | `mart_lga_scorecard` | one row per LGA | 8 rows, 5 reportable |
 | `mart_data_coverage` | one row per LGA | owns `is_truncated_history` |
 
-**4. The app — DONE 2026-08-12.** Four pages under `streamlit/`, verified
-headless against live data with zero exception blocks. See
-[README.md](README.md).
+**4. The app — DONE.** Four pages under `streamlit/`, verified headless with
+zero exception blocks. Deployed to Railway on `realestate_prod` behind a
+read-only service principal. See [README.md](README.md).
+
+| model added for the app | grain |
+| --- | --- |
+| `mart_comparable_sale` | one row per qualifying comparable sale, banded and indexed |
+
+`mart_comparable_sale` exists because the app was reimplementing the
+`comparable_band` macro and the `valuation_comparable_from` var in Python to
+list the sales behind each verdict. Two implementations of one definition, and
+the drift would have been silent — the evidence table would quietly describe
+different sales than the median it justifies. The rules now live in one model
+that `mart_listing_valuation` aggregates and the app filters.
 
 ### Two bugs the build surfaced
 
@@ -430,9 +449,12 @@ instant.
 
 ## Open decisions
 
-1. **Comparable window.** Sold since 2024 gives 566 of 674 listings a verdict at
-   LGA grain. Widening to 2023 covers more but mixes in a market ~8% cheaper.
-   Worth testing both before fixing it.
+1. **Comparable window.** Sold since 2024 gives 480 of 670 offerings a verdict.
+   Widening to 2023 covers more but mixes in a market ~8% cheaper. The window is
+   the `valuation_comparable_from` var and is published on
+   `mart_comparable_sale`, so moving it changes the mart and the dashboard's
+   evidence table together. Note it is a fixed anchor whose "recent enough"
+   justification decays as the pipeline accumulates.
 2. ~~**Seed scope.**~~ Settled: the full 15,286-row CSV is vendored verbatim,
    all states, with no filter in staging. `dim_lga` therefore covers all 538
    Australian LGAs and `has_listing_data` narrows it to the 8 in play.
