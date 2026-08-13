@@ -18,9 +18,71 @@ models:
                 field: location_key
 
   - name: dim_location
+    description: >
+      One row per suburb observed in the listings feed, with its centroid and
+      the Local Government Area it resolves to. Suburb grain is retained so the
+      marts can drill down, but LGA is the level they report at.
     columns:
       - name: location_key
         tests: [unique, not_null]
+      - name: lga_key
+        description: >
+          Resolved against stg_suburbs. Never null — an unresolved suburb points
+          at dim_lga's Unknown member, matching how dim_agent and dim_agency
+          handle theirs.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_lga')
+                field: lga_key
+      - name: lga_match_method
+        description: >
+          Which resolution tier produced the LGA. 'exact' on (suburb, postcode,
+          state); 'name' where the postcode was wrong but the name is
+          unambiguous within the state; 'override' from the seed; 'unmatched'
+          where nothing resolved. Reported on the dashboard's coverage page — a
+          match rate means little without knowing how the matches were made.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['exact', 'name', 'override', 'unmatched']
+
+  - name: dim_lga
+    description: >
+      One row per Local Government Area per state (538 nationally) plus an
+      Unknown member, with demographics aggregated from the ABS reference.
+
+      Covers all of Australia, not only the LGAs currently holding listings —
+      `has_listing_data` filters to those. This is the grain the marts report
+      at, because the listings API is queried by region and each crawl region
+      resolves to one LGA at 95-100%, making the LGA the unit the data is
+      collected at and the unit the source's result cap applies to.
+    columns:
+      - name: lga_key
+        tests: [unique, not_null]
+      - name: local_government_area
+        tests: [not_null]
+      - name: state_code
+        tests:
+          - not_null:
+              config:
+                # Null on the Unknown member only.
+                where: "not is_unknown"
+      - name: approx_weighted_mean_income
+        description: >
+          Population-weighted mean of per-suburb median incomes — an
+          approximation, not a median. The reference publishes income per
+          suburb and a median of medians cannot be recovered into a true LGA
+          median. Use dim_location.median_income where an exact figure matters.
+      - name: suburbs_with_listings
+        description: How many of this LGA's suburbs appear in our own listings data. 0 for most of Australia.
+        tests: [not_null]
+      - name: has_listing_data
+        tests: [not_null]
+      - name: is_unknown
+        tests: [not_null]
 
   - name: dim_agent
     columns:
@@ -133,3 +195,417 @@ models:
     columns:
       - name: inspection_key
         tests: [unique, not_null]
+
+  - name: mart_suburb_price_trend
+    description: >
+      Sale price distribution per location, year and property type. An aggregate
+      over fct_sale — coarser grain, so do not join it to listing-grain
+      dimensions. is_truncated_history marks locations whose region crawl hit
+      the source's 1,500-result ceiling; their medians come from the most
+      relevant listings, not a random sample.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [location_key, sold_year, property_type_key]
+    columns:
+      - name: location_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_location')
+                field: location_key
+      - name: property_type_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property_type')
+                field: property_type_key
+      - name: sold_year
+        tests: [not_null]
+      - name: sales
+        tests: [not_null]
+      - name: is_truncated_history
+        tests: [not_null]
+      # Ordering the distribution must hold: min <= q1 <= median <= q3 <= max.
+      # Cheap, and it catches a percentile expression edited into the wrong
+      # column far more reliably than reading the SQL does.
+      - name: q1_price_aud
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= min_price_aud"
+      - name: median_price_aud
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= q1_price_aud"
+      - name: q3_price_aud
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= median_price_aud"
+      - name: max_price_aud
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= q3_price_aud"
+
+  - name: mart_repeat_sales
+    description: >
+      One row per property sold two or more times, with the growth between its
+      first and last observed sale. An AGGREGATE fact — coarser than fct_sale,
+      so never join the two.
+
+      Restricted to identified addresses with dated, non-withheld prices. This
+      is the dataset's strongest capital-growth evidence because it holds the
+      dwelling constant, removing the mix-shift that moves any median-price
+      series.
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "last_sold_date >= first_sold_date"
+      # Annualising a few weeks' gain produces a real number that means nothing.
+      # The model nulls it below the threshold; this asserts it actually did.
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "annualised_growth_pct is null"
+            config:
+              where: "is_short_hold"
+    columns:
+      - name: property_key
+        description: Grain. One row per repeat-selling property.
+        tests: [unique, not_null]
+      - name: sale_count
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 2
+                inclusive: true
+      - name: lga_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_lga')
+                field: lga_key
+      - name: location_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_location')
+                field: location_key
+      - name: days_held
+        description: Calendar days between the first and last observed sale.
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: true
+      - name: first_sale_price_aud
+        tests: [not_null]
+      - name: last_sale_price_aud
+        tests: [not_null]
+      - name: annualised_growth_pct
+        description: >
+          CAGR between first and last sale. Null where the hold is shorter than
+          repeat_sale_min_annualise_days — total_growth_pct stays populated for
+          those, so a short hold is reported rather than dropped.
+      - name: spans_multiple_ownerships
+        description: >
+          True where the property sold three or more times, meaning the window
+          covers more than one owner and "years held" is the property's observed
+          history rather than any single holding period.
+        tests: [not_null]
+
+  - name: mart_listing_valuation
+    description: >
+      One row per distinct live OFFERING at the most recent crawl, priced
+      against comparable sales in the same LGA, property type and bedroom
+      count.
+
+      Offering, not listing: the source aggregates several portals, so one
+      property can arrive under two listing_ids. Those are collapsed on
+      property_key — the address — where land size agrees within 5% AND asking
+      price within 20%, keeping the priced copy and then the lower asking
+      price. offer_listing_count shows how many source listings each row
+      stands for.
+
+      Bedrooms are deliberately NOT part of the match. Agents disagree on
+      whether a study counts as a bedroom, so matching on it would split the
+      duplicates it is meant to join.
+
+      Two things survive as separate rows because the guards catch them —
+      house-and-land packages, where bare land and the completed house share an
+      address but sit 67-77% apart on price, and address collisions like Lot 2
+      Watsons Lane where two parcels of 32,800 and 246,000 m2 share a
+      street-address string. True duplicates sit 0-9.7% apart on price, so the
+      20% threshold falls in an empty band rather than being tuned.
+
+      Comparables are configured by the valuation_* project vars. Below the
+      minimum count every derived measure is null and has_verdict is false —
+      the mart declines to answer rather than answering from two sales.
+
+      Comparables are matched on LGA, property type and a BAND — bedrooms for
+      a dwelling, land area for land and rural types. Banding land by bedrooms
+      put every parcel in an LGA into one cell, because vacant land always
+      reports 0 bedrooms; a 53-hectare block was priced against 756 m2 suburban
+      blocks and read +3,809%. See the comparable_band macro.
+
+      Comparable sales are indexed forward to the crawl date at their own
+      LGA's repeat-sales growth rate before the median is taken, correcting the
+      staleness bias that otherwise put the median listing +21.7% above
+      comparables purely because the average comparable was 1.19 years old.
+      Both the raw and indexed medians are published so the adjustment stays
+      auditable.
+
+      Residual positive skew is expected and real: asking prices carry
+      negotiating room and live stock is a different mix from sold stock. The
+      verdict is still better read as a ranking than as an accusation.
+    tests:
+      # Every derived measure is gated on has_verdict inside the model. These
+      # assert the gate holds from both directions, so a consumer that ignores
+      # the flag still cannot read an unsupported number.
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: >-
+              comparable_sales is null
+              and comparable_median_price_aud is null
+              and comparable_median_indexed_aud is null
+              and comparable_q1_indexed_aud is null
+              and comparable_q3_indexed_aud is null
+              and comparable_median_age_years is null
+              and applied_growth_pct is null
+              and growth_rate_source is null
+              and variance_from_comparable_pct is null
+              and valuation_verdict is null
+            config:
+              where: "not has_verdict"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: >-
+              comparable_sales >= {{ var('valuation_min_comparables') }}
+              and comparable_median_price_aud is not null
+              and comparable_median_indexed_aud is not null
+              and comparable_q1_indexed_aud is not null
+              and comparable_q3_indexed_aud is not null
+              and comparable_median_age_years is not null
+              and applied_growth_pct is not null
+              and growth_rate_source is not null
+              and variance_from_comparable_pct is not null
+              and valuation_verdict is not null
+              and no_verdict_reason is null
+            config:
+              where: "has_verdict"
+    columns:
+      - name: listing_snapshot_key
+        description: >
+          Grain. One row per distinct live offering at the latest crawl, keyed
+          on the surviving listing.
+        tests: [unique, not_null]
+      - name: offer_listing_count
+        description: >
+          Source listings collapsed into this row; >1 marks a cross-portal
+          duplicate. Mirrors fct_sale.source_listing_count.
+        tests: [not_null]
+      - name: listing_id
+        tests: [not_null]
+      - name: lga_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_lga')
+                field: lga_key
+      - name: location_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_location')
+                field: location_key
+      - name: has_verdict
+        tests: [not_null]
+      - name: valuation_verdict
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['above comparables', 'in line', 'below comparables']
+      - name: no_verdict_reason
+        description: Which of the three reasons blocked a verdict. Null when has_verdict is true.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['no asking price', 'no land size recorded', 'no bedroom count recorded', 'no comparable sales', 'too few comparable sales']
+      - name: comparable_sales
+        description: >
+          Number of sales behind the median. Null where no verdict was reached —
+          deliberately, so a low count cannot be mistaken for a supported one.
+      - name: comparable_median_price_aud
+        description: Raw observed median of the comparable cell, unindexed. Published so the adjustment can be undone.
+      - name: comparable_median_indexed_aud
+        description: >
+          Comparable median after each sale is indexed forward to the crawl
+          date. This is what variance_from_comparable_pct and
+          valuation_verdict are computed against.
+      - name: applied_growth_pct
+        description: Annual rate used to index this cell's comparables, from mart_lga_growth_rate.
+      - name: comparable_median_age_years
+        description: Median staleness of the comparables. With applied_growth_pct, this is the full size of the adjustment.
+
+  - name: mart_lga_growth_rate
+    description: >
+      One row per LGA with listing data: the annual growth rate used to index
+      historical sale prices forward to the present.
+
+      Estimated as the median per-property CAGR from mart_repeat_sales, which
+      holds the dwelling constant and so is not moved by shifts in the mix of
+      what sold. An LGA below valuation_min_growth_pairs borrows the national
+      median instead of trusting a rate drawn from a handful of properties —
+      that fallback is the only guard the model needs, because the thin-evidence
+      case never reaches the arithmetic.
+    columns:
+      - name: lga_key
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_lga')
+                field: lga_key
+      - name: applied_growth_pct
+        description: The rate consumers should use — the LGA's own where reliable, the national median otherwise.
+        tests:
+          - not_null
+          # A rate outside this range would compound into nonsense over the
+          # ~1.2-year indexation window. It cannot happen while the fallback
+          # holds, which is exactly why it is worth asserting.
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: -15
+                max_value: 30
+      - name: repeat_sale_pairs
+        tests: [not_null]
+      - name: is_reliable
+        tests: [not_null]
+      - name: growth_rate_source
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['lga', 'national']
+
+  - name: mart_lga_price_trend
+    description: >
+      Sale price distribution per LGA, year and property type — the LGA-grain
+      successor to mart_suburb_price_trend, which is kept for drill-down.
+
+      An aggregate over fct_sale, so never join it to listing-grain dimensions.
+      is_truncated_history comes from mart_data_coverage rather than being
+      recomputed, so every mart reports the same flag.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [lga_key, sold_year, property_type_key]
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "q1_price_aud <= median_price_aud and median_price_aud <= q3_price_aud"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "min_price_aud <= q1_price_aud and q3_price_aud <= max_price_aud"
+    columns:
+      - name: lga_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_lga')
+                field: lga_key
+      - name: property_type_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property_type')
+                field: property_type_key
+      - name: sales
+        tests: [not_null]
+      - name: is_partial_year
+        description: True for the crawl's own year, which is incomplete and must not be charted as a full year.
+        tests: [not_null]
+      - name: is_truncated_history
+        tests: [not_null]
+
+  - name: mart_lga_scorecard
+    description: >
+      One row per LGA with listing data — the dashboard's landing table.
+
+      Deliberately carries NO windowed growth KPI. The 1,500-result cap bites
+      hardest where the market is busiest, so history depth runs inverse to
+      activity: Horsham reaches back 3.9 years while Pyrenees reaches 19.1. Any
+      windowed comparison would compare different spans of time and read as a
+      market difference. Growth is therefore the repeat-sales CAGR, a
+      per-property rate that is comparable across all five, with history_years
+      published beside it.
+    columns:
+      - name: lga_key
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_lga')
+                field: lga_key
+      - name: local_government_area
+        tests: [not_null]
+      - name: annual_growth_pct
+        description: Repeat-sales CAGR from mart_lga_growth_rate. Comparable across LGAs where a windowed figure would not be.
+        tests: [not_null]
+      - name: is_reportable
+        description: >
+          False for LGAs below scorecard_min_sales — stray by-catch from a
+          neighbouring region's crawl rather than a market. Flagged, not
+          dropped, so the coverage page can show what was excluded.
+        tests: [not_null]
+      - name: is_truncated_history
+        tests: [not_null]
+      - name: price_to_income_ratio
+        description: Median sold price over the LGA's approximate weighted-mean income. For ranking, not for lending.
+
+  - name: mart_data_coverage
+    description: >
+      One row per LGA with listing data — the honesty table behind the
+      dashboard's caveats page, so those caveats read from data rather than from
+      prose that will drift.
+
+      Owns the single definition of is_truncated_history, derived from
+      int_crawl_coverage. Separates the three limits that are easy to confuse:
+      DEPTH (the result cap, inverse to activity), BREADTH (8 LGAs of western
+      Victoria) and TIME (crawl_dates, which gates every day-over-day measure).
+    columns:
+      - name: lga_key
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_lga')
+                field: lga_key
+      - name: suburbs_unmatched
+        description: Suburbs that resolved to no LGA. Should stay 0; assert_suburbs_resolve_to_lga warns if not.
+        tests: [not_null]
+      - name: crawl_dates
+        description: >
+          Distinct ingest dates. While this reads 1, days-on-market, price
+          reductions, discount-to-asking and listing velocity are uncomputable
+          rather than merely imprecise.
+        tests: [not_null]
+      - name: supports_time_series
+        tests: [not_null]
+      - name: is_truncated_history
+        tests: [not_null]
+      - name: rent_listings
+        description: Counted but never surfaced — 49 dataset-wide is why yield is deferred. Present so the omission stays visible.
+        tests: [not_null]

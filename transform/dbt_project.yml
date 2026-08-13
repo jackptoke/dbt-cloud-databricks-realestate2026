@@ -22,6 +22,55 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+vars:
+  # Mirrors fetch_suburb.py's ceiling: MAX_RESULTS (1500) / PAGE_SIZE (30). A
+  # sold crawl that landed this many pages hit the source's result cap, so the
+  # region's history is incomplete. Kept in sync by hand — if the page size
+  # changes in the ingest code, change it here too.
+  sold_page_cap: 50
+
+  # fct_sale. Two records of one dwelling sold this many days apart AT THE SAME
+  # PRICE are treated as one sale reported twice. Price equality carries the
+  # decision — a genuine fast resale is unlikely but possible, and one that
+  # lands on exactly the same figure is not, so a pair that disagrees on price
+  # survives as two sales. Observed same-price pairs span 1 to 18 days.
+  sale_duplicate_window_days: 30
+
+  # mart_lga_scorecard / mart_data_coverage. Below this many sales an LGA is
+  # stray by-catch from a neighbouring region's crawl rather than a market of
+  # its own — Loddon, Buloke and Southern Grampians hold 4, 2 and 1 between
+  # them. They stay in the marts, flagged rather than dropped, so the coverage
+  # page can show what was excluded and why.
+  scorecard_min_sales: 100
+
+  # mart_listing_valuation. Both are modelling judgements rather than facts, so
+  # they live here where they can be moved and the effect measured, instead of
+  # being buried in the SQL.
+  #
+  # Window: recent enough that the comparables describe today's market, wide
+  # enough to fill the cells. 2024 onward currently puts 567 of 674 live
+  # listings in a cell with enough comparables; 537 of those also carry an
+  # asking price and so receive a verdict. Opening it to 2023 covers more but
+  # blends in a market roughly 8% cheaper.
+  valuation_comparable_from: '2024-01-01'
+  # Below this many comparable sales the mart returns no verdict rather than a
+  # confident-looking one. Five is the floor at which a median means anything.
+  valuation_min_comparables: 5
+  # Percentage either side of the comparable median that still counts as "in
+  # line". Narrower than this and normal dispersion reads as mispricing.
+  valuation_in_line_band_pct: 10
+  # Repeat-sale pairs an LGA needs before its own growth rate is trusted to
+  # index comparables forward. Below it the national median is used instead.
+  # The five measured LGAs currently hold 75-165 pairs each, so this is a
+  # guard against future thin LGAs rather than a live constraint.
+  valuation_min_growth_pairs: 20
+
+  # mart_repeat_sales. Annualising a gain over a few weeks produces a number
+  # that is arithmetically correct and completely meaningless — a 10% gain over
+  # 10 days annualises to over 3,000%. Below this hold the mart reports total
+  # growth and leaves the annualised figure null.
+  repeat_sale_min_annualise_days: 365
+
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -40,6 +89,28 @@ models:
     intermediate:
       +schema: silver
       +materialized: view
+    +persist_docs:
+      relation: true
+      columns: true
+
+seeds:
+  dbt_cloud_databricks_realestate2026:
+    # Reference data, not presentation data: it belongs beside the conformed
+    # staging models rather than in gold.
+    +schema: silver
+    australian_suburbs:
+      +column_types:
+        # Both are identifiers that happen to look numeric. Left to inference
+        # they load as bigint, which drops the leading zero from the 313
+        # postcodes stored as three characters — 301 NT, plus 9 SA and 3 WA all
+        # sharing the remote-Australia code 0872 — and silently breaks every
+        # postcode join. No ACT postcode is affected. ssc_code is never
+        # arithmetic either.
+        ssc_code: string
+        postcode: string
+    suburb_lga_overrides:
+      +column_types:
+        postcode: string
     +persist_docs:
       relation: true
       columns: true

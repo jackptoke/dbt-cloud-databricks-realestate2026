@@ -110,6 +110,11 @@ def build_url(
 ) -> str:
     """Build a search URL.
 
+    FULL PARAMETER REFERENCE: see API_PARAMETERS.md beside this file. It records
+    every parameter the vendor documents, which of them actually work on the
+    sold channel, and — just as usefully — the ~25 spellings that are silently
+    ignored, so they are not retested. Read it before adding a parameter here.
+
     Centralised so the page-1 request and the mapped page requests cannot
     drift apart — differing query strings would silently return differently
     ordered or filtered result sets.
@@ -127,11 +132,22 @@ def build_url(
         nhill     ->  14 suburbs,   890 of 2,160 actually in Nhill  (41%)
         beaufort  ->   1 suburb,    828 of   828                   (100%)
 
-    That matters because the API's 1,500-result ceiling applies per region, so
-    for Nhill 59% of the budget is spent on neighbours. Switching to a
-    suburb-scoped search would need ``type`` and ``searchLocationSubtext``
-    changed together, and the result counts re-verified — the API silently
-    ignores parameters it does not recognise.
+    That matters because the 1,500-result ceiling applies per query, so for
+    Nhill 59% of the budget is spent on neighbours.
+
+    WHAT CONTROLS THE SCOPE, verified 2026-08-13: not ``type`` and not
+    ``searchLocationSubtext`` — both are ignored on their own. It is the
+    ``searchLocation`` STRING:
+
+        "Horsham, VIC"       -> "Horsham - Greater Region, VIC"   7,892
+        "Horsham, VIC 3400"  -> "Horsham, VIC 3400"               6,873
+        "Natimuk, VIC"       -> "Natimuk, VIC 3409"                 115
+
+    A locality sharing its name with a region resolves to the REGION unless the
+    postcode is supplied; smaller localities resolve to themselves either way.
+    Appending the postcode therefore gives each locality its own 1,500 budget
+    instead of 32 sharing one. Not done here yet because it changes the landing
+    path namespace — see query_scope in fetch_suburb.py.
 
     ``max_sold_age_months`` restricts the sold channel to recent sales. Units
     are MONTHS, verified against the API:
@@ -147,6 +163,18 @@ def build_url(
     `dateFrom` both return the unfiltered count — so a typo here degrades to a
     full fetch rather than an error. Any change to this name should be checked
     against a known result count.
+
+    There is NO lower bound on sold date. `minSoldAge`, `soldAgeFrom`,
+    `dateSoldFrom`, `soldFrom` and `minAge` were all tested and ignored, so
+    maxSoldAge only ever gives cumulative windows from today — it cannot reach
+    past the point where the running total hits the 1,500 ceiling.
+
+    ``sortType`` is the lever that can. Each ordering is a DIFFERENT 1,500-row
+    window into the same set: for Horsham 3400 `relevance` opens at 2026-07
+    while `sold-price-asc` opens at 2008-10, so a union across orderings reaches
+    records no single query returns. Valid values are in API_PARAMETERS.md. A
+    sort never changes totalResultsCount, so it must be verified by comparing
+    the first listing id — checking the count is how it was wrongly written off.
     """
     from urllib.parse import urlencode
 

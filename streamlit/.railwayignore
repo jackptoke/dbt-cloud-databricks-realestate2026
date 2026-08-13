@@ -1,0 +1,12 @@
+# Design mockups and their exports — several MB of .pen and .png that the
+# running app never reads.
+designs/
+
+# Local artefacts
+__pycache__/
+*.pyc
+.venv/
+
+# Databricks Apps deployment descriptor. Kept in the repo as the alternative
+# deployment path, but it means nothing to Railway.
+app.yaml

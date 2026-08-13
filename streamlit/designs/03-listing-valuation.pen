@@ -1,0 +1,3850 @@
+{
+  "version": "2.17",
+  "children": [
+    {
+      "type": "frame",
+      "id": "YN5j6",
+      "x": 0,
+      "y": 0,
+      "name": "Components",
+      "gap": 48,
+      "children": [
+        {
+          "type": "frame",
+          "id": "HeRTy",
+          "name": "Component / Listing Row",
+          "reusable": true,
+          "width": 296,
+          "fill": "#00000000",
+          "cornerRadius": 8,
+          "stroke": "#00000000",
+          "strokeWidth": 1,
+          "layout": "vertical",
+          "gap": 7,
+          "padding": [
+            12,
+            14
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "vlCDK",
+              "name": "Top",
+              "width": "fill_container",
+              "gap": 10,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "VZ34S",
+                  "name": "Address",
+                  "fill": "$ink",
+                  "content": "24 Wattle Grove",
+                  "fontFamily": "$font",
+                  "fontSize": 14,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.1
+                },
+                {
+                  "type": "frame",
+                  "id": "U3BLG",
+                  "name": "Badge",
+                  "fill": "$over-bg",
+                  "cornerRadius": 4,
+                  "padding": [
+                    3,
+                    7
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "c2nmv",
+                      "name": "Badge Label",
+                      "fill": "$over",
+                      "content": "+12.4%",
+                      "fontFamily": "$mono",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tBJsx",
+              "name": "Meta",
+              "width": "fill_container",
+              "gap": 10,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "VncLT",
+                  "name": "Suburb",
+                  "fill": "$ink-3",
+                  "content": "Ringwood East  ·  4 bed  ·  812 m²",
+                  "fontFamily": "$font",
+                  "fontSize": 11.5,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "MgDOs",
+                  "name": "Price",
+                  "fill": "$ink-2",
+                  "content": "$1.18M",
+                  "fontFamily": "$mono",
+                  "fontSize": 11.5,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "kSivn",
+          "name": "Component / Metric",
+          "reusable": true,
+          "width": 300,
+          "fill": "$bg-subtle",
+          "cornerRadius": 10,
+          "stroke": "$line",
+          "strokeWidth": 1,
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            18,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "lcV0W",
+              "name": "Label",
+              "fill": "$ink-3",
+              "content": "COMPARABLE MEDIAN",
+              "fontFamily": "$font",
+              "fontSize": 11,
+              "fontWeight": "600",
+              "letterSpacing": 0.8
+            },
+            {
+              "type": "text",
+              "id": "KOscg",
+              "name": "Value",
+              "fill": "$ink",
+              "content": "$1,049,500",
+              "fontFamily": "$font",
+              "fontSize": 32,
+              "fontWeight": "600",
+              "letterSpacing": -1
+            },
+            {
+              "type": "text",
+              "id": "yEA5E",
+              "name": "Note",
+              "fill": "$ink-2",
+              "content": "median of 14 matched sales",
+              "fontFamily": "$font",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QbIY0",
+          "name": "Component / Comp Sale Row",
+          "reusable": true,
+          "width": 1020,
+          "fill": "#00000000",
+          "stroke": "$line",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "QugFT",
+              "name": "Address Cell",
+              "width": "fill_container",
+              "padding": [
+                13,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Pis7M",
+                  "name": "Address",
+                  "fill": "$ink",
+                  "content": "12 Wattle Grove",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "eJeOj",
+              "name": "Sold Cell",
+              "width": 112,
+              "padding": [
+                13,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "i1Zljy",
+                  "name": "Sold",
+                  "fill": "$ink-2",
+                  "content": "18 Jun 2026",
+                  "fontFamily": "$font",
+                  "fontSize": 12.5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "G9of2",
+              "name": "Type Cell",
+              "width": 92,
+              "padding": [
+                13,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "stzf8",
+                  "name": "Type",
+                  "fill": "$ink-2",
+                  "content": "House",
+                  "fontFamily": "$font",
+                  "fontSize": 12.5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "bPhP1",
+              "name": "Beds Cell",
+              "width": 56,
+              "padding": [
+                13,
+                10
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "QQWGx",
+                  "name": "Beds",
+                  "fill": "$ink-2",
+                  "content": "4",
+                  "fontFamily": "$mono",
+                  "fontSize": 12.5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "nL6rk",
+              "name": "Land Cell",
+              "width": 90,
+              "padding": [
+                13,
+                10
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "V5wcl",
+                  "name": "Land",
+                  "fill": "$ink-2",
+                  "content": "790 m²",
+                  "fontFamily": "$mono",
+                  "fontSize": 12.5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "SJfl7",
+              "name": "Sold Price Cell",
+              "width": 130,
+              "padding": [
+                13,
+                10
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "O04gV",
+                  "name": "Sold Price",
+                  "fill": "$ink",
+                  "content": "$1,092,000",
+                  "fontFamily": "$mono",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "juaJI",
+              "name": "Dist Cell",
+              "width": 78,
+              "padding": [
+                13,
+                10
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "T1HDsr",
+                  "name": "Dist",
+                  "fill": "$ink-3",
+                  "content": "0.2 km",
+                  "fontFamily": "$mono",
+                  "fontSize": 12.5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RkyXM",
+              "name": "vs Asking Cell",
+              "width": 110,
+              "padding": [
+                13,
+                10
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "w19TC",
+                  "name": "vs Asking",
+                  "fill": "$under",
+                  "content": "−7.5%",
+                  "fontFamily": "$mono",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "t0CWF4",
+      "x": 0,
+      "y": 239,
+      "name": "Listing Valuation — Verdict",
+      "clip": true,
+      "width": 1440,
+      "height": 1300,
+      "fill": "$bg",
+      "children": [
+        {
+          "type": "frame",
+          "id": "jCvl3",
+          "name": "Sidebar",
+          "width": 340,
+          "height": "fill_container",
+          "fill": "$bg-sidebar",
+          "stroke": "$line",
+          "strokeWidth": {
+            "right": 1
+          },
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "laWzc",
+              "name": "Brand",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 3,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "b6LTW",
+                  "name": "Product",
+                  "fill": "$accent",
+                  "content": "PROPERTY IQ  /  VIC",
+                  "fontFamily": "$font",
+                  "fontSize": 10.5,
+                  "fontWeight": "600",
+                  "letterSpacing": 1.2
+                },
+                {
+                  "type": "text",
+                  "id": "WYb4i",
+                  "name": "Page Title",
+                  "fill": "$ink",
+                  "content": "Listing Valuation",
+                  "fontFamily": "$font",
+                  "fontSize": 19,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.4
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "E2IPCV",
+              "name": "Search Field",
+              "width": "fill_container",
+              "fill": "$bg",
+              "cornerRadius": 8,
+              "stroke": "$line-strong",
+              "strokeWidth": 1,
+              "gap": 9,
+              "padding": [
+                10,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "JpKlq",
+                  "name": "Search Icon",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$ink-3"
+                },
+                {
+                  "type": "text",
+                  "id": "c1g6ae",
+                  "name": "Search Placeholder",
+                  "fill": "$ink-3",
+                  "content": "Search address or suburb",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wktXN",
+              "name": "Filter Chips",
+              "width": "fill_container",
+              "gap": 7,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EICwX",
+                  "name": "Chip Ringwood + 5 km",
+                  "fill": "$ink",
+                  "cornerRadius": 20,
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "wbpRW",
+                      "name": "Chip Label",
+                      "fill": "$bg",
+                      "content": "Ringwood + 5 km",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "dnJ1p",
+                  "name": "Chip House",
+                  "fill": "$ink",
+                  "cornerRadius": 20,
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Fa5fj",
+                      "name": "Chip Label",
+                      "fill": "$bg",
+                      "content": "House",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "d9C0P",
+                  "name": "Chip 4+ bed",
+                  "fill": "#00000000",
+                  "cornerRadius": 20,
+                  "stroke": "$line-strong",
+                  "strokeWidth": 1,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QxKZl",
+                      "name": "Chip Label",
+                      "fill": "$ink-2",
+                      "content": "4+ bed",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "xqD2o",
+              "name": "List Heading",
+              "fill": "$ink-3",
+              "content": "8 LIVE LISTINGS  ·  SORTED BY VARIANCE",
+              "fontFamily": "$font",
+              "fontSize": 10,
+              "fontWeight": "600",
+              "letterSpacing": 0.9
+            },
+            {
+              "type": "frame",
+              "id": "cqbgH",
+              "name": "Listing List",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "id": "ff6KK",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 24 Wattle Grove",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "stroke": "$accent",
+                  "strokeWidth": {
+                    "left": 3
+                  },
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "24 Wattle Grove",
+                      "fill": "$ink",
+                      "fontWeight": "600"
+                    },
+                    "U3BLG": {
+                      "fill": "$over-bg"
+                    },
+                    "c2nmv": {
+                      "content": "+12.4%",
+                      "fill": "$over"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood East  ·  4 bed  ·  812 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$1.18M"
+                    }
+                  }
+                },
+                {
+                  "id": "Kwu90",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 4 Ferndale Ct",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "4 Ferndale Ct",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$over-bg"
+                    },
+                    "c2nmv": {
+                      "content": "+9.7%",
+                      "fill": "$over"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood East  ·  4 bed  ·  845 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$1.24M"
+                    }
+                  }
+                },
+                {
+                  "id": "Uzh8U",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 12/3 Adelaide St",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "12/3 Adelaide St",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$over-bg"
+                    },
+                    "c2nmv": {
+                      "content": "+2.8%",
+                      "fill": "$over"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood  ·  2 bed  ·  apartment"
+                    },
+                    "MgDOs": {
+                      "content": "$615K"
+                    }
+                  }
+                },
+                {
+                  "id": "OSIZi",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 9 Kalinda Rd",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "9 Kalinda Rd",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$over-bg"
+                    },
+                    "c2nmv": {
+                      "content": "+0.9%",
+                      "fill": "$over"
+                    },
+                    "VncLT": {
+                      "content": "Croydon  ·  3 bed  ·  690 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$945K"
+                    }
+                  }
+                },
+                {
+                  "id": "l8eyIY",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 17 Loughnan Rd",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "17 Loughnan Rd",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$under-bg"
+                    },
+                    "c2nmv": {
+                      "content": "−2.3%",
+                      "fill": "$under"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood North  ·  3 bed  ·  712 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$985K"
+                    }
+                  }
+                },
+                {
+                  "id": "RNIFH",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 88 Mullum Mullum Rd",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "88 Mullum Mullum Rd",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$under-bg"
+                    },
+                    "c2nmv": {
+                      "content": "−4.1%",
+                      "fill": "$under"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood  ·  3 bed  ·  604 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$890K"
+                    }
+                  }
+                },
+                {
+                  "id": "GIkv8",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 31 Bedford Rd",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "31 Bedford Rd",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$under-bg"
+                    },
+                    "c2nmv": {
+                      "content": "−6.2%",
+                      "fill": "$under"
+                    },
+                    "VncLT": {
+                      "content": "Heathmont  ·  4 bed  ·  726 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$1.05M"
+                    }
+                  }
+                },
+                {
+                  "id": "F2nXA",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 5 Clifftop Rise",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "5 Clifftop Rise",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$muted-bg"
+                    },
+                    "c2nmv": {
+                      "content": "no verdict",
+                      "fill": "$ink-3"
+                    },
+                    "VncLT": {
+                      "content": "Warrandyte North  ·  5 bed  ·  4.1 ha"
+                    },
+                    "MgDOs": {
+                      "content": "$2.65M"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "T0KFY",
+          "name": "Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "$bg",
+          "layout": "vertical",
+          "gap": 26,
+          "padding": [
+            30,
+            40
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "nakKy",
+              "name": "Header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "r4zHY",
+                  "name": "Header Left",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "vXV9d",
+                      "name": "Breadcrumb",
+                      "fill": "$ink-3",
+                      "content": "Analytics  ›  Listing Valuation",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AgQoj",
+                      "name": "Title",
+                      "fill": "$ink",
+                      "content": "Is this listing priced above the market?",
+                      "fontFamily": "$font",
+                      "fontSize": 22,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.5
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gzeBK",
+                  "name": "Header Right",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "d1MsF",
+                      "name": "Freshness",
+                      "fill": "$ink-3",
+                      "content": "Sales data to 12 Aug 2026",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n3L8B9",
+                      "name": "Export Button",
+                      "fill": "$bg",
+                      "cornerRadius": 7,
+                      "stroke": "$line-strong",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "padding": [
+                        8,
+                        13
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "d8dZRC",
+                          "name": "Download Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "download",
+                          "library": "lucide",
+                          "fill": "$ink-2"
+                        },
+                        {
+                          "type": "text",
+                          "id": "EdFAM",
+                          "name": "Export Label",
+                          "fill": "$ink-2",
+                          "content": "Export comps",
+                          "fontFamily": "$font",
+                          "fontSize": 12.5,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jVWt2",
+              "name": "Selected Listing",
+              "width": "fill_container",
+              "stroke": "$line",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "gap": 40,
+              "padding": [
+                0,
+                0,
+                24,
+                0
+              ],
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "A2wff",
+                  "name": "Listing Identity",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "V0dyAE",
+                      "name": "Address Block",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IS0CS",
+                          "name": "Address",
+                          "fill": "$ink",
+                          "content": "24 Wattle Grove",
+                          "fontFamily": "$font",
+                          "fontSize": 30,
+                          "fontWeight": "600",
+                          "letterSpacing": -0.9
+                        },
+                        {
+                          "type": "text",
+                          "id": "saMW9",
+                          "name": "Locality",
+                          "fill": "$ink-2",
+                          "content": "Ringwood East VIC 3135  ·  listed 28 Jul 2026  ·  ID 4820119",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kQbRg",
+                      "name": "Attributes",
+                      "gap": 34,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "tQXhO",
+                          "name": "Attr PROPERTY TYPE",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "McPpS",
+                              "name": "Attr Label",
+                              "fill": "$ink-3",
+                              "content": "PROPERTY TYPE",
+                              "fontFamily": "$font",
+                              "fontSize": 10,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.8
+                            },
+                            {
+                              "type": "text",
+                              "id": "G3I3CT",
+                              "name": "Attr Value",
+                              "fill": "$ink",
+                              "content": "House",
+                              "fontFamily": "$font",
+                              "fontSize": 16,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XVmeF",
+                          "name": "Attr BEDROOMS",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "je2LX",
+                              "name": "Attr Label",
+                              "fill": "$ink-3",
+                              "content": "BEDROOMS",
+                              "fontFamily": "$font",
+                              "fontSize": 10,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.8
+                            },
+                            {
+                              "type": "text",
+                              "id": "P3kzxp",
+                              "name": "Attr Value",
+                              "fill": "$ink",
+                              "content": "4",
+                              "fontFamily": "$font",
+                              "fontSize": 16,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "RKTTv",
+                          "name": "Attr LAND SIZE",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "tDRKm",
+                              "name": "Attr Label",
+                              "fill": "$ink-3",
+                              "content": "LAND SIZE",
+                              "fontFamily": "$font",
+                              "fontSize": 10,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.8
+                            },
+                            {
+                              "type": "text",
+                              "id": "B4e7f",
+                              "name": "Attr Value",
+                              "fill": "$ink",
+                              "content": "812 m²",
+                              "fontFamily": "$font",
+                              "fontSize": 16,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vM5jQ",
+                  "name": "Asking Price Block",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "h0PtEZ",
+                      "name": "Asking Label",
+                      "fill": "$ink-3",
+                      "content": "ASKING PRICE",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "iq6NI",
+                      "name": "Asking Value",
+                      "fill": "$ink",
+                      "content": "$1,180,000",
+                      "fontFamily": "$font",
+                      "fontSize": 38,
+                      "fontWeight": "600",
+                      "letterSpacing": -1.4
+                    },
+                    {
+                      "type": "frame",
+                      "id": "P7r8Y7",
+                      "name": "Verdict Pill",
+                      "fill": "$over-bg",
+                      "cornerRadius": 6,
+                      "gap": 7,
+                      "padding": [
+                        7,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "W7wnnz",
+                          "name": "Verdict Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "trending-up",
+                          "library": "lucide",
+                          "fill": "$over"
+                        },
+                        {
+                          "type": "text",
+                          "id": "vepNO",
+                          "name": "Verdict Label",
+                          "fill": "$over",
+                          "content": "12.4% above what comparables sold for",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "m31dr1",
+              "name": "Verdict Metrics",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "id": "RliE9",
+                  "type": "ref",
+                  "ref": "kSivn",
+                  "name": "Metric COMPARABLE MEDIAN",
+                  "width": "fill_container",
+                  "descendants": {
+                    "lcV0W": {
+                      "content": "COMPARABLE MEDIAN"
+                    },
+                    "KOscg": {
+                      "content": "$1,049,500",
+                      "fill": "$ink"
+                    },
+                    "yEA5E": {
+                      "content": "Median sold price of matched comps"
+                    }
+                  }
+                },
+                {
+                  "id": "WYF1w",
+                  "type": "ref",
+                  "ref": "kSivn",
+                  "name": "Metric VARIANCE VS COMPARABLES",
+                  "width": "fill_container",
+                  "descendants": {
+                    "lcV0W": {
+                      "content": "VARIANCE VS COMPARABLES"
+                    },
+                    "KOscg": {
+                      "content": "+12.4%",
+                      "fill": "$over"
+                    },
+                    "yEA5E": {
+                      "content": "$130,500 above the comparable median"
+                    }
+                  }
+                },
+                {
+                  "id": "A5vTH",
+                  "type": "ref",
+                  "ref": "kSivn",
+                  "name": "Metric COMPARABLE SALES USED",
+                  "width": "fill_container",
+                  "descendants": {
+                    "lcV0W": {
+                      "content": "COMPARABLE SALES USED"
+                    },
+                    "KOscg": {
+                      "content": "14",
+                      "fill": "$ink"
+                    },
+                    "yEA5E": {
+                      "content": "Sold in last 6 months within 2 km"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "OJD7z",
+              "name": "Distribution Section",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xWw28",
+                  "name": "Chart Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "gI6pq",
+                      "name": "Chart Title Block",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ZVnH8",
+                          "name": "Chart Title",
+                          "fill": "$ink",
+                          "content": "Where this listing sits in the comparable sale distribution",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "aYhz7",
+                          "name": "Chart Sub",
+                          "fill": "$ink-3",
+                          "content": "14 comparable sales · Ringwood East and adjoining suburbs · houses, 3–5 bed, 600–1,000 m²",
+                          "fontFamily": "$font",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "B16Ly",
+                      "name": "Legend",
+                      "gap": 16,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "W4H2vZ",
+                          "name": "Legend Comparable sales",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "ajH7i",
+                              "name": "Swatch",
+                              "fill": "$line-strong",
+                              "width": 10,
+                              "height": 10
+                            },
+                            {
+                              "type": "text",
+                              "id": "No8nt",
+                              "name": "Legend Label",
+                              "fill": "$ink-2",
+                              "content": "Comparable sales",
+                              "fontFamily": "$font",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ZVJp2",
+                          "name": "Legend Median band",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "qHZ7y",
+                              "name": "Swatch",
+                              "fill": "$ink-2",
+                              "width": 10,
+                              "height": 10
+                            },
+                            {
+                              "type": "text",
+                              "id": "pfzyO",
+                              "name": "Legend Label",
+                              "fill": "$ink-2",
+                              "content": "Median band",
+                              "fontFamily": "$font",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Tbvji",
+                          "name": "Legend This listing",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "Az4Uc",
+                              "name": "Swatch",
+                              "fill": "$over",
+                              "width": 10,
+                              "height": 10
+                            },
+                            {
+                              "type": "text",
+                              "id": "i0gOm",
+                              "name": "Legend Label",
+                              "fill": "$ink-2",
+                              "content": "This listing",
+                              "fontFamily": "$font",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cmKAM",
+                  "name": "Histogram",
+                  "width": "fill_container",
+                  "height": 260,
+                  "gap": 10,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "C1Nwxe",
+                      "name": "Bin $820–900k",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "justifyContent": "end",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "q4hX0V",
+                          "name": "Count",
+                          "fill": "$ink-3",
+                          "content": "1",
+                          "fontFamily": "$mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": [
+                            3,
+                            3,
+                            0,
+                            0
+                          ],
+                          "id": "S0OTcO",
+                          "name": "Bar",
+                          "fill": "$line-strong",
+                          "width": "fill_container",
+                          "height": 44
+                        },
+                        {
+                          "type": "text",
+                          "id": "xBORd",
+                          "name": "Bin Label",
+                          "fill": "$ink-3",
+                          "content": "$820–900k",
+                          "fontFamily": "$font",
+                          "fontSize": 10.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "P8JqX0",
+                      "name": "Bin $900–980k",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "justifyContent": "end",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "wCoTh",
+                          "name": "Count",
+                          "fill": "$ink-3",
+                          "content": "2",
+                          "fontFamily": "$mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": [
+                            3,
+                            3,
+                            0,
+                            0
+                          ],
+                          "id": "abSaM",
+                          "name": "Bar",
+                          "fill": "$line-strong",
+                          "width": "fill_container",
+                          "height": 88
+                        },
+                        {
+                          "type": "text",
+                          "id": "nXDEV",
+                          "name": "Bin Label",
+                          "fill": "$ink-3",
+                          "content": "$900–980k",
+                          "fontFamily": "$font",
+                          "fontSize": 10.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "W0eJkh",
+                      "name": "Bin $980k–1.06M",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "justifyContent": "end",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "PXMSD",
+                          "name": "Tag",
+                          "fill": "$muted-bg",
+                          "cornerRadius": 4,
+                          "padding": [
+                            3,
+                            7
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "EdnlE",
+                              "name": "Tag Label",
+                              "fill": "$ink-2",
+                              "content": "MEDIAN",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.6
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "vJbAo",
+                          "name": "Count",
+                          "fill": "$ink-3",
+                          "content": "4",
+                          "fontFamily": "$mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": [
+                            3,
+                            3,
+                            0,
+                            0
+                          ],
+                          "id": "c6wS6V",
+                          "name": "Bar",
+                          "fill": "$ink-2",
+                          "width": "fill_container",
+                          "height": 176
+                        },
+                        {
+                          "type": "text",
+                          "id": "Yft6w",
+                          "name": "Bin Label",
+                          "fill": "$ink-2",
+                          "content": "$980k–1.06M",
+                          "fontFamily": "$font",
+                          "fontSize": 10.5,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uAtSA",
+                      "name": "Bin $1.06–1.14M",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "justifyContent": "end",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "oF9BC",
+                          "name": "Count",
+                          "fill": "$ink-3",
+                          "content": "3",
+                          "fontFamily": "$mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": [
+                            3,
+                            3,
+                            0,
+                            0
+                          ],
+                          "id": "Jt32M",
+                          "name": "Bar",
+                          "fill": "$line-strong",
+                          "width": "fill_container",
+                          "height": 132
+                        },
+                        {
+                          "type": "text",
+                          "id": "E02Eeu",
+                          "name": "Bin Label",
+                          "fill": "$ink-3",
+                          "content": "$1.06–1.14M",
+                          "fontFamily": "$font",
+                          "fontSize": 10.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Cn4Vc",
+                      "name": "Bin $1.14–1.22M",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "justifyContent": "end",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "jiANa",
+                          "name": "Tag",
+                          "fill": "$over",
+                          "cornerRadius": 4,
+                          "padding": [
+                            3,
+                            7
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "MkohD",
+                              "name": "Tag Label",
+                              "fill": "$bg",
+                              "content": "THIS LISTING",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.6
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "T5gUAN",
+                          "name": "Count",
+                          "fill": "$over",
+                          "content": "2",
+                          "fontFamily": "$mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": [
+                            3,
+                            3,
+                            0,
+                            0
+                          ],
+                          "id": "rf5Vf",
+                          "name": "Bar",
+                          "fill": "$over",
+                          "width": "fill_container",
+                          "height": 88
+                        },
+                        {
+                          "type": "text",
+                          "id": "gRck6",
+                          "name": "Bin Label",
+                          "fill": "$ink-2",
+                          "content": "$1.14–1.22M",
+                          "fontFamily": "$font",
+                          "fontSize": 10.5,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lYaYY",
+                      "name": "Bin $1.22–1.30M",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "justifyContent": "end",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bEJfp",
+                          "name": "Count",
+                          "fill": "$ink-3",
+                          "content": "1",
+                          "fontFamily": "$mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": [
+                            3,
+                            3,
+                            0,
+                            0
+                          ],
+                          "id": "f2MRd",
+                          "name": "Bar",
+                          "fill": "$line-strong",
+                          "width": "fill_container",
+                          "height": 44
+                        },
+                        {
+                          "type": "text",
+                          "id": "Zbfff",
+                          "name": "Bin Label",
+                          "fill": "$ink-3",
+                          "content": "$1.22–1.30M",
+                          "fontFamily": "$font",
+                          "fontSize": 10.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Y4wQEN",
+                      "name": "Bin $1.30–1.38M",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "justifyContent": "end",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "u3poHs",
+                          "name": "Count",
+                          "fill": "$ink-3",
+                          "content": "1",
+                          "fontFamily": "$mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": [
+                            3,
+                            3,
+                            0,
+                            0
+                          ],
+                          "id": "WnLsq",
+                          "name": "Bar",
+                          "fill": "$line-strong",
+                          "width": "fill_container",
+                          "height": 44
+                        },
+                        {
+                          "type": "text",
+                          "id": "byHpd",
+                          "name": "Bin Label",
+                          "fill": "$ink-3",
+                          "content": "$1.30–1.38M",
+                          "fontFamily": "$font",
+                          "fontSize": 10.5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Ea4gh",
+                  "name": "Chart Footnote",
+                  "fill": "$ink-2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Bars count comparable sales falling in each price band. The listing's $1,180,000 asking price sits in the $1.14–1.22M band — above the $980k–1.06M band where the median sale landed.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "coA0t",
+              "name": "Comparable Sales Section",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "fp3oh",
+                  "name": "Table Header Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ZPgws",
+                      "name": "Table Title Block",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "qxxd8",
+                          "name": "Table Title",
+                          "fill": "$ink",
+                          "content": "The comparable sales behind this verdict",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "hSZOJ",
+                          "name": "Table Sub",
+                          "fill": "$ink-3",
+                          "content": "Negative “sold vs asking” means the comparable sold for less than this listing is asking.",
+                          "fontFamily": "$font",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "YNtRm",
+                      "name": "Row Count",
+                      "fill": "$ink-3",
+                      "content": "Showing 8 of 14 · sorted by sale date",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iwDa5",
+                  "name": "Comparable Sales Table",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "G2z8j",
+                      "name": "Header Row",
+                      "width": "fill_container",
+                      "fill": "$bg-subtle",
+                      "stroke": "$line-strong",
+                      "strokeWidth": {
+                        "bottom": 1
+                      },
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "V2Bq48",
+                          "name": "H ADDRESS",
+                          "width": "fill_container",
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "o9PH2F",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "ADDRESS",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "WsAvW",
+                          "name": "H SOLD",
+                          "width": 112,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "j5w8vt",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "SOLD",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bDE2A",
+                          "name": "H TYPE",
+                          "width": 92,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "iYxeH",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "TYPE",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "N8BEn",
+                          "name": "H BEDS",
+                          "width": 56,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "lZOQP",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "BEDS",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ZDBfw",
+                          "name": "H LAND",
+                          "width": 90,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "K2WcEL",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "LAND",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "t2lZrg",
+                          "name": "H SOLD PRICE",
+                          "width": 130,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "vcdlb",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "SOLD PRICE",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "TL27A",
+                          "name": "H DIST",
+                          "width": 78,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ltz7o",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "DIST",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "wSNc5",
+                          "name": "H SOLD VS ASKING",
+                          "width": 110,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "hZKqd",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "VS ASKING",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "PvbLK",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 12 Wattle Grove",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "12 Wattle Grove"
+                        },
+                        "i1Zljy": {
+                          "content": "18 Jun 2026"
+                        },
+                        "stzf8": {
+                          "content": "House"
+                        },
+                        "QQWGx": {
+                          "content": "4"
+                        },
+                        "V5wcl": {
+                          "content": "790 m²"
+                        },
+                        "O04gV": {
+                          "content": "$1,092,000"
+                        },
+                        "T1HDsr": {
+                          "content": "0.2 km"
+                        },
+                        "w19TC": {
+                          "content": "−7.5%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "U97dc6",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 7 Bardia St",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "7 Bardia St"
+                        },
+                        "i1Zljy": {
+                          "content": "02 Jun 2026"
+                        },
+                        "stzf8": {
+                          "content": "House"
+                        },
+                        "QQWGx": {
+                          "content": "4"
+                        },
+                        "V5wcl": {
+                          "content": "845 m²"
+                        },
+                        "O04gV": {
+                          "content": "$1,140,000"
+                        },
+                        "T1HDsr": {
+                          "content": "0.6 km"
+                        },
+                        "w19TC": {
+                          "content": "−3.4%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "o5DUKZ",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 55 Knaith Rd",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "55 Knaith Rd"
+                        },
+                        "i1Zljy": {
+                          "content": "24 May 2026"
+                        },
+                        "stzf8": {
+                          "content": "House"
+                        },
+                        "QQWGx": {
+                          "content": "4"
+                        },
+                        "V5wcl": {
+                          "content": "760 m²"
+                        },
+                        "O04gV": {
+                          "content": "$1,007,000"
+                        },
+                        "T1HDsr": {
+                          "content": "0.9 km"
+                        },
+                        "w19TC": {
+                          "content": "−14.7%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "ewnJr",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 3 Oban Rd",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "3 Oban Rd"
+                        },
+                        "i1Zljy": {
+                          "content": "11 May 2026"
+                        },
+                        "stzf8": {
+                          "content": "House"
+                        },
+                        "QQWGx": {
+                          "content": "5"
+                        },
+                        "V5wcl": {
+                          "content": "880 m²"
+                        },
+                        "O04gV": {
+                          "content": "$1,215,000"
+                        },
+                        "T1HDsr": {
+                          "content": "1.1 km"
+                        },
+                        "w19TC": {
+                          "content": "+3.0%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "jWrzp",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 18 Tarrawarra Ct",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "18 Tarrawarra Ct"
+                        },
+                        "i1Zljy": {
+                          "content": "27 Apr 2026"
+                        },
+                        "stzf8": {
+                          "content": "House"
+                        },
+                        "QQWGx": {
+                          "content": "4"
+                        },
+                        "V5wcl": {
+                          "content": "720 m²"
+                        },
+                        "O04gV": {
+                          "content": "$985,000"
+                        },
+                        "T1HDsr": {
+                          "content": "1.3 km"
+                        },
+                        "w19TC": {
+                          "content": "−16.5%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "P8Bh07",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 9 Bemboka Rd",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "9 Bemboka Rd"
+                        },
+                        "i1Zljy": {
+                          "content": "12 Apr 2026"
+                        },
+                        "stzf8": {
+                          "content": "House"
+                        },
+                        "QQWGx": {
+                          "content": "4"
+                        },
+                        "V5wcl": {
+                          "content": "805 m²"
+                        },
+                        "O04gV": {
+                          "content": "$1,050,000"
+                        },
+                        "T1HDsr": {
+                          "content": "1.4 km"
+                        },
+                        "w19TC": {
+                          "content": "−11.0%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "wLfi8",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 41 Warrandyte Rd",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "41 Warrandyte Rd"
+                        },
+                        "i1Zljy": {
+                          "content": "04 Apr 2026"
+                        },
+                        "stzf8": {
+                          "content": "House"
+                        },
+                        "QQWGx": {
+                          "content": "4"
+                        },
+                        "V5wcl": {
+                          "content": "690 m²"
+                        },
+                        "O04gV": {
+                          "content": "$958,000"
+                        },
+                        "T1HDsr": {
+                          "content": "1.6 km"
+                        },
+                        "w19TC": {
+                          "content": "−18.8%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "F8HQi",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 26 Heathmont Rd",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "26 Heathmont Rd"
+                        },
+                        "i1Zljy": {
+                          "content": "21 Mar 2026"
+                        },
+                        "stzf8": {
+                          "content": "House"
+                        },
+                        "QQWGx": {
+                          "content": "4"
+                        },
+                        "V5wcl": {
+                          "content": "830 m²"
+                        },
+                        "O04gV": {
+                          "content": "$1,168,000"
+                        },
+                        "T1HDsr": {
+                          "content": "1.8 km"
+                        },
+                        "w19TC": {
+                          "content": "−1.0%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "LzAan",
+                  "name": "Method Note",
+                  "fill": "$ink-3",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Method · comparables are settled sales in the last 6 months within 2 km, same property type, bedrooms ±1, land size within 25%. Verdict requires at least 6 comparable sales.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font",
+                  "fontSize": 11.5,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "d7n7JS",
+      "x": 1560,
+      "y": 239,
+      "name": "Listing Valuation — Too Few Comps",
+      "clip": true,
+      "width": 1440,
+      "height": 1010,
+      "fill": "$bg",
+      "children": [
+        {
+          "type": "frame",
+          "id": "qekV8",
+          "name": "Sidebar",
+          "width": 340,
+          "height": "fill_container",
+          "fill": "$bg-sidebar",
+          "stroke": "$line",
+          "strokeWidth": {
+            "right": 1
+          },
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "a9SNaz",
+              "name": "Brand",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 3,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "RZJEv",
+                  "name": "Product",
+                  "fill": "$accent",
+                  "content": "PROPERTY IQ  /  VIC",
+                  "fontFamily": "$font",
+                  "fontSize": 10.5,
+                  "fontWeight": "600",
+                  "letterSpacing": 1.2
+                },
+                {
+                  "type": "text",
+                  "id": "Z6WXf",
+                  "name": "Page Title",
+                  "fill": "$ink",
+                  "content": "Listing Valuation",
+                  "fontFamily": "$font",
+                  "fontSize": 19,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.4
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "grzuz",
+              "name": "Search Field",
+              "width": "fill_container",
+              "fill": "$bg",
+              "cornerRadius": 8,
+              "stroke": "$line-strong",
+              "strokeWidth": 1,
+              "gap": 9,
+              "padding": [
+                10,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "on3rj",
+                  "name": "Search Icon",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$ink-3"
+                },
+                {
+                  "type": "text",
+                  "id": "YIl2n",
+                  "name": "Search Placeholder",
+                  "fill": "$ink-3",
+                  "content": "Search address or suburb",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Q2A6r",
+              "name": "Filter Chips",
+              "width": "fill_container",
+              "gap": 7,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "tvj9q",
+                  "name": "Chip Ringwood + 5 km",
+                  "fill": "$ink",
+                  "cornerRadius": 20,
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ILjkT",
+                      "name": "Chip Label",
+                      "fill": "$bg",
+                      "content": "Ringwood + 5 km",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "K9IZXH",
+                  "name": "Chip House",
+                  "fill": "$ink",
+                  "cornerRadius": 20,
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Hydhw",
+                      "name": "Chip Label",
+                      "fill": "$bg",
+                      "content": "House",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FuiQ8",
+                  "name": "Chip 4+ bed",
+                  "fill": "#00000000",
+                  "cornerRadius": 20,
+                  "stroke": "$line-strong",
+                  "strokeWidth": 1,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "NGtuE",
+                      "name": "Chip Label",
+                      "fill": "$ink-2",
+                      "content": "4+ bed",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "X4l214",
+              "name": "List Heading",
+              "fill": "$ink-3",
+              "content": "8 LIVE LISTINGS  ·  SORTED BY VARIANCE",
+              "fontFamily": "$font",
+              "fontSize": 10,
+              "fontWeight": "600",
+              "letterSpacing": 0.9
+            },
+            {
+              "type": "frame",
+              "id": "QGecY",
+              "name": "Listing List",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "id": "x5IdWa",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 24 Wattle Grove",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "24 Wattle Grove",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$over-bg"
+                    },
+                    "c2nmv": {
+                      "content": "+12.4%",
+                      "fill": "$over"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood East  ·  4 bed  ·  812 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$1.18M"
+                    }
+                  }
+                },
+                {
+                  "id": "Nofgs",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 4 Ferndale Ct",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "4 Ferndale Ct",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$over-bg"
+                    },
+                    "c2nmv": {
+                      "content": "+9.7%",
+                      "fill": "$over"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood East  ·  4 bed  ·  845 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$1.24M"
+                    }
+                  }
+                },
+                {
+                  "id": "K6KnZG",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 12/3 Adelaide St",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "12/3 Adelaide St",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$over-bg"
+                    },
+                    "c2nmv": {
+                      "content": "+2.8%",
+                      "fill": "$over"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood  ·  2 bed  ·  apartment"
+                    },
+                    "MgDOs": {
+                      "content": "$615K"
+                    }
+                  }
+                },
+                {
+                  "id": "a84rUw",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 9 Kalinda Rd",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "9 Kalinda Rd",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$over-bg"
+                    },
+                    "c2nmv": {
+                      "content": "+0.9%",
+                      "fill": "$over"
+                    },
+                    "VncLT": {
+                      "content": "Croydon  ·  3 bed  ·  690 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$945K"
+                    }
+                  }
+                },
+                {
+                  "id": "QE1qh",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 17 Loughnan Rd",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "17 Loughnan Rd",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$under-bg"
+                    },
+                    "c2nmv": {
+                      "content": "−2.3%",
+                      "fill": "$under"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood North  ·  3 bed  ·  712 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$985K"
+                    }
+                  }
+                },
+                {
+                  "id": "ZBc4X",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 88 Mullum Mullum Rd",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "88 Mullum Mullum Rd",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$under-bg"
+                    },
+                    "c2nmv": {
+                      "content": "−4.1%",
+                      "fill": "$under"
+                    },
+                    "VncLT": {
+                      "content": "Ringwood  ·  3 bed  ·  604 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$890K"
+                    }
+                  }
+                },
+                {
+                  "id": "gvinE",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 31 Bedford Rd",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "stroke": "#00000000",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "31 Bedford Rd",
+                      "fill": "$ink-2",
+                      "fontWeight": "500"
+                    },
+                    "U3BLG": {
+                      "fill": "$under-bg"
+                    },
+                    "c2nmv": {
+                      "content": "−6.2%",
+                      "fill": "$under"
+                    },
+                    "VncLT": {
+                      "content": "Heathmont  ·  4 bed  ·  726 m²"
+                    },
+                    "MgDOs": {
+                      "content": "$1.05M"
+                    }
+                  }
+                },
+                {
+                  "id": "Tz18w",
+                  "type": "ref",
+                  "ref": "HeRTy",
+                  "name": "Row 5 Clifftop Rise",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "stroke": "$accent",
+                  "strokeWidth": {
+                    "left": 3
+                  },
+                  "descendants": {
+                    "VZ34S": {
+                      "content": "5 Clifftop Rise",
+                      "fill": "$ink",
+                      "fontWeight": "600"
+                    },
+                    "U3BLG": {
+                      "fill": "$muted-bg"
+                    },
+                    "c2nmv": {
+                      "content": "no verdict",
+                      "fill": "$ink-3"
+                    },
+                    "VncLT": {
+                      "content": "Warrandyte North  ·  5 bed  ·  4.1 ha"
+                    },
+                    "MgDOs": {
+                      "content": "$2.65M"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "iPK7D",
+          "name": "Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "$bg",
+          "layout": "vertical",
+          "gap": 26,
+          "padding": [
+            30,
+            40
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "VFqHE",
+              "name": "Header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "OzjML",
+                  "name": "Header Left",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nv9Lf",
+                      "name": "Breadcrumb",
+                      "fill": "$ink-3",
+                      "content": "Analytics  ›  Listing Valuation",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "yarHc",
+                      "name": "Title",
+                      "fill": "$ink",
+                      "content": "Is this listing priced above the market?",
+                      "fontFamily": "$font",
+                      "fontSize": 22,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.5
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "P1Nkiy",
+                  "name": "Header Right",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "PZaXA",
+                      "name": "Freshness",
+                      "fill": "$ink-3",
+                      "content": "Sales data to 12 Aug 2026",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "a5slK",
+                      "name": "Export Button",
+                      "fill": "$bg",
+                      "cornerRadius": 7,
+                      "stroke": "$line-strong",
+                      "strokeWidth": 1,
+                      "gap": 6,
+                      "padding": [
+                        8,
+                        13
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "q9Bf1",
+                          "name": "Download Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "download",
+                          "library": "lucide",
+                          "fill": "$ink-2"
+                        },
+                        {
+                          "type": "text",
+                          "id": "M6kiq1",
+                          "name": "Export Label",
+                          "fill": "$ink-2",
+                          "content": "Export comps",
+                          "fontFamily": "$font",
+                          "fontSize": 12.5,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "H4FOS",
+              "name": "Selected Listing",
+              "width": "fill_container",
+              "stroke": "$line",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "gap": 40,
+              "padding": [
+                0,
+                0,
+                24,
+                0
+              ],
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "l7Te7p",
+                  "name": "Listing Identity",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L9Ttrr",
+                      "name": "Address Block",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mmY59",
+                          "name": "Address",
+                          "fill": "$ink",
+                          "content": "5 Clifftop Rise",
+                          "fontFamily": "$font",
+                          "fontSize": 30,
+                          "fontWeight": "600",
+                          "letterSpacing": -0.9
+                        },
+                        {
+                          "type": "text",
+                          "id": "IaekP",
+                          "name": "Locality",
+                          "fill": "$ink-2",
+                          "content": "Warrandyte North VIC 3113  ·  listed 04 Aug 2026  ·  ID 4831077",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "v7XxD",
+                      "name": "Attributes",
+                      "gap": 34,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "y9s8EH",
+                          "name": "Attr PROPERTY TYPE",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "WnN5N",
+                              "name": "Attr Label",
+                              "fill": "$ink-3",
+                              "content": "PROPERTY TYPE",
+                              "fontFamily": "$font",
+                              "fontSize": 10,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.8
+                            },
+                            {
+                              "type": "text",
+                              "id": "dCrQ8",
+                              "name": "Attr Value",
+                              "fill": "$ink",
+                              "content": "Acreage / Semi-rural",
+                              "fontFamily": "$font",
+                              "fontSize": 16,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Rvia5",
+                          "name": "Attr BEDROOMS",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "fO4cP",
+                              "name": "Attr Label",
+                              "fill": "$ink-3",
+                              "content": "BEDROOMS",
+                              "fontFamily": "$font",
+                              "fontSize": 10,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.8
+                            },
+                            {
+                              "type": "text",
+                              "id": "o7obXR",
+                              "name": "Attr Value",
+                              "fill": "$ink",
+                              "content": "5",
+                              "fontFamily": "$font",
+                              "fontSize": 16,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ppun8",
+                          "name": "Attr LAND SIZE",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Dakgk",
+                              "name": "Attr Label",
+                              "fill": "$ink-3",
+                              "content": "LAND SIZE",
+                              "fontFamily": "$font",
+                              "fontSize": 10,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.8
+                            },
+                            {
+                              "type": "text",
+                              "id": "mZsLP",
+                              "name": "Attr Value",
+                              "fill": "$ink",
+                              "content": "4.1 ha",
+                              "fontFamily": "$font",
+                              "fontSize": 16,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "n6qYt",
+                  "name": "Asking Price Block",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "KRcf2",
+                      "name": "Asking Label",
+                      "fill": "$ink-3",
+                      "content": "ASKING PRICE",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "iWyw0",
+                      "name": "Asking Value",
+                      "fill": "$ink",
+                      "content": "$2,650,000",
+                      "fontFamily": "$font",
+                      "fontSize": 38,
+                      "fontWeight": "600",
+                      "letterSpacing": -1.4
+                    },
+                    {
+                      "type": "frame",
+                      "id": "G3dSX",
+                      "name": "Verdict Pill",
+                      "fill": "$muted-bg",
+                      "cornerRadius": 6,
+                      "gap": 7,
+                      "padding": [
+                        7,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "PKt4x",
+                          "name": "Verdict Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "circle-slash",
+                          "library": "lucide",
+                          "fill": "$ink-2"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kdeVf",
+                          "name": "Verdict Label",
+                          "fill": "$ink-2",
+                          "content": "No verdict — not enough comparable sales",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WbWBs",
+              "name": "Verdict Metrics",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "id": "mvLLG",
+                  "type": "ref",
+                  "ref": "kSivn",
+                  "name": "Metric COMPARABLE MEDIAN",
+                  "width": "fill_container",
+                  "descendants": {
+                    "lcV0W": {
+                      "content": "COMPARABLE MEDIAN"
+                    },
+                    "KOscg": {
+                      "content": "—",
+                      "fill": "$ink-3"
+                    },
+                    "yEA5E": {
+                      "content": "Needs 6 or more matched sales"
+                    }
+                  }
+                },
+                {
+                  "id": "n26aag",
+                  "type": "ref",
+                  "ref": "kSivn",
+                  "name": "Metric VARIANCE VS COMPARABLES",
+                  "width": "fill_container",
+                  "descendants": {
+                    "lcV0W": {
+                      "content": "VARIANCE VS COMPARABLES"
+                    },
+                    "KOscg": {
+                      "content": "—",
+                      "fill": "$ink-3"
+                    },
+                    "yEA5E": {
+                      "content": "Not calculated for this listing"
+                    }
+                  }
+                },
+                {
+                  "id": "BNaK3",
+                  "type": "ref",
+                  "ref": "kSivn",
+                  "name": "Metric COMPARABLE SALES USED",
+                  "width": "fill_container",
+                  "descendants": {
+                    "lcV0W": {
+                      "content": "COMPARABLE SALES USED"
+                    },
+                    "KOscg": {
+                      "content": "2",
+                      "fill": "$ink"
+                    },
+                    "yEA5E": {
+                      "content": "Below the minimum of 6"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "JMJvo",
+              "name": "Distribution Section",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MKcO7",
+                  "name": "Chart Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ixJBq",
+                      "name": "Chart Title Block",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "UdZvU",
+                          "name": "Chart Title",
+                          "fill": "$ink",
+                          "content": "Comparable sale distribution unavailable",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "R3srIa",
+                          "name": "Chart Sub",
+                          "fill": "$ink-3",
+                          "content": "A distribution needs at least 6 comparable sales — only 2 matched this listing",
+                          "fontFamily": "$font",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cgHXd",
+                      "x": 712,
+                      "y": 22,
+                      "name": "Legend",
+                      "enabled": false,
+                      "gap": 16,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "dIyXi",
+                          "name": "Legend Comparable sales",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "L3eDt",
+                              "name": "Swatch",
+                              "fill": "$line-strong",
+                              "width": 10,
+                              "height": 10
+                            },
+                            {
+                              "type": "text",
+                              "id": "BPJuo",
+                              "name": "Legend Label",
+                              "fill": "$ink-2",
+                              "content": "Comparable sales",
+                              "fontFamily": "$font",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "v3xtTv",
+                          "name": "Legend Median band",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "ilnNt",
+                              "name": "Swatch",
+                              "fill": "$ink-2",
+                              "width": 10,
+                              "height": 10
+                            },
+                            {
+                              "type": "text",
+                              "id": "Mx2pP",
+                              "name": "Legend Label",
+                              "fill": "$ink-2",
+                              "content": "Median band",
+                              "fontFamily": "$font",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "iJIaE",
+                          "name": "Legend This listing",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "OJ6ry",
+                              "name": "Swatch",
+                              "fill": "$over",
+                              "width": 10,
+                              "height": 10
+                            },
+                            {
+                              "type": "text",
+                              "id": "VnHKK",
+                              "name": "Legend Label",
+                              "fill": "$ink-2",
+                              "content": "This listing",
+                              "fontFamily": "$font",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kfV4S",
+                  "name": "No Verdict Panel",
+                  "width": "fill_container",
+                  "height": 260,
+                  "fill": "$bg-subtle",
+                  "cornerRadius": 10,
+                  "stroke": "$line-strong",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    34,
+                    40
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "rsVRl",
+                      "name": "Empty Icon",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "search-x",
+                      "library": "lucide",
+                      "fill": "$ink-3"
+                    },
+                    {
+                      "type": "text",
+                      "id": "YDX7G",
+                      "name": "Empty Title",
+                      "fill": "$ink",
+                      "content": "No verdict given for this listing",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kj18K",
+                      "name": "Reason",
+                      "width": 620,
+                      "layout": "vertical",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "B7APd4",
+                          "name": "Reason Text",
+                          "fill": "$ink-2",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Only 2 sales matched the comparison rules and the valuation requires at least 6. Semi-rural acreage in Warrandyte North turns over rarely: the two matches are 2.4 km and 3.9 km away, and the nearest sold five months ago. A median from two sales is not a reliable price to judge this listing against.",
+                          "lineHeight": 1.6,
+                          "textAlign": "center",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QeGED",
+                      "name": "Loosen Actions",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Rq0i1",
+                          "name": "Action Widen radius to 10 km  (+3 matches)",
+                          "fill": "$bg",
+                          "cornerRadius": 7,
+                          "stroke": "$line-strong",
+                          "strokeWidth": 1,
+                          "gap": 7,
+                          "padding": [
+                            8,
+                            13
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "S6bhxx",
+                              "name": "Action Icon",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "radius",
+                              "library": "lucide",
+                              "fill": "$ink-2"
+                            },
+                            {
+                              "type": "text",
+                              "id": "cl07X",
+                              "name": "Action Label",
+                              "fill": "$ink-2",
+                              "content": "Widen radius to 10 km  (+3 matches)",
+                              "fontFamily": "$font",
+                              "fontSize": 12.5,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EWcD9",
+                          "name": "Action Extend window to 24 months  (+1 match)",
+                          "fill": "$bg",
+                          "cornerRadius": 7,
+                          "stroke": "$line-strong",
+                          "strokeWidth": 1,
+                          "gap": 7,
+                          "padding": [
+                            8,
+                            13
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "NxLIU",
+                              "name": "Action Icon",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "calendar-range",
+                              "library": "lucide",
+                              "fill": "$ink-2"
+                            },
+                            {
+                              "type": "text",
+                              "id": "vJdcF",
+                              "name": "Action Label",
+                              "fill": "$ink-2",
+                              "content": "Extend window to 24 months  (+1 match)",
+                              "fontFamily": "$font",
+                              "fontSize": 12.5,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ZXs8e",
+              "name": "Comparable Sales Section",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "jERR4",
+                  "name": "Table Header Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "plHAt",
+                      "name": "Table Title Block",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "rri6A",
+                          "name": "Table Title",
+                          "fill": "$ink",
+                          "content": "The 2 sales that did match",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "K4Z8Fh",
+                          "name": "Table Sub",
+                          "fill": "$ink-3",
+                          "content": "Shown so the shortfall can be checked — they are not enough to price this listing against.",
+                          "fontFamily": "$font",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Qu7IZ",
+                      "name": "Row Count",
+                      "fill": "$ink-3",
+                      "content": "Showing 2 of 2 · sorted by sale date",
+                      "fontFamily": "$font",
+                      "fontSize": 11.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "z6oNC",
+                  "name": "Comparable Sales Table",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "P8ulhw",
+                      "name": "Header Row",
+                      "width": "fill_container",
+                      "fill": "$bg-subtle",
+                      "stroke": "$line-strong",
+                      "strokeWidth": {
+                        "bottom": 1
+                      },
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "O1QBfc",
+                          "name": "H ADDRESS",
+                          "width": "fill_container",
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "N2Kr01",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "ADDRESS",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "PmpCf",
+                          "name": "H SOLD",
+                          "width": 112,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "nJQIg",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "SOLD",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "RUN2q",
+                          "name": "H TYPE",
+                          "width": 92,
+                          "padding": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "aWKcH",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "TYPE",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "GXT5C",
+                          "name": "H BEDS",
+                          "width": 56,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "RASYp",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "BEDS",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "T2I7av",
+                          "name": "H LAND",
+                          "width": 90,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "U6j2S",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "LAND",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "X1ZDW",
+                          "name": "H SOLD PRICE",
+                          "width": 130,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L5BmQP",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "SOLD PRICE",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "hagJE",
+                          "name": "H DIST",
+                          "width": 78,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "g8IWSj",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "DIST",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ziU45",
+                          "name": "H SOLD VS ASKING",
+                          "width": 110,
+                          "padding": 10,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "t6tr49",
+                              "name": "H Label",
+                              "fill": "$ink-3",
+                              "content": "VS ASKING",
+                              "textAlign": "right",
+                              "fontFamily": "$font",
+                              "fontSize": 9.5,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.7
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "XuHXb",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 12 Wattle Grove",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "112 Falconer Rd"
+                        },
+                        "i1Zljy": {
+                          "content": "09 Jun 2026"
+                        },
+                        "stzf8": {
+                          "content": "Acreage"
+                        },
+                        "QQWGx": {
+                          "content": "5"
+                        },
+                        "V5wcl": {
+                          "content": "3.8 ha"
+                        },
+                        "O04gV": {
+                          "content": "$2,480,000"
+                        },
+                        "T1HDsr": {
+                          "content": "2.4 km"
+                        },
+                        "w19TC": {
+                          "content": "−6.4%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "p2FhuU",
+                      "type": "ref",
+                      "ref": "QbIY0",
+                      "name": "Comp 7 Bardia St",
+                      "width": "fill_container",
+                      "descendants": {
+                        "Pis7M": {
+                          "content": "8 Ranges View Ct"
+                        },
+                        "i1Zljy": {
+                          "content": "17 Feb 2026"
+                        },
+                        "stzf8": {
+                          "content": "Acreage"
+                        },
+                        "QQWGx": {
+                          "content": "6"
+                        },
+                        "V5wcl": {
+                          "content": "4.6 ha"
+                        },
+                        "O04gV": {
+                          "content": "$2,905,000"
+                        },
+                        "T1HDsr": {
+                          "content": "3.9 km"
+                        },
+                        "w19TC": {
+                          "content": "+9.6%",
+                          "fill": "$ink-2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "e9ZA3",
+                  "name": "Method Note",
+                  "fill": "$ink-3",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Method · comparables are settled sales in the last 6 months within 2 km, same property type, bedrooms ±1, land size within 25%. Verdict requires at least 6 comparable sales. Matches beyond the radius are listed but excluded from the median.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font",
+                  "fontSize": 11.5,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "bg": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "bg-sidebar": {
+      "type": "color",
+      "value": "#F4F5F7"
+    },
+    "bg-subtle": {
+      "type": "color",
+      "value": "#F8F9FA"
+    },
+    "ink": {
+      "type": "color",
+      "value": "#14181F"
+    },
+    "ink-2": {
+      "type": "color",
+      "value": "#4A5361"
+    },
+    "ink-3": {
+      "type": "color",
+      "value": "#6E7787"
+    },
+    "line": {
+      "type": "color",
+      "value": "#E3E6EB"
+    },
+    "line-strong": {
+      "type": "color",
+      "value": "#C9CFD8"
+    },
+    "accent": {
+      "type": "color",
+      "value": "#FF4B4B"
+    },
+    "over": {
+      "type": "color",
+      "value": "#C2352B"
+    },
+    "over-bg": {
+      "type": "color",
+      "value": "#FCEDEB"
+    },
+    "under": {
+      "type": "color",
+      "value": "#1B7A55"
+    },
+    "under-bg": {
+      "type": "color",
+      "value": "#E8F4EF"
+    },
+    "muted-bg": {
+      "type": "color",
+      "value": "#EDEFF3"
+    },
+    "font": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "mono": {
+      "type": "string",
+      "value": "Roboto Mono"
+    }
+  },
+  "fileToken": "25094a08-c3ca-41d9-8fd7-74afcc225db5"
+}

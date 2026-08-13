@@ -1,0 +1,16 @@
+# Full dependency set. Streamlit, pandas and pyarrow are pre-installed in the
+# Databricks Apps runtime but NOT on Railway, so they are pinned here — a
+# requirements file that assumes its host's base image only works on that host.
+#
+# Upper bounds on every line, deliberately. Railway rebuilds from source on
+# every deploy, so an unbounded spec means the SAME commit can resolve a
+# different dependency tree tomorrow: a breaking major lands, the container
+# crashloops, and restartPolicyMaxRetries is exhausted against a code change
+# nobody made. Caps make a rebuild reproducible enough to trust, and bumping one
+# is a visible commit rather than a silent Tuesday.
+streamlit>=1.38,<2
+pandas>=2.2,<3
+pyarrow>=16,<22
+databricks-sql-connector>=3.4,<5
+databricks-sdk>=0.30,<1
+plotly>=5.22,<7

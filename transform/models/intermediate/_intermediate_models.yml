@@ -63,3 +63,21 @@ models:
           - accepted_values:
               arguments:
                 values: ['buy', 'rent']
+
+  - name: int_crawl_coverage
+    description: >
+      One row per sold crawl region: how deep it paged and whether it hit the
+      source's 1,500-result ceiling. The single definition of crawl truncation,
+      consumed by mart_data_coverage and both price-trend marts.
+
+      Exists because each of those was deriving the cap from its own rows, which
+      gave two marts contradictory answers for the same LGA — the ceiling
+      applies to a crawl, not to whichever slice of it a region receives.
+    columns:
+      - name: crawl_region
+        tests: [unique, not_null]
+      - name: max_page
+        tests: [not_null]
+      - name: hit_result_cap
+        description: True when this crawl exhausted the result budget, so what it did not return is missing rather than absent.
+        tests: [not_null]
