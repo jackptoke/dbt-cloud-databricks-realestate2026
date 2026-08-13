@@ -1,6 +1,6 @@
 # realestate2026 — investor dashboard
 
-A Streamlit app over `realestate.gold`, answering one question:
+A Streamlit app over the gold layer, answering one question:
 **what has this market done, and is this listing priced fairly against it?**
 
 Scope, and the reasoning behind what is in and out, lives in [SCOPE.md](SCOPE.md).
@@ -73,12 +73,42 @@ cd streamlit
 railway up --service dashboard
 ```
 
-The app reads through a service principal holding `USE CATALOG` on
-`realestate_prod`, plus `USE SCHEMA` and `SELECT` on `realestate_prod.gold`, and
-`CAN_USE` on the warehouse. Nothing else — verified: the same credentials are
-refused on the dev catalog. Rotate by issuing a new secret with
-`databricks service-principal-secrets-proxy create <sp-id>` and updating the
-Railway variable; the old one can then be deleted independently.
+### The service principal
+
+The deployment authenticates as **`realestate-dashboard`**
+(`699bc97d-29d4-448d-84ef-3322bc280d4f`, workspace SCIM id `142324170671516`),
+in no groups, with an OAuth secret expiring **2028-08-11**.
+
+| scope | grant |
+| --- | --- |
+| `realestate_prod` catalog | `USE CATALOG` |
+| `realestate_prod.gold` | `SELECT`, `USE SCHEMA` |
+| `realestate_prod.silver` / `bronze` | none |
+| warehouse `cf2a73a5f7ab6a80` | `CAN_USE` |
+| `realestate` (dev) catalog | `USE CATALOG` — inherited, see below |
+
+**The dev-catalog row is expected and is not a leak.** It comes from
+`_workspace_users_realestate_<workspace-id>`, an automatic group Databricks
+grants `USE CATALOG` on the dev catalog to every workspace principal. `USE
+CATALOG` permits traversal only: reading needs `USE SCHEMA` and `SELECT` on a
+schema or table, and the principal has neither there. Measured before deploy —
+the same credentials read prod fine and return `INSUFFICIENT_PERMISSIONS` on
+`realestate.gold.fct_sale`.
+
+Do not try to revoke it. It is held by a workspace-wide group, so removing it
+would change access for every user and principal in the workspace in order to
+withdraw a permission that confers no data access.
+
+**Rotating the secret:**
+
+```bash
+databricks service-principal-secrets-proxy create 142324170671516 --profile realestate_dev
+railway variables --service dashboard --set "DATABRICKS_CLIENT_SECRET=<new>"
+databricks service-principal-secrets-proxy delete 142324170671516 <old-secret-id> --profile realestate_dev
+```
+
+Issue the new secret before deleting the old one — both are valid at once, so
+there is no window where the running app cannot authenticate.
 
 ### Databricks Apps (alternative)
 
