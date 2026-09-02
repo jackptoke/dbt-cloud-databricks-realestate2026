@@ -3,12 +3,17 @@ resources:
     realestate_ingest:
       name: realestate_ingest
       description: >
-        Nightly: fetch listings from realty-in-au and land them as NDJSON.
+        Weekly: fetch listings from realty-in-au and land them as NDJSON.
         Loading bronze and building silver/gold is realestate_medallion's job,
         triggered by the files this one writes.
 
+      # Weekly, Sunday 11pm Melbourne. Was nightly; the listing set does not
+      # churn fast enough to justify a daily pass against a rate-limited key.
+      # Note the sold channel below still uses max_sold_age_months=1, so a
+      # 7-day cadence leaves ~3 weeks of overlap between runs — no sale can
+      # fall through the gap.
       schedule:
-        quartz_cron_expression: "0 0 23 * * ?"
+        quartz_cron_expression: "0 0 23 ? * SUN"
         timezone_id: Australia/Melbourne
 
       # Three chained for_each tasks over ~20 suburbs is minutes of work, not

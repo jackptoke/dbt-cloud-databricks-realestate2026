@@ -3,7 +3,7 @@
     <landing_root>/_state/<dataset>/state=<state>/suburb=<suburb>.json
 
 A marker records that a suburb's full history has been fetched at least once.
-It exists so the nightly incremental run can refuse to start on a suburb that
+It exists so the weekly incremental run can refuse to start on a suburb that
 has never been backfilled, rather than quietly giving it one month of history
 while its neighbours have twenty — the coverage artefact suburbs.py warns about.
 

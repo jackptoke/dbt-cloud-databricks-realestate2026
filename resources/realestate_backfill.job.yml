@@ -4,7 +4,7 @@ resources:
       name: realestate_backfill
       description: >
         One-off full sold history for one suburb. Run this before a newly
-        watched suburb's first nightly run; the nightly job refuses to ingest
+        watched suburb's first scheduled run; the weekly job refuses to ingest
         a suburb with no backfill marker.
 
       # A full backfill is long by nature, so this ceiling is generous — it is
@@ -13,7 +13,7 @@ resources:
       timeout_seconds: 14400
 
       # No schedule, deliberately. A full backfill is thousands of requests
-      # against the same rate-limited key the nightly run depends on, so it
+      # against the same rate-limited key the weekly run depends on, so it
       # happens when someone is watching — never because a marker was missing
       # at 11pm.
 

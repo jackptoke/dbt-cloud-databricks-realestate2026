@@ -70,7 +70,7 @@ def page_filename(page: int, *, scope: str | None = None) -> str:
     anything that reasons about "pages above N" in that directory is reasoning
     across two unrelated crawls. That is what made the first version of
     prune_stale_pages delete 48 pages of irrecoverable backfill history when the
-    nightly run followed it on the same day.
+    scheduled run followed it on the same day.
 
     The full scope keeps the bare ``page=NNNN.jsonl`` name so already-landed
     data stays within the naming scheme rather than needing a migration.
