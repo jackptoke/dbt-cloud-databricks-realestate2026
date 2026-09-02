@@ -490,7 +490,7 @@ def main(argv: list[str] | None = None) -> int:
         "--require_backfill_marker",
         type=_flag,
         default=False,
-        help="Fail if this suburb has never been backfilled. For the nightly run.",
+        help="Fail if this suburb has never been backfilled. For the scheduled run.",
     )
     parser.add_argument(
         "--write_backfill_marker",

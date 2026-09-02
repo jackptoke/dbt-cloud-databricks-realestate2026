@@ -4,7 +4,7 @@ resources:
       name: realestate_medallion
       description: >
         Load bronze with Auto Loader, then build silver and gold with dbt.
-        Triggered by files landing in the volume, so it serves the nightly
+        Triggered by files landing in the volume, so it serves the weekly
         realestate_ingest run and ad-hoc realestate_backfill runs alike.
 
       timeout_seconds: 10800
@@ -13,7 +13,7 @@ resources:
       #
       # wait_after_last_change_seconds must exceed the longest gap WITHIN a
       # crawl, or the trigger fires mid-run and Auto Loader sees a partial
-      # landing zone. A nightly crawl is only a couple of minutes of fetching,
+      # landing zone. A weekly crawl is only a couple of minutes of fetching,
       # so 15 minutes is generous by design: it absorbs a 429 backoff chain
       # (http.py waits up to 60s per retry, six attempts), a slow suburb, or a
       # gap between for_each iterations. Latency costs nothing here — the run
